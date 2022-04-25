@@ -1,138 +1,272 @@
-* {
-    margin: 0;
-    padding: 0;
-    -webkit-box-sizing: border-box;
-    box-sizing: border-box;
-}
-
-/* 
-body {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    height: 100vh;
-    align-items: center;
-    justify-content: flex-start;
-    font-family: "Ek Mukta";
-    text-transform: uppercase;
-    font-weight: 600;
-    letter-spacing: 4px;
-    background: #1d1f20;
-} */
+@import "https://fonts.googleapis.com/css?family=Roboto:100,300";
+@import "https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.3.2/css/simple-line-icons.min.css";
+@import "https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css";
+@import "https://fonts.googleapis.com/css?family=Roboto+Mono:300,700";
 /* 
 h1 {
-    margin-top: 10vh;
-    font-size: 2.5rem;
-    max-width: 500px;
-    letter-spacing: 3px;
     text-align: center;
-    line-height: 1.5;
-    font-family: "Open Sans";
-    text-transform: capitalize;
-    font-weight: 800;
-    color: white;
-
-    span {
-        color: #ff908b;
-    }
+    color: #fff;
+    font-weight: 600;
+    font-size: 3em;
+    letter-spacing: 0px;
+    text-shadow: 1px 1px rgba(0, 0, 0, 0.02), 2px 2px rgba(0, 0, 0, 0.02),
+        3px 3px rgba(0, 0, 0, 0.02), 4px 4px rgba(0, 0, 0, 0.02),
+        5px 5px rgba(0, 0, 0, 0.02), 6px 6px rgba(0, 0, 0, 0.02),
+        7px 7px rgba(0, 0, 0, 0.02);
 } */
-form {
-    position: relative;
-    width: 18rem;
-    margin-top: 8vh;
-}
 
-.chosen-value,
-.value-list {
+h1 i {
     position: relative;
-    top: 3vw;
-    left: 40vw;
+    font-size: 70px;
+}
+p {
+    text-align: center;
+    color: #fff;
+    font-size: 14px;
+    margin-bottom: 2em;
+    line-height: 30px;
+}
+p img {
+    position: relative;
+    top: 8px;
+    right: 10px;
+}
+.select {
+    position: relative;
+    overflow: hidden;
+    display: block;
+    margin: auto;
+    width: 330px;
+    height: 100%;
+    border-bottom: 0px;
+    border-radius: 3px;
+    font-size: 12px;
+    box-shadow: 0px 1em 2em -1.5em rgba(0, 0, 0, 0.5);
+}
+.select > i.toggle {
+    position: absolute;
+    z-index: 4;
+    right: 1.5em;
+    top: 1.6em;
+    color: #ccc;
+}
+.select .title,
+.select .placeholder {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 1.5em 2em;
+    background: rgba(255, 255, 255, 1);
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+}
+.select > input {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    display: block;
+    opacity: 0;
+    cursor: pointer;
+}
+.select > input:checked ~ i.toggle.icon-arrow-down {
+    display: none;
+}
+.select > input:checked ~ i.toggle.icon-arrow-up {
+    display: block;
+}
+.select > input:checked div.options label.option .title {
+    display: none !important;
+}
+.select > input:not(:checked) {
+    z-index: 4;
+}
+.select > input:not(:checked) ~ label.option > span.title {
+    display: none;
+}
+.select > input:not(:checked) ~ i.toggle.icon-arrow-up {
+    display: none;
+}
+.select > input:not(:checked) ~ i.toggle.icon-arrow-down {
+    display: block;
+}
+.select > input:disabled {
+    cursor: no-drop;
+}
+.select > span.placeholder {
+    position: relative;
+    z-index: 0;
+    display: inline-block;
+    width: 100%;
+    color: #999;
+    border-top: 0px;
+}
+.select label.option {
+    display: block;
+    overflow: hidden;
+    z-index: 1;
+    width: 100%;
+    transition: all 1s ease-out;
+}
+.select label.option span.title {
+    position: relative;
+    z-index: 2;
+    transition: background 0.3s ease-out;
+}
+.select label.option span.title i.icon {
+    padding-right: 8px;
+    color: rgba(146, 168, 209, 1);
+}
+.select label.option span.title:hover {
+    /* color: #0059a6; */
+    color: #ffa112;
+    background: rgba(255, 255, 255, 0.3);
+    box-shadow: inset 0px 1px 0px rgba(0, 0, 0, 0.1);
+}
+.select label.option input {
+    display: none;
+}
+.select label.option input:checked ~ span.title {
+    position: absolute;
+    display: block;
+    z-index: 3;
+    top: 0px;
+    font-size: 12px;
+    background: #fff;
+    border-top: 0px;
+    box-shadow: none;
+    color: inherit;
     width: 100%;
 }
-
-.chosen-value {
-    font-family: "Open Sans";
-    text-transform: uppercase;
-    font-weight: 600;
-    letter-spacing: 4px;
-    height: 4rem;
-    font-size: 1.1rem;
-    padding: 1rem;
-    background-color: #fafcfd;
-    border: 3px solid transparent;
-    -webkit-transition: 0.3s ease-in-out;
-    transition: 0.3s ease-in-out;
+.select label.option input:disabled ~ span.title {
+    background: #f9f9f9 !important;
+    color: #aaa;
 }
-
-.chosen-value::-webkit-input-placeholder {
-    color: #333;
+.select label.option input:disabled ~ span.title:hover {
+    color: #aaa;
+    background: none;
+    cursor: no-drop;
 }
-
-.chosen-value:hover {
-    background-color: #ff908b;
-    cursor: pointer;
-}
-
-.chosen-value:hover::-webkit-input-placeholder {
-    color: #333;
-}
-
-.chosen-value:focus,
-.chosen-value.open {
-    -webkit-box-shadow: 0px 5px 8px 0px rgba(0, 0, 0, 0.2);
-    box-shadow: 0px 5px 8px 0px rgba(0, 0, 0, 0.2);
-    outline: 0;
-    background-color: #ff908b;
-    color: #000;
-}
-
-.chosen-value:focus::-webkit-input-placeholder,
-.chosen-value.open::-webkit-input-placeholder {
-    color: #000;
-}
-
-.value-list {
-    list-style: none;
-    margin-top: 4rem;
-    -webkit-box-shadow: 0px 5px 8px 0px rgba(0, 0, 0, 0.2);
-    box-shadow: 0px 5px 8px 0px rgba(0, 0, 0, 0.2);
-    overflow: hidden;
-    max-height: 0;
-    -webkit-transition: 0.3s ease-in-out;
-    transition: 0.3s ease-in-out;
-}
-
-.value-list.open {
-    max-height: 320px;
-    overflow: auto;
-}
-
-.value-list li {
+.select2 {
     position: relative;
-    height: 4rem;
-    background-color: #fafcfd;
-    padding: 1rem;
-    font-size: 1.1rem;
-    display: -webkit-box;
-    display: -ms-flexbox;
-    display: flex;
-    -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
-    cursor: pointer;
-    -webkit-transition: background-color 0.3s;
-    transition: background-color 0.3s;
-    opacity: 1;
-}
-
-.value-list li:hover {
-    background-color: #ff908b;
-}
-
-.value-list li.closed {
-    max-height: 0;
     overflow: hidden;
-    padding: 0;
-    opacity: 0;
+    display: block;
+    margin: auto;
+    width: 330px;
+    height: 100%;
+    border-bottom: 0px;
+    border-radius: 3px;
+    font-size: 12px;
+    box-shadow: 0px 1em 2em -1.5em rgba(0, 0, 0, 0.5);
 }
-/*# sourceMappingURL=style.css.map */
+.select2 i.toggle {
+    position: absolute;
+    z-index: 4;
+    right: 1.5em;
+    top: 1.6em;
+    color: #ccc;
+}
+.select2 .title,
+.select2 .placeholder {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 1.5em 2em;
+    background: rgba(255, 255, 255, 1);
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+    cursor: pointer;
+}
+.select2 > label > input {
+    position: absolute;
+    left: 0px;
+    top: 0px;
+    z-index: 2;
+    width: 100%;
+    height: 100%;
+    display: block;
+    opacity: 0;
+    cursor: pointer;
+}
+.select2 > label > input:checked {
+    z-index: 2;
+}
+.select2 > label > input:checked ~ i.toggle.icon-plus {
+    display: none;
+}
+.select2 > label > input:checked ~ i.toggle.icon-minus {
+    display: block;
+}
+.select2 > label > input:not(:checked) ~ i.toggle.icon-minus {
+    display: none;
+}
+.select2 > label > input:not(:checked) ~ i.toggle.icon-plus {
+    display: block;
+}
+.select2
+    > label
+    > input:not(:checked)
+    ~ label.option
+    input:not(:checked)
+    ~ .title {
+    display: none !important;
+}
+.select2 > label > input:disabled {
+    cursor: no-drop;
+}
+.select2 label > span.placeholder {
+    position: relative;
+    z-index: 0;
+    display: inline-block;
+    width: 100%;
+    color: #999;
+    border-top: 0px;
+}
+.select2 label.option {
+    display: block;
+    overflow: hidden;
+    z-index: 1;
+    width: 100%;
+    transition: all 1s ease-out;
+}
+.select2 label.option span.title {
+    position: relative;
+    z-index: 2;
+    transition: background 0.3s ease-out;
+}
+.select2 label.option span.title i.icon {
+    padding-right: 8px;
+    color: rgba(146, 168, 209, 1);
+}
+.select2 label.option span.title:hover {
+    color: #fff;
+    background: rgba(146, 168, 209, 0.5);
+    box-shadow: inset 0px 1px 0px rgba(0, 0, 0, 0.1);
+}
+.select2 label.option input {
+    display: none;
+}
+.select2 label.option input:checked ~ span.title {
+    position: absolute;
+    display: block;
+    z-index: 1;
+    top: 0px;
+    font-size: 12px;
+    background: #fff;
+    border-top: 0px;
+    box-shadow: none;
+    color: inherit;
+    width: 100%;
+}
+.select2 label.option input:disabled ~ span.title {
+    background: #f9f9f9 !important;
+    color: #aaa;
+}
+.select2 label.option input:disabled ~ span.title:hover {
+    color: #aaa;
+    background: none;
+    cursor: no-drop;
+}
