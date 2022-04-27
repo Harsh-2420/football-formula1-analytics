@@ -1,4 +1,6 @@
 import React, { useEffect, useState } from "react"
+import Select from "react-select"
+import "bootstrap/dist/css/bootstrap.min.css"
 import {
     LineChart,
     Line,
@@ -163,7 +165,9 @@ export const DropdownPage = () => {
         setSelectedEvent(e.target.value)
     }
     const handleDropdownSelectDriver = (e) => {
-        setSelectedDriver(e.target.value)
+        const values = [...e.target.selectedOptions].map((opt) => opt.value)
+        // console.log(values)
+        setSelectedDriver(values)
     }
     const getLatestRace = () => {
         fetch("http://127.0.0.1:5000/api/getrace")
@@ -196,6 +200,13 @@ export const DropdownPage = () => {
         <div>
             <div className="row">
                 <div>
+                    {/* <Select
+                        options={years}
+                        getOptionLabel={(option) => option.content}
+                        // getOptionValue={(option) => option.content}
+                        // onChange={(option) => handleDropdownSelectYear(option)}
+                        onChange={handleDropdownSelectYear}
+                    /> */}
                     <select onChange={handleDropdownSelectYear}>
                         <option value="">Select Year</option>
                         {years.map((year) => (

@@ -28,7 +28,7 @@ fastf1.Cache.enable_cache('../f1_cache')
 class Year(db.Model):
     __bind_key__ = 'year'
     id = db.Column(db.Integer, primary_key=True)
-    content = db.Column(db.String(80), unique=False)
+    content = db.Column(db.String(80), unique=True)
 
     def __str__(self):
         return f'{self.id} {self.content}'
@@ -156,7 +156,7 @@ def selectevent():
         # get round number after getting session:
         # round_number = event_records[event_records['EventName'] == selected_race]['RoundNumber']
         driver_list = [x[:3] for x in requests.get(
-            "http://ergast.com/api/f1/2022/4/drivers").text.split('code="')[1:]]
+            "http://ergast.com/api/f1/{}/{}/drivers".format(selected_year, round_number)).text.split('code="')[1:]]
         db.create_all(bind='driver')
         db.drop_all(bind='driver')
         db.create_all(bind='driver')
@@ -169,13 +169,19 @@ def selectevent():
 @app.route('/api/selectdriver', methods=['POST'])
 def selectdriver():
     if request.method == 'POST':
+        # list of multi select drivers (real-time changes)
         selected_drivers = request.get_json(force=True)
-        app.logger.info(selected_drivers)
+        # session send selected_drivers
         return {"201": selected_drivers}
 
 
 @app.route('/api/lap_number_time')
 def getChartData():
+    selected_year = 2021
+    selected_race = "Bahrain Grand Prix"
+    selected_event = "Race"
+    round_number = 1
+    selected_drivers = ['HAM', 'ALO', 'LAT']
     return "pass"
     # return jsonify()
 
