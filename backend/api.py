@@ -1,8 +1,11 @@
-from re import M
+from models import Year, Race, Event, Driver, serializer
 from flask import Flask, jsonify, request, json
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from random import randrange
+import fastf1
+import session
+import requests
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///example.db'
@@ -15,55 +18,7 @@ app.config['SQLALCHEMY_BINDS'] = {
 db = SQLAlchemy(app)
 db.create_all()
 CORS(app)
-
-
-class Year(db.Model):
-    __bind_key__ = 'year'
-    id = db.Column(db.Integer, primary_key=True)
-    content = db.Column(db.String(80), unique=True)
-
-    def __str__(self):
-        return f'{self.id} {self.content}'
-
-
-class Race(db.Model):
-    __bind_key__ = 'race'
-    id = db.Column(db.Integer, primary_key=True)
-    content = db.Column(db.String(80), unique=True)
-
-    def __str__(self):
-        return f'{self.id} {self.content}'
-
-
-class Event(db.Model):
-    __bind_key__ = 'event'
-    id = db.Column(db.Integer, primary_key=True)
-    content = db.Column(db.String(80), unique=True)
-
-    def __str__(self):
-        return f'{self.id} {self.content}'
-
-
-class Driver(db.Model):
-    __bind_key__ = 'driver'
-    id = db.Column(db.Integer, primary_key=True)
-    content = db.Column(db.String(80), unique=True)
-
-    def __str__(self):
-        return f'{self.id}, {self.content}'
-
-
-class Todo(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    content = db.Column(db.Text, nullable=False)
-
-    def __str__(self):
-        return f'{self.id} {self.content}'
-
-
-def serializer(todo):
-    return {'id': todo.id,
-            'content': todo.content}
+fastf1.Cache.enable_cache('../f1_cache')
 
 
 @app.route('/api/getyear', methods=['GET'])
@@ -89,62 +44,41 @@ def getdriver():
 @app.route('/api/selectyear', methods=['POST'])
 def selectyear():
     if request.method == 'POST':
-        request_data = request.get_json(force=True)
-        # db.session.add(Race(content='Australia'))
-        # db.session.commit()
-        app.logger.info(str("#######################" + request_data))
-        return {"201": request_data}
+        year = request.get_json(force=True)
+        unformatted_names = requests.get(
+            "http://ergast.com/api/f1/{}/circuits".format(year)).text.split('<CircuitName>')[1:]
+        circuit_list = [x.split('</CircuitName>')[0]
+                        for x in unformatted_names]
+        db.drop_all(bind='race')
+        for race in circuit_list:
+            db.session.add(Race(content=race))
+        db.session.commit()
+        return {"201": year}
 
 
 @app.route('/api/selectrace', methods=['POST'])
 def selectrace():
     if request.method == 'POST':
-        request_data = request.get_json(force=True)
+        race = request.get_json(force=True)
         # db.session.add(Race(content='Singapore'))
         # db.session.commit()
-        app.logger.info(str("#######################" + request_data))
-        return {"201": request_data}
+        app.logger.info(str("#######################" + race))
+        return {"201": race}
 
 
 @app.route('/api/selectevent', methods=['POST'])
 def selectevent():
     if request.method == 'POST':
-        request_data = request.get_json(force=True)
+        event = request.get_json(force=True)
         # db.session.add(Event(content=request_data))
         # db.session.commit()
-        return {"201": request_data}
+        return {"201": event}
 
 
 @app.route('/api/lap_number_time')
 def getChartData():
-    # array = list(map(lambda x: {'x': x, 'y': randrange(20)}, range(10)))
-    data = [
-        {
-            "name": 'Page A',
-            "uv": 4000,
-            "pv": 2400,
-            "amt": 2400,
-        },
-        {
-            "name": 'Page B',
-            "uv": 3000,
-            "pv": 1398,
-            "amt": 2210,
-        },
-        {
-            "name": 'Page C',
-            "uv": 2000,
-            "pv": 9800,
-            "amt": 2290,
-        },
-        {
-            "name": 'Page D',
-            "uv": 2780,
-            "pv": 3908,
-            "amt": 2000,
-        },
-    ]
-    return jsonify(data)
+    pass
+    # return jsonify()
 
 
 if __name__ == '__main__':
