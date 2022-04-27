@@ -80,18 +80,12 @@ def serializer(todo):
 
 @app.route('/api/getyear', methods=['GET'])
 def getyear():
-    try:
-        # Year.query.filter_by(id=2).first()
-        Year.query.all()
-        db.drop_all(bind='year')
-        db.create_all(bind='year')
-    except:
-        db.create_all(bind='year')
-        db.drop_all(bind='year')
-        db.create_all(bind='year')
-
-    for year in range(2018, datetime.datetime.now().year+1):
-        db.session.add(Year(content=year))
+    curr_year = datetime.datetime.now().year+1
+    year_db_len = len(Year.query.all())
+    latest_entry = Year.query.filter_by(id=year_db_len).first().content
+    if str(latest_entry) > str(curr_year):
+        db.session.add(
+            Year(content=(int(latest_entry)+1)))
     db.session.commit()
     return jsonify([*map(serializer, Year.query.all())])
 
@@ -121,7 +115,9 @@ def selectyear():
         # app.logger.info(type(selected_year))
 
         f1_season = fastf1.get_event_schedule(int(selected_year))
-        circuit_list = list(f1_season['EventName'])
+        event_records = f1_season[['RoundNumber', 'EventName']]
+        circuit_list = list(
+            f1_season['EventName'][datetime.datetime.now() > f1_season['Session5Date']])
         db.create_all(bind='race')
         db.drop_all(bind='race')
         db.create_all(bind='race')
@@ -152,8 +148,30 @@ def selectrace():
 @app.route('/api/selectevent', methods=['POST'])
 def selectevent():
     if request.method == 'POST':
-        event = request.get_json(force=True)
-        return {"201": event}
+        selected_event = request.get_json(force=True)
+        selected_year = 2021
+        selected_race = "Bahrain Grand Prix"
+        round_number = 1
+        # get event_records from session
+        # get round number after getting session:
+        # round_number = event_records[event_records['EventName'] == selected_race]['RoundNumber']
+        driver_list = [x[:3] for x in requests.get(
+            "http://ergast.com/api/f1/2022/4/drivers").text.split('code="')[1:]]
+        db.create_all(bind='driver')
+        db.drop_all(bind='driver')
+        db.create_all(bind='driver')
+        for driver in driver_list:
+            db.session.add(Driver(content=driver))
+        db.session.commit()
+        return {"201": selected_event}
+
+
+@app.route('/api/selectdriver', methods=['POST'])
+def selectdriver():
+    if request.method == 'POST':
+        selected_drivers = request.get_json(force=True)
+        app.logger.info(selected_drivers)
+        return {"201": selected_drivers}
 
 
 @app.route('/api/lap_number_time')
