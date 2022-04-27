@@ -1,11 +1,20 @@
 import React, { useEffect, useState } from "react"
-// import { DropdownItem } from "../Components/DropdownItem"
+import {
+    LineChart,
+    Line,
+    XAxis,
+    YAxis,
+    CartesianGrid,
+    Tooltip,
+    Legend,
+} from "recharts"
 
 export const DropdownPage = () => {
     const [years, setYears] = useState([])
     const [selectedYear, setSelectedYear] = useState()
     const [races, setRaces] = useState([])
     const [selectedRace, setSelectedRace] = useState()
+    const [currentChartData, setCurrentChartData] = useState([])
 
     useEffect(() => {
         fetch("http://127.0.0.1:5000/api/getyear", {
@@ -66,6 +75,15 @@ export const DropdownPage = () => {
         }
     }, [selectedRace])
 
+    useEffect(() => {
+        fetch("http://127.0.0.1:5000/api/lap_number_time")
+            .then((res) => res.json())
+            .then((data) => {
+                console.log("first chart data is", data)
+                setCurrentChartData(data)
+            })
+    }, [])
+
     const handleDropdownSelectYear = (e) => {
         setSelectedYear(e.target.value)
     }
@@ -85,23 +103,28 @@ export const DropdownPage = () => {
 
     return (
         <div>
-            <div>
-                <select onChange={handleDropdownSelectYear}>
-                    <option value="">Select Year</option>
-                    {years.map((year) => (
-                        <option key={year.id}>{year.content}</option>
-                        // <DropdownItem key={year.id} year={year}></DropdownItem>
-                    ))}
-                </select>
+            <div className="row">
+                <div>
+                    <select onChange={handleDropdownSelectYear}>
+                        <option value="">Select Year</option>
+                        {years.map((year) => (
+                            <option key={year.id}>{year.content}</option>
+                        ))}
+                    </select>
+                </div>
+                <div>
+                    <select onChange={handleDropdownSelectRace}>
+                        <option value="">Select Race</option>
+                        {races.map((race) => (
+                            <option key={race.id}>{race.content}</option>
+                        ))}
+                    </select>
+                </div>
             </div>
             <div>
-                <select onChange={handleDropdownSelectRace}>
-                    <option value="">Select Race</option>
-                    {races.map((race) => (
-                        <option key={race.id}>{race.content}</option>
-                        // <DropdownItem key={race.id} race={race}></DropdownItem>
-                    ))}
-                </select>
+                <LineChart width={400} height={400} data={currentChartData}>
+                    <Line type="monotone" dataKey="uv" stroke="#8884d8" />
+                </LineChart>
             </div>
         </div>
     )
