@@ -7,6 +7,7 @@ import fastf1
 import requests
 import datetime
 from datetime import timedelta
+from set_values import driver_key_val_pair
 
 app = Flask(__name__)
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(hours=1)
@@ -182,8 +183,20 @@ def getChartData():
     selected_event = "Race"
     round_number = 1
     selected_drivers = ['HAM', 'ALO', 'LAT']
-    return "pass"
-    # return jsonify()
+
+    selected_data = [driver_key_val_pair[x]
+                     for x in selected_drivers]
+    selected_data.append("LapNumber")
+
+    fastf1_session = fastf1.get_session(
+        selected_year, selected_race, selected_event)
+    fastf1_session.load(telemetry=True, laps=True, weather=True)
+
+    lap_time_number = fastf1_session.laps.iloc[:, 1:4].copy()
+    lap_time_number_piv = lap_time_number.pivot(
+        index="LapNumber", columns='DriverNumber', values='LapTime').rename_axis(None, axis=1).reset_index()
+    lap_time_number_cov = lap_time_number_piv[selected_data].to_dict('records')
+    return jsonify(lap_time_number_cov)
 
 
 if __name__ == '__main__':
