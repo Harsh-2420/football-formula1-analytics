@@ -19,6 +19,9 @@ export const DropdownPage = () => {
     const [events, setEvents] = useState([])
     const [selectedEvent, setSelectedEvent] = useState()
 
+    const [drivers, setDrivers] = useState([])
+    const [selectedDriver, setSelectedDriver] = useState()
+
     const [currentChartData, setCurrentChartData] = useState([])
 
     useEffect(() => {
@@ -56,6 +59,18 @@ export const DropdownPage = () => {
             .then((res) => res.json())
             .then((data) => {
                 setEvents(data)
+            })
+    }, [])
+    useEffect(() => {
+        fetch("http://127.0.0.1:5000/api/getdriver", {
+            method: "GET",
+            headers: {
+                "Content-type": "application/json",
+            },
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                setDrivers(data)
             })
     }, [])
 
@@ -106,10 +121,28 @@ export const DropdownPage = () => {
                     if (!res.ok) return Promise.reject(res)
                     return res.json()
                 })
-                // .then((data) => {})
+                .then((data) => {
+                    getLatestDriver()
+                })
                 .catch(console.error)
         }
     }, [selectedEvent])
+
+    useEffect(() => {
+        if (selectedDriver) {
+            fetch("http://127.0.0.1:5000/api/selectdriver", {
+                method: "POST",
+                body: JSON.stringify(selectedDriver),
+                headers: { "content-type": "application/json" },
+            })
+                .then((res) => {
+                    if (!res.ok) return Promise.reject(res)
+                    return res.json()
+                })
+                // .then((data) => {})
+                .catch(console.error)
+        }
+    }, [selectedDriver])
 
     useEffect(() => {
         fetch("http://127.0.0.1:5000/api/lap_number_time")
@@ -129,6 +162,9 @@ export const DropdownPage = () => {
     const handleDropdownSelectEvent = (e) => {
         setSelectedEvent(e.target.value)
     }
+    const handleDropdownSelectDriver = (e) => {
+        setSelectedDriver(e.target.value)
+    }
     const getLatestRace = () => {
         fetch("http://127.0.0.1:5000/api/getrace")
             .then((response) => {
@@ -147,7 +183,15 @@ export const DropdownPage = () => {
             })
             .then((response) => setEvents(response))
     }
-
+    const getLatestDriver = () => {
+        fetch("http://127.0.0.1:5000/api/getdriver")
+            .then((response) => {
+                if (response.ok) {
+                    return response.json()
+                }
+            })
+            .then((response) => setDrivers(response))
+    }
     return (
         <div>
             <div className="row">
@@ -171,6 +215,14 @@ export const DropdownPage = () => {
                     <select onChange={handleDropdownSelectEvent}>
                         <option value="">Select Event</option>
                         {events.map((event) => (
+                            <option key={event.id}>{event.content}</option>
+                        ))}
+                    </select>
+                </div>
+                <div>
+                    <select onChange={handleDropdownSelectDriver} multiple>
+                        <option value="">Select Drivers</option>
+                        {drivers.map((event) => (
                             <option key={event.id}>{event.content}</option>
                         ))}
                     </select>
