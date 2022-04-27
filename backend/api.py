@@ -6,12 +6,17 @@ from flask_sqlalchemy import SQLAlchemy
 import fastf1
 import requests
 import datetime
+from datetime import timedelta
 
 app = Flask(__name__)
-# app.config["SESSION_PERMANENT"] = True
+app.config["SESSION_PERMANENT"] = True
+app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(hours=1)
+app.config['SESSION_FILE_THRESHOLD'] = 5
+app.config['SECRET_KEY'] = "F1"
 SESSION_TYPE = "filesystem"
 app.config.from_object(__name__)
-Session(app)
+sess = Session()
+sess.init_app(app)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///example.db'
 app.config['SQLALCHEMY_BINDS'] = {
     "year": "sqlite:///year.db",
@@ -134,8 +139,8 @@ def selectyear():
 def selectrace():
     if request.method == 'POST':
         selected_race = request.get_json(force=True)
-        if not 'selected_year' in session:
-            session['selected_year'] = 2021
+        # if not 'selected_year' in session:
+        # session['selected_year'] = 2021
         selected_year = session.get('selected_year', None)
         # app.logger.info()
         f1_session = fastf1.get_event(int(selected_year), selected_race)
