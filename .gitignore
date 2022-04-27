@@ -1,5 +1,7 @@
 *.pkl
 *.ff1pkl
 *.pyc
-node_modules
+node_modules/
 *.db
+*.sqlite
+.ipynb_checkpoints/
