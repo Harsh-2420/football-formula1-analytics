@@ -143,7 +143,7 @@ def selectrace():
         # session['selected_year'] = 2021
         selected_year = session.get('selected_year', None)
         # app.logger.info()
-        f1_session = fastf1.get_event(int(selected_year), selected_race)
+        f1_session = fastf1.get_event(selected_year, selected_race)
         f1_session_list = [f1_session['Session1'], f1_session['Session2'],
                            f1_session['Session3'], f1_session['Session4'], f1_session['Session5']]
         db.create_all(bind='event')
