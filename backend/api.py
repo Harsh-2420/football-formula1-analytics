@@ -1,10 +1,8 @@
-from models import Year, Race, Event, Driver, serializer
 from flask import Flask, jsonify, request, json
-from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
 from random import randrange
+from flask_sqlalchemy import SQLAlchemy
 import fastf1
-import session
 import requests
 
 app = Flask(__name__)
@@ -16,9 +14,61 @@ app.config['SQLALCHEMY_BINDS'] = {
     "driver": "sqlite:///driver.db",
 }
 db = SQLAlchemy(app)
-db.create_all()
 CORS(app)
-fastf1.Cache.enable_cache('../f1_cache')
+# fastf1.Cache.enable_cache('../f1_cache')
+
+
+class Year(db.Model):
+    __bind_key__ = 'year'
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.String(80), unique=True)
+
+    def __str__(self):
+        return f'{self.id} {self.content}'
+
+
+class Race(db.Model):
+    __bind_key__ = 'race'
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.String(80), unique=True)
+
+    def __str__(self):
+        return f'{self.id} {self.content}'
+
+
+class Event(db.Model):
+    __bind_key__ = 'event'
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.String(80), unique=True)
+
+    def __str__(self):
+        return f'{self.id} {self.content}'
+
+
+class Driver(db.Model):
+    __bind_key__ = 'driver'
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.String(80), unique=True)
+
+    def __str__(self):
+        return f'{self.id}, {self.content}'
+
+
+class Todo(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.Text, nullable=False)
+
+    def __str__(self):
+        return f'{self.id} {self.content}'
+
+
+db.create_all()
+db.session.commit()
+
+
+def serializer(todo):
+    return {'id': todo.id,
+            'content': todo.content}
 
 
 @app.route('/api/getyear', methods=['GET'])
@@ -49,7 +99,9 @@ def selectyear():
             "http://ergast.com/api/f1/{}/circuits".format(year)).text.split('<CircuitName>')[1:]
         circuit_list = [x.split('</CircuitName>')[0]
                         for x in unformatted_names]
+        db.create_all(bind='race')
         db.drop_all(bind='race')
+        db.create_all(bind='race')
         for race in circuit_list:
             db.session.add(Race(content=race))
         db.session.commit()
@@ -77,7 +129,7 @@ def selectevent():
 
 @app.route('/api/lap_number_time')
 def getChartData():
-    pass
+    return "pass"
     # return jsonify()
 
 
