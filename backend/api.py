@@ -2,6 +2,7 @@ from re import M
 from flask import Flask, jsonify, request, json
 from flask_sqlalchemy import SQLAlchemy
 from flask_cors import CORS
+from random import randrange
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///example.db'
@@ -89,8 +90,8 @@ def getdriver():
 def selectyear():
     if request.method == 'POST':
         request_data = request.get_json(force=True)
-        db.session.add(Race(content='Australia'))
-        db.session.commit()
+        # db.session.add(Race(content='Australia'))
+        # db.session.commit()
         app.logger.info(str("#######################" + request_data))
         return {"201": request_data}
 
@@ -114,24 +115,54 @@ def selectevent():
         return {"201": request_data}
 
 
-# @app.route('/api/create', methods=["POST"])
-# def create():
-#     if request.method == 'POST':
-#         request_data = request.get_json(force=True)
-#         todo = Todo(content=request_data['content'])
-#         db.session.add(todo)
-#         db.session.commit()
-#         return {'201': 'Todo Added'}
-
-
-# @app.route('/api/<int:id>', methods=['GET'])
-# def delete(id):
-#     response = {}
-#     todo = Todo.query.get(id)
-#     response['id'] = todo.id
-#     db.session.delete(todo)
-#     db.session.commit()
-#     return {'204': 'Todo Deleted'}
+@app.route('/api/lap_number_time')
+def getChartData():
+    # array = list(map(lambda x: {'x': x, 'y': randrange(20)}, range(10)))
+    data = {
+        {
+            "name": 'Page A',
+            "uv": 4000,
+            "pv": 2400,
+            "amt": 2400,
+        },
+        {
+            "name": 'Page B',
+            "uv": 3000,
+            "pv": 1398,
+            "amt": 2210,
+        },
+        {
+            "name": 'Page C',
+            "uv": 2000,
+            "pv": 9800,
+            "amt": 2290,
+        },
+        {
+            "name": 'Page D',
+            "uv": 2780,
+            "pv": 3908,
+            "amt": 2000,
+        },
+        {
+            "name": 'Page E',
+            "uv": 1890,
+            "pv": 4800,
+            "amt": 2181,
+        },
+        {
+            "name": 'Page F',
+            "uv": 2390,
+            "pv": 3800,
+            "amt": 2500,
+        },
+        {
+            "name": 'Page G',
+            "uv": 3490,
+            "pv": 4300,
+            "amt": 2100,
+        },
+    }
+    return jsonify(data)
 
 
 if __name__ == '__main__':
