@@ -1,3 +1,5 @@
-*pkl
-*ff1pkl
-*pyc
+*.pkl
+*.ff1pkl
+*.pyc
+node_modules
+*.db
