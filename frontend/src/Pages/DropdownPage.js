@@ -12,8 +12,13 @@ import {
 export const DropdownPage = () => {
     const [years, setYears] = useState([])
     const [selectedYear, setSelectedYear] = useState()
+
     const [races, setRaces] = useState([])
     const [selectedRace, setSelectedRace] = useState()
+
+    const [events, setEvents] = useState([])
+    const [selectedEvent, setSelectedEvent] = useState()
+
     const [currentChartData, setCurrentChartData] = useState([])
 
     useEffect(() => {
@@ -41,6 +46,18 @@ export const DropdownPage = () => {
                 setRaces(data)
             })
     }, [])
+    useEffect(() => {
+        fetch("http://127.0.0.1:5000/api/getevent", {
+            method: "GET",
+            headers: {
+                "Content-type": "application/json",
+            },
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                setEvents(data)
+            })
+    }, [])
 
     useEffect(() => {
         if (selectedYear) {
@@ -59,6 +76,7 @@ export const DropdownPage = () => {
                 .catch(console.error)
         }
     }, [selectedYear])
+
     useEffect(() => {
         if (selectedRace) {
             fetch("http://127.0.0.1:5000/api/selectrace", {
@@ -70,10 +88,28 @@ export const DropdownPage = () => {
                     if (!res.ok) return Promise.reject(res)
                     return res.json()
                 })
-                // .then((data) => {})
+                .then((data) => {
+                    getLatestEvent()
+                })
                 .catch(console.error)
         }
     }, [selectedRace])
+
+    useEffect(() => {
+        if (selectedEvent) {
+            fetch("http://127.0.0.1:5000/api/selectevent", {
+                method: "POST",
+                body: JSON.stringify(selectedEvent),
+                headers: { "content-type": "application/json" },
+            })
+                .then((res) => {
+                    if (!res.ok) return Promise.reject(res)
+                    return res.json()
+                })
+                // .then((data) => {})
+                .catch(console.error)
+        }
+    }, [selectedEvent])
 
     useEffect(() => {
         fetch("http://127.0.0.1:5000/api/lap_number_time")
@@ -90,7 +126,9 @@ export const DropdownPage = () => {
     const handleDropdownSelectRace = (e) => {
         setSelectedRace(e.target.value)
     }
-
+    const handleDropdownSelectEvent = (e) => {
+        setSelectedEvent(e.target.value)
+    }
     const getLatestRace = () => {
         fetch("http://127.0.0.1:5000/api/getrace")
             .then((response) => {
@@ -99,6 +137,15 @@ export const DropdownPage = () => {
                 }
             })
             .then((response) => setRaces(response))
+    }
+    const getLatestEvent = () => {
+        fetch("http://127.0.0.1:5000/api/getevent")
+            .then((response) => {
+                if (response.ok) {
+                    return response.json()
+                }
+            })
+            .then((response) => setEvents(response))
     }
 
     return (
@@ -117,6 +164,14 @@ export const DropdownPage = () => {
                         <option value="">Select Race</option>
                         {races.map((race) => (
                             <option key={race.id}>{race.content}</option>
+                        ))}
+                    </select>
+                </div>
+                <div>
+                    <select onChange={handleDropdownSelectEvent}>
+                        <option value="">Select Event</option>
+                        {events.map((event) => (
+                            <option key={event.id}>{event.content}</option>
                         ))}
                     </select>
                 </div>
