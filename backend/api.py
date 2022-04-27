@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, request, json, session
-from flask_session import Session
+# from flask_session import Session
 from flask_cors import CORS
 from random import randrange
 from flask_sqlalchemy import SQLAlchemy
@@ -9,14 +9,9 @@ import datetime
 from datetime import timedelta
 
 app = Flask(__name__)
-app.config["SESSION_PERMANENT"] = True
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(hours=1)
 app.config['SESSION_FILE_THRESHOLD'] = 5
-app.config['SECRET_KEY'] = "F1"
-SESSION_TYPE = "filesystem"
-app.config.from_object(__name__)
-sess = Session()
-sess.init_app(app)
+app.config["SECRET_KEY"] = "OCML3BRawWEUeaxcuKHLpw"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///example.db'
 app.config['SQLALCHEMY_BINDS'] = {
     "year": "sqlite:///year.db",
@@ -120,12 +115,13 @@ def getdriver():
 def selectyear():
     if request.method == 'POST':
         selected_year = request.get_json(force=True)
-        session['selected_year'] = selected_year
-        # app.logger.info(type(session_selection))
-        unformatted_names = requests.get(
-            "http://ergast.com/api/f1/{}/circuits".format(selected_year)).text.split('<CircuitName>')[1:]
-        circuit_list = [x.split('</CircuitName>')[0]
-                        for x in unformatted_names]
+
+        session['YEAR'] = str(selected_year)
+        print("######################"+str(session))
+        # app.logger.info(type(selected_year))
+
+        f1_season = fastf1.get_event_schedule(int(selected_year))
+        circuit_list = list(f1_season['EventName'])
         db.create_all(bind='race')
         db.drop_all(bind='race')
         db.create_all(bind='race')
@@ -139,10 +135,8 @@ def selectyear():
 def selectrace():
     if request.method == 'POST':
         selected_race = request.get_json(force=True)
-        # if not 'selected_year' in session:
-        # session['selected_year'] = 2021
-        selected_year = session.get('selected_year', None)
-        # app.logger.info()
+        # selected_year = session.get("YEAR")
+        selected_year = 2021
         f1_session = fastf1.get_event(selected_year, selected_race)
         f1_session_list = [f1_session['Session1'], f1_session['Session2'],
                            f1_session['Session3'], f1_session['Session4'], f1_session['Session5']]
