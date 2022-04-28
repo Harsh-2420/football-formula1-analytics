@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react"
+import "../App.css"
 import { DropdownItem } from "../Components/DropdownItem"
 import Select from "react-select"
 import "bootstrap/dist/css/bootstrap.min.css"
@@ -248,10 +249,21 @@ export const DropdownPage = () => {
                     </select>
                 </div>
             </div>
-            <div style={{ marginLeft: "10vw" }}>
+            <div>
                 {/* <ResponsiveContainer width="100%" height="100%"> */}
 
-                <LineChart width={600} height={600} data={currentChartData}>
+                <LineChart
+                    width={1000}
+                    height={400}
+                    className="LapTimeNumber"
+                    margin={{
+                        top: 5,
+                        right: 30,
+                        left: 30,
+                        bottom: 5,
+                    }}
+                    data={currentChartData}
+                >
                     <Line type="monotone" dataKey="14" stroke="#8884d8" />
                     <Line type="monotone" dataKey="44" stroke="#82ca9d" />
                     <Line type="monotone" dataKey="6" stroke="#1a5d57" />
@@ -260,7 +272,7 @@ export const DropdownPage = () => {
                         domain={["auto", "auto"]}
                         name="Time"
                         tickFormatter={(unixTime) =>
-                            moment(unixTime).format("mm:ss:SSS")
+                            moment(unixTime).utc().format("mm:ss.SSS")
                         }
                         type="number"
                     />
