@@ -4,6 +4,7 @@ from flask_cors import CORS
 from random import randrange
 from flask_sqlalchemy import SQLAlchemy
 import fastf1
+import fastf1.plotting
 import pandas as pd
 import requests
 import datetime
@@ -224,8 +225,11 @@ def speed_distance():
     driv_tel = {}
     for driver in selected_drivers:
         driv_lap = fastf1_session.laps.pick_driver(driver).pick_fastest()
+        color = fastf1.plotting.team_color(driv_lap['Team'])
         driv_tel[driver] = driv_lap.get_car_data().add_distance(
-        )[['Speed', 'Distance']].rename(columns={"Speed": driver}).to_dict('records')
+        )[['Speed', 'Distance']].rename(columns={"Speed": driver})
+        driv_tel[driver]['Color'] = color
+        driv_tel[driver] = driv_tel[driver].to_dict('records')
     return jsonify(driv_tel)
 
 

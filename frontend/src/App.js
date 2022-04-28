@@ -63,8 +63,8 @@ function App() {
                     <CssBaseline />
                     <DemoNavbar />
                     <DropdownPage />
-                    <LapTime />
-                    <SpeedDistance />
+                    {/* <LapTime />
+                    <SpeedDistance /> */}
                 </ThemeProvider>
             </React.Fragment>
         </div>

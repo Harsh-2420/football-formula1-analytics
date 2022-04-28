@@ -7,6 +7,8 @@ import FormHelperText from "@mui/material/FormHelperText"
 import FormControl from "@mui/material/FormControl"
 import Select from "@mui/material/Select"
 import Box from "@mui/material/Box"
+import ListItemText from "@material-ui/core/ListItemText"
+// import { MenuProps, useStyles } from "../styles"
 
 export const DropdownPage = () => {
     const [years, setYears] = useState([])
@@ -19,7 +21,9 @@ export const DropdownPage = () => {
     const [selectedEvent, setSelectedEvent] = useState()
 
     const [drivers, setDrivers] = useState([])
-    const [selectedDriver, setSelectedDriver] = useState()
+    const [selectedDriver, setSelectedDriver] = useState([])
+
+    // const classes = useStyles()
 
     useEffect(() => {
         fetch("http://127.0.0.1:5000/api/getyear", {
@@ -155,6 +159,17 @@ export const DropdownPage = () => {
         console.log(values)
         setSelectedDriver(values)
     }
+    // Use with MUI??:
+    // const handleDropdownSelectDriver = (e) => {
+    //     const value = e.target.value
+    //     if (value[value.length - 1] === "all") {
+    //         setSelectedDriver(
+    //             selectedDriver.length === drivers.length ? [] : drivers
+    //         )
+    //         return
+    //     }
+    //     setSelectedDriver(value)
+    // }
     const getLatestRace = () => {
         fetch("http://127.0.0.1:5000/api/getrace")
             .then((response) => {
@@ -201,7 +216,6 @@ export const DropdownPage = () => {
                             </MenuItem>
                         ))}
                     </Select>
-                    {/* <FormHelperText>Year</FormHelperText> */}
                 </FormControl>
                 <FormControl sx={{ m: 1, minWidth: 120 }}>
                     <InputLabel id="demo-simple-select-label">
@@ -220,7 +234,6 @@ export const DropdownPage = () => {
                             </MenuItem>
                         ))}
                     </Select>
-                    {/* <FormHelperText>Circuit</FormHelperText> */}
                 </FormControl>
                 <FormControl sx={{ m: 1, minWidth: 120 }}>
                     <InputLabel id="demo-simple-select-label">
@@ -239,29 +252,32 @@ export const DropdownPage = () => {
                             </MenuItem>
                         ))}
                     </Select>
-                    {/* <FormHelperText>Session</FormHelperText> */}
                 </FormControl>
-                {/* <FormControl sx={{ m: 1, minWidth: 120 }}>
-                <InputLabel
-                // id="demo-simple-select-label"
+                {/* <FormControl
+                    sx={{ m: 1, minWidth: 120 }}
+                    // className={classes.formControl}
                 >
-                    Driver
-                </InputLabel>
-                <Select
-                    multiple={true}
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    label="Age"
-                    onChange={handleDropdownSelectDriver}
-                >
-                    {drivers.map((driver) => (
-                        <MenuItem value={driver.content} key={driver.id}>
-                            {driver.content}
-                        </MenuItem>
-                    ))}
-                </Select>
-                <FormHelperText>Driver</FormHelperText>
-            </FormControl> */}
+                    <InputLabel id="mutiple-select-label">Driver</InputLabel>
+                    <Select
+                        multiple
+                        value={selectedDriver}
+                        labelId="mutiple-select-label"
+                        id="demo-simple-select"
+                        label="Age"
+                        onChange={handleDropdownSelectDriver}
+                        renderValue={(selectedDriver) =>
+                            selectedDriver.join(", ")
+                        }
+                        // MenuProps={MenuProps}
+                    >
+                        {drivers.map((driver) => (
+                            <MenuItem value={driver.content} key={driver.id}>
+                                {driver.content}
+                                <ListItemText primary={driver} />
+                            </MenuItem>
+                        ))}
+                    </Select>
+                </FormControl> */}
                 <div>
                     <select onChange={handleDropdownSelectDriver} multiple>
                         <option value="">Select Drivers</option>
