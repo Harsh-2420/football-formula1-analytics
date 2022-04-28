@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react"
+import { DropdownItem } from "../Components/DropdownItem"
 import Select from "react-select"
 import "bootstrap/dist/css/bootstrap.min.css"
 import {
@@ -11,6 +12,7 @@ import {
     Tooltip,
     Legend,
 } from "recharts"
+import moment from "moment"
 
 export const DropdownPage = () => {
     const [years, setYears] = useState([])
@@ -197,6 +199,11 @@ export const DropdownPage = () => {
             })
             .then((response) => setDrivers(response))
     }
+
+    // const dateFormatter = date => {
+    //     // return moment(date).unix();
+    //     return moment(date).format('DD/MM/YY HH:mm');
+    //   };
     return (
         <div>
             <div className="row">
@@ -222,6 +229,7 @@ export const DropdownPage = () => {
                             <option key={race.id}>{race.content}</option>
                         ))}
                     </select>
+                    {/* <DropdownItem setEvents={setEvents} /> */}
                 </div>
                 <div>
                     <select onChange={handleDropdownSelectEvent}>
@@ -240,15 +248,22 @@ export const DropdownPage = () => {
                     </select>
                 </div>
             </div>
-            <div>
+            <div style={{ marginLeft: "10vw" }}>
                 {/* <ResponsiveContainer width="100%" height="100%"> */}
 
-                <LineChart width={400} height={400} data={currentChartData}>
+                <LineChart width={600} height={600} data={currentChartData}>
                     <Line type="monotone" dataKey="14" stroke="#8884d8" />
                     <Line type="monotone" dataKey="44" stroke="#82ca9d" />
                     <Line type="monotone" dataKey="6" stroke="#1a5d57" />
                     <XAxis dataKey="LapNumber" />
-                    <YAxis />
+                    <YAxis
+                        domain={["auto", "auto"]}
+                        name="Time"
+                        tickFormatter={(unixTime) =>
+                            moment(unixTime).format("mm:ss:SSS")
+                        }
+                        type="number"
+                    />
                     <Legend />
                 </LineChart>
                 {/* </ResponsiveContainer> */}

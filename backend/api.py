@@ -181,19 +181,30 @@ def getChartData():
     data = [
         {
             "LapNumber": '0',
-            "44": "0 days 00:01:38.781000",
-            "6":  "0 days 00:01:56.122000",
+            "44": "0 days 00:01:27.440000",
+            "6": "0 days 00:01:27.313000",
         },
         {
             "name": '1',
-            "44": "0 days 00:01:38.280000",
-            "6":  "0 days 00:01:40.308000",
-        },
-        {
-            "name": '2',
-            "44":  "0 days 00:01:38.518000",
-            "6":  "0 days 00:01:38.006000",
-        }, ]
+            "44": "0 days 00:01:27.504000",
+            "6":  "0 days 00:01:28.126000",
+        }]
+    data_nano = [{
+        "LapNumber": '0',
+        "44": 87440000000,
+        "6": 87313000000},
+        {"LapNumber": '1',
+         "44": 88982000000,
+         "6":  87504000000
+         }]
+    data_milli = [{
+        "LapNumber": '0',
+        "44": 87440,
+        "6": 87313},
+        {"LapNumber": '1',
+         "44": 88982,
+         "6":  87504
+         }]
     # selected_year = 2021
     # selected_race = "Bahrain Grand Prix"
     # selected_event = "Race"
@@ -214,7 +225,7 @@ def getChartData():
     # lap_time_number_cov = lap_time_number_piv[selected_data].fillna(
     #     timedelta(0)).to_dict('records')
     # return json.dumps(lap_time_number_cov, indent=4, sort_keys=True, default=str)
-    return jsonify(data)
+    return jsonify(data_milli)
 
 
 if __name__ == '__main__':
