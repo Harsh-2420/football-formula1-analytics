@@ -4,6 +4,7 @@ from flask_cors import CORS
 from random import randrange
 from flask_sqlalchemy import SQLAlchemy
 import fastf1
+import pandas as pd
 import requests
 import datetime
 from datetime import timedelta
@@ -178,54 +179,35 @@ def selectdriver():
 
 @app.route('/api/lap_number_time')
 def getChartData():
-    data = [
-        {
-            "LapNumber": '0',
-            "44": "0 days 00:01:27.440000",
-            "6": "0 days 00:01:27.313000",
-        },
-        {
-            "name": '1',
-            "44": "0 days 00:01:27.504000",
-            "6":  "0 days 00:01:28.126000",
-        }]
-    data_nano = [{
-        "LapNumber": '0',
-        "44": 87440000000,
-        "6": 87313000000},
-        {"LapNumber": '1',
-         "44": 88982000000,
-         "6":  87504000000
-         }]
-    data_milli = [{
-        "LapNumber": '0',
-        "44": 87440,
-        "6": 87313},
-        {"LapNumber": '1',
-         "44": 88982,
-         "6":  87504
-         }]
-    # selected_year = 2021
-    # selected_race = "Bahrain Grand Prix"
-    # selected_event = "Race"
-    # round_number = 1
-    # selected_drivers = ['HAM', 'ALO', 'LAT']
+    # Get Data from Sessions
+    selected_year = 2021
+    selected_race = "Bahrain Grand Prix"
+    selected_event = "Race"
+    round_number = 1
+    selected_drivers = ['HAM', 'ALO', 'LAT']
+    selected_drivers.append("LapNumber")
 
-    # selected_data = [driver_key_val_pair[x]
-    #                  for x in selected_drivers]
-    # selected_data.append("LapNumber")
+    # Call the API with data
+    fastf1_session = fastf1.get_session(
+        selected_year, selected_race, selected_event)
+    fastf1_session.load(telemetry=True, laps=True, weather=False)
 
-    # fastf1_session = fastf1.get_session(
-    #     selected_year, selected_race, selected_event)
-    # fastf1_session.load(telemetry=True, laps=True, weather=False)
+    keys, values = list((fastf1_session.laps[['DriverNumber']]['DriverNumber']).unique(
+    )), list((fastf1_session.laps[['Driver']]['Driver']).unique())
+    driver_key_val_pair = dict(zip(keys, values))
 
-    # lap_time_number = fastf1_session.laps.iloc[:, 1:4].copy()
-    # lap_time_number_piv = lap_time_number.pivot(
-    #     index="LapNumber", columns='DriverNumber', values='LapTime').rename_axis(None, axis=1).reset_index()
-    # lap_time_number_cov = lap_time_number_piv[selected_data].fillna(
-    #     timedelta(0)).to_dict('records')
-    # return json.dumps(lap_time_number_cov, indent=4, sort_keys=True, default=str)
-    return jsonify(data_milli)
+    lap_time_number = fastf1_session.laps.iloc[:, 1:4].copy()
+    lap_time_number_piv = lap_time_number.pivot(
+        index="LapNumber", columns='DriverNumber', values='LapTime').rename_axis(None, axis=1).reset_index().fillna(timedelta(0))
+    for col in lap_time_number_piv.columns[1:]:
+        lap_time_number_piv[col] = pd.to_numeric(lap_time_number_piv[col])
+        lap_time_number_piv[col] = lap_time_number_piv[col]/1000000
+    # lap_time_number_piv[lap_time_number_piv < 0] = float("nan")
+    lap_time_number_piv = lap_time_number_piv.rename(
+        columns=driver_key_val_pair)
+    lap_time_number_cov = lap_time_number_piv[selected_drivers].to_dict(
+        'records')
+    return jsonify(lap_time_number_cov)
 
 
 if __name__ == '__main__':
