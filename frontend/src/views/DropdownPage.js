@@ -1,23 +1,12 @@
 import React, { useEffect, useState } from "react"
 import "../App.css"
-import { DropdownItem } from "../Components/DropdownItem"
 import "bootstrap/dist/css/bootstrap.min.css"
-import {
-    LineChart,
-    Line,
-    XAxis,
-    YAxis,
-    CartesianGrid,
-    ResponsiveContainer,
-    Tooltip,
-    Legend,
-} from "recharts"
-import moment from "moment"
 import InputLabel from "@mui/material/InputLabel"
 import MenuItem from "@mui/material/MenuItem"
 import FormHelperText from "@mui/material/FormHelperText"
 import FormControl from "@mui/material/FormControl"
 import Select from "@mui/material/Select"
+import Box from "@mui/material/Box"
 
 export const DropdownPage = () => {
     const [years, setYears] = useState([])
@@ -31,9 +20,6 @@ export const DropdownPage = () => {
 
     const [drivers, setDrivers] = useState([])
     const [selectedDriver, setSelectedDriver] = useState()
-
-    const [currentChartData, setCurrentChartData] = useState([])
-    const [opacity, setOpacity] = useState({ HAM: 1, ALO: 1, LAT: 1 })
 
     useEffect(() => {
         fetch("http://127.0.0.1:5000/api/getyear", {
@@ -155,15 +141,6 @@ export const DropdownPage = () => {
         }
     }, [selectedDriver])
 
-    useEffect(() => {
-        fetch("http://127.0.0.1:5000/api/lap_number_time")
-            .then((res) => res.json())
-            .then((data) => {
-                console.log("first chart data is", data)
-                setCurrentChartData(data)
-            })
-    }, [])
-
     const handleDropdownSelectYear = (e) => {
         setSelectedYear(e.target.value)
     }
@@ -205,70 +182,66 @@ export const DropdownPage = () => {
             })
             .then((response) => setDrivers(response))
     }
-    const handleMouseEnter = (o) => {
-        const { dataKey } = o
-        setOpacity({ ...opacity, [dataKey]: 0.5 })
-    }
-
-    const handleMouseLeave = (o) => {
-        const { dataKey } = o
-        setOpacity({ ...opacity, [dataKey]: 1 })
-    }
 
     return (
         <div>
-            <FormControl sx={{ m: 1, minWidth: 120 }}>
-                <InputLabel id="demo-simple-select-label">Year</InputLabel>
-                <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={selectedYear || ""}
-                    label="Year"
-                    onChange={handleDropdownSelectYear}
-                >
-                    {years.map((year) => (
-                        <MenuItem value={year.content} key={year.id}>
-                            {year.content}
-                        </MenuItem>
-                    ))}
-                </Select>
-                <FormHelperText>Year</FormHelperText>
-            </FormControl>
-            <FormControl sx={{ m: 1, minWidth: 120 }}>
-                <InputLabel id="demo-simple-select-label">Circuit</InputLabel>
-                <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={selectedRace || ""}
-                    label="Circuit"
-                    onChange={handleDropdownSelectRace}
-                >
-                    {races.map((race) => (
-                        <MenuItem value={race.content} key={race.id}>
-                            {race.content}
-                        </MenuItem>
-                    ))}
-                </Select>
-                <FormHelperText>Circuit</FormHelperText>
-            </FormControl>
-            <FormControl sx={{ m: 1, minWidth: 120 }}>
-                <InputLabel id="demo-simple-select-label">Session</InputLabel>
-                <Select
-                    labelId="demo-simple-select-label"
-                    id="demo-simple-select"
-                    value={selectedEvent || ""}
-                    label="Session"
-                    onChange={handleDropdownSelectEvent}
-                >
-                    {events.map((event) => (
-                        <MenuItem value={event.content} key={event.id}>
-                            {event.content}
-                        </MenuItem>
-                    ))}
-                </Select>
-                <FormHelperText>Session</FormHelperText>
-            </FormControl>
-            {/* <FormControl sx={{ m: 1, minWidth: 120 }}>
+            <Box sx={{ marginTop: 5 }}>
+                <FormControl sx={{ m: 1, minWidth: 120 }}>
+                    <InputLabel id="demo-simple-select-label">Year</InputLabel>
+                    <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={selectedYear || ""}
+                        label="Year"
+                        onChange={handleDropdownSelectYear}
+                    >
+                        {years.map((year) => (
+                            <MenuItem value={year.content} key={year.id}>
+                                {year.content}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                    {/* <FormHelperText>Year</FormHelperText> */}
+                </FormControl>
+                <FormControl sx={{ m: 1, minWidth: 120 }}>
+                    <InputLabel id="demo-simple-select-label">
+                        Circuit
+                    </InputLabel>
+                    <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={selectedRace || ""}
+                        label="Circuit"
+                        onChange={handleDropdownSelectRace}
+                    >
+                        {races.map((race) => (
+                            <MenuItem value={race.content} key={race.id}>
+                                {race.content}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                    {/* <FormHelperText>Circuit</FormHelperText> */}
+                </FormControl>
+                <FormControl sx={{ m: 1, minWidth: 120 }}>
+                    <InputLabel id="demo-simple-select-label">
+                        Session
+                    </InputLabel>
+                    <Select
+                        labelId="demo-simple-select-label"
+                        id="demo-simple-select"
+                        value={selectedEvent || ""}
+                        label="Session"
+                        onChange={handleDropdownSelectEvent}
+                    >
+                        {events.map((event) => (
+                            <MenuItem value={event.content} key={event.id}>
+                                {event.content}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                    {/* <FormHelperText>Session</FormHelperText> */}
+                </FormControl>
+                {/* <FormControl sx={{ m: 1, minWidth: 120 }}>
                 <InputLabel
                 // id="demo-simple-select-label"
                 >
@@ -289,68 +262,15 @@ export const DropdownPage = () => {
                 </Select>
                 <FormHelperText>Driver</FormHelperText>
             </FormControl> */}
-            <div>
-                <select onChange={handleDropdownSelectDriver} multiple>
-                    <option value="">Select Drivers</option>
-                    {drivers.map((event) => (
-                        <option key={event.id}>{event.content}</option>
-                    ))}
-                </select>
-            </div>
-            {/* </div> */}
-            <div className="responsive">
-                <div className="responsive-container">
-                    <ResponsiveContainer width="100%" height="100%">
-                        <LineChart
-                            width={1000}
-                            height={400}
-                            className="LapTimeNumber"
-                            margin={{
-                                top: 5,
-                                right: 30,
-                                left: 30,
-                                bottom: 5,
-                            }}
-                            data={currentChartData}
-                            // replace 0 in currentChartData with NaN
-                        >
-                            <Line
-                                type="monotone"
-                                dataKey="HAM"
-                                stroke="#8884d8"
-                                activeDot={{ r: 8 }}
-                                strokeOpacity={opacity.HAM}
-                            />
-                            <Line
-                                type="monotone"
-                                dataKey="ALO"
-                                stroke="#82ca9d"
-                                strokeOpacity={opacity.ALO}
-                            />
-                            <Line
-                                type="monotone"
-                                dataKey="LAT"
-                                stroke="#1a5d57"
-                                strokeOpacity={opacity.LAT}
-                            />
-                            <XAxis dataKey="LapNumber" />
-                            <YAxis
-                                domain={["auto", "auto"]}
-                                name="Time"
-                                tickFormatter={(unixTime) =>
-                                    moment(unixTime).utc().format("mm:ss.SSS")
-                                }
-                                type="number"
-                            />
-                            <Tooltip />
-                            <Legend
-                                onMouseEnter={handleMouseEnter}
-                                onMouseLeave={handleMouseLeave}
-                            />
-                        </LineChart>
-                    </ResponsiveContainer>
+                <div>
+                    <select onChange={handleDropdownSelectDriver} multiple>
+                        <option value="">Select Drivers</option>
+                        {drivers.map((event) => (
+                            <option key={event.id}>{event.content}</option>
+                        ))}
+                    </select>
                 </div>
-            </div>
+            </Box>
         </div>
     )
 }

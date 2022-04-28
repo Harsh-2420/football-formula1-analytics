@@ -1,14 +1,15 @@
-import "./App.css"
 import * as React from "react"
-import { DropdownPage } from "./views/DropdownPage"
+import "./App.css"
 import "bootstrap/dist/css/bootstrap.min.css"
-import Header from "./views/Header"
-import DemoNavbar from "./views/Navbar.js"
 import { createTheme } from "@mui/material/styles"
 import { ThemeProvider } from "@mui/material/styles"
 import Box from "@mui/material/Box"
 import CssBaseline from "@mui/material/CssBaseline"
 import styles from "./styles.js"
+
+import { DropdownPage } from "./views/DropdownPage"
+import { LapTime } from "./views/LapTime"
+import DemoNavbar from "./views/Navbar.js"
 
 import "@fontsource/roboto/300.css"
 import "@fontsource/roboto/400.css"
@@ -19,11 +20,10 @@ const theme = createTheme({
     palette: {
         type: "dark",
         primary: {
-            main: "#25292f",
-            contrast: "#ffff",
+            main: "#8a9c9b",
         },
         secondary: {
-            main: "#ce4219",
+            main: "#ffa726",
             light: "#ff4a13",
         },
         background: {
@@ -60,11 +60,9 @@ function App() {
             <React.Fragment>
                 <ThemeProvider theme={theme}>
                     <CssBaseline />
-                    {/* <Box color="primary.main"> */}
                     <DemoNavbar />
-                    {/* <Header /> */}
                     <DropdownPage />
-                    {/* </Box> */}
+                    <LapTime />
                 </ThemeProvider>
             </React.Fragment>
         </div>
