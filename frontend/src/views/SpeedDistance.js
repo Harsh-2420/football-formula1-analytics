@@ -14,15 +14,15 @@ import {
 } from "recharts"
 import moment from "moment"
 
-export const LapTime = () => {
+export const SpeedDistance = () => {
     const [currentChartData, setCurrentChartData] = useState([])
     const [opacity, setOpacity] = useState({ HAM: 1, ALO: 1, LAT: 1 })
 
     useEffect(() => {
-        fetch("http://127.0.0.1:5000/api/lap_number_time")
+        fetch("http://127.0.0.1:5000/api/speed_distance")
             .then((res) => res.json())
             .then((data) => {
-                console.log("first chart data is", data)
+                console.log("speed distance data: ", data)
                 setCurrentChartData(data)
             })
     }, [])
@@ -42,14 +42,12 @@ export const LapTime = () => {
                     <LineChart
                         width={1000}
                         height={400}
-                        className="LapTimeNumber"
                         margin={{
                             top: 5,
                             right: 30,
                             left: 30,
                             bottom: 5,
                         }}
-                        data={currentChartData}
                     >
                         <Line
                             type="monotone"
@@ -57,43 +55,31 @@ export const LapTime = () => {
                             stroke="#8884d8"
                             activeDot={{ r: 8 }}
                             strokeOpacity={opacity.HAM}
+                            data={currentChartData.HAM}
                         />
                         <Line
                             type="monotone"
                             dataKey="ALO"
                             stroke="#82ca9d"
                             strokeOpacity={opacity.ALO}
+                            data={currentChartData.ALO}
                         />
                         <Line
                             type="monotone"
                             dataKey="LAT"
                             stroke="#1a5d57"
                             strokeOpacity={opacity.LAT}
+                            data={currentChartData.LAT}
                         />
                         <XAxis
-                            dataKey="LapNumber"
-                            // label={{
-                            //     value: "Lap Number",
-                            //     position: "Bottom",
-                            //     // offset: 5,
-                            // }}
+                            type="number"
+                            dataKey="Distance"
+                            domain={["auto", "auto"]}
                         />
-                        {/* <Label value="Pages of my website" offset={0} position="insideBottom" />
-                        <Label value="Pages of my website" offset={0} position="insideBottom" /> */}
                         <YAxis
                             domain={["auto", "auto"]}
-                            name="Time"
-                            tickFormatter={(unixTime) =>
-                                moment(unixTime).utc().format("mm:ss.SSS")
-                            }
+                            name="Speed"
                             type="number"
-                            // label={{
-                            //     value: "Lap Times",
-                            //     angle: -90,
-                            //     position: "Left",
-                            //     // color: "white",
-                            //     // offset: 100,
-                            // }}
                         />
                         <Tooltip />
                         <Legend

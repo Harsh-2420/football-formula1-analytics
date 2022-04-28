@@ -9,6 +9,7 @@ import styles from "./styles.js"
 
 import { DropdownPage } from "./views/DropdownPage"
 import { LapTime } from "./views/LapTime"
+import { SpeedDistance } from "./views/SpeedDistance"
 import DemoNavbar from "./views/Navbar.js"
 
 import "@fontsource/roboto/300.css"
@@ -63,6 +64,7 @@ function App() {
                     <DemoNavbar />
                     <DropdownPage />
                     <LapTime />
+                    <SpeedDistance />
                 </ThemeProvider>
             </React.Fragment>
         </div>

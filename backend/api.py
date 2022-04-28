@@ -190,7 +190,7 @@ def getChartData():
     # Call the API with data
     fastf1_session = fastf1.get_session(
         selected_year, selected_race, selected_event)
-    fastf1_session.load(telemetry=True, laps=True, weather=False)
+    fastf1_session.load(telemetry=False, laps=True, weather=False)
 
     keys, values = list((fastf1_session.laps[['DriverNumber']]['DriverNumber']).unique(
     )), list((fastf1_session.laps[['Driver']]['Driver']).unique())
@@ -208,6 +208,25 @@ def getChartData():
     lap_time_number_cov = lap_time_number_piv[selected_drivers].to_dict(
         'records')
     return jsonify(lap_time_number_cov)
+
+
+@app.route('/api/speed_distance')
+def speed_distance():
+    selected_year = 2021
+    selected_race = "Bahrain Grand Prix"
+    selected_event = "Race"
+    round_number = 1
+    selected_drivers = ['HAM', 'ALO', 'LAT']
+    fastf1_session = fastf1.get_session(
+        selected_year, selected_race, selected_event)
+    fastf1_session.load(telemetry=True, laps=True, weather=False)
+
+    driv_tel = {}
+    for driver in selected_drivers:
+        driv_lap = fastf1_session.laps.pick_driver(driver).pick_fastest()
+        driv_tel[driver] = driv_lap.get_car_data().add_distance(
+        )[['Speed', 'Distance']].rename(columns={"Speed": driver}).to_dict('records')
+    return jsonify(driv_tel)
 
 
 if __name__ == '__main__':
