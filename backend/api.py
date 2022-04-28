@@ -178,25 +178,43 @@ def selectdriver():
 
 @app.route('/api/lap_number_time')
 def getChartData():
-    selected_year = 2021
-    selected_race = "Bahrain Grand Prix"
-    selected_event = "Race"
-    round_number = 1
-    selected_drivers = ['HAM', 'ALO', 'LAT']
+    data = [
+        {
+            "LapNumber": '0',
+            "44": "0 days 00:01:38.781000",
+            "6":  "0 days 00:01:56.122000",
+        },
+        {
+            "name": '1',
+            "44": "0 days 00:01:38.280000",
+            "6":  "0 days 00:01:40.308000",
+        },
+        {
+            "name": '2',
+            "44":  "0 days 00:01:38.518000",
+            "6":  "0 days 00:01:38.006000",
+        }, ]
+    # selected_year = 2021
+    # selected_race = "Bahrain Grand Prix"
+    # selected_event = "Race"
+    # round_number = 1
+    # selected_drivers = ['HAM', 'ALO', 'LAT']
 
-    selected_data = [driver_key_val_pair[x]
-                     for x in selected_drivers]
-    selected_data.append("LapNumber")
+    # selected_data = [driver_key_val_pair[x]
+    #                  for x in selected_drivers]
+    # selected_data.append("LapNumber")
 
-    fastf1_session = fastf1.get_session(
-        selected_year, selected_race, selected_event)
-    fastf1_session.load(telemetry=True, laps=True, weather=True)
+    # fastf1_session = fastf1.get_session(
+    #     selected_year, selected_race, selected_event)
+    # fastf1_session.load(telemetry=True, laps=True, weather=False)
 
-    lap_time_number = fastf1_session.laps.iloc[:, 1:4].copy()
-    lap_time_number_piv = lap_time_number.pivot(
-        index="LapNumber", columns='DriverNumber', values='LapTime').rename_axis(None, axis=1).reset_index()
-    lap_time_number_cov = lap_time_number_piv[selected_data].to_dict('records')
-    return jsonify(lap_time_number_cov)
+    # lap_time_number = fastf1_session.laps.iloc[:, 1:4].copy()
+    # lap_time_number_piv = lap_time_number.pivot(
+    #     index="LapNumber", columns='DriverNumber', values='LapTime').rename_axis(None, axis=1).reset_index()
+    # lap_time_number_cov = lap_time_number_piv[selected_data].fillna(
+    #     timedelta(0)).to_dict('records')
+    # return json.dumps(lap_time_number_cov, indent=4, sort_keys=True, default=str)
+    return jsonify(data)
 
 
 if __name__ == '__main__':

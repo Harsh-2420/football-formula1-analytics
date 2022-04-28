@@ -7,6 +7,7 @@ import {
     XAxis,
     YAxis,
     CartesianGrid,
+    ResponsiveContainer,
     Tooltip,
     Legend,
 } from "recharts"
@@ -240,9 +241,17 @@ export const DropdownPage = () => {
                 </div>
             </div>
             <div>
+                {/* <ResponsiveContainer width="100%" height="100%"> */}
+
                 <LineChart width={400} height={400} data={currentChartData}>
-                    <Line type="monotone" dataKey="uv" stroke="#8884d8" />
+                    <Line type="monotone" dataKey="14" stroke="#8884d8" />
+                    <Line type="monotone" dataKey="44" stroke="#82ca9d" />
+                    <Line type="monotone" dataKey="6" stroke="#1a5d57" />
+                    <XAxis dataKey="LapNumber" />
+                    <YAxis />
+                    <Legend />
                 </LineChart>
+                {/* </ResponsiveContainer> */}
             </div>
         </div>
     )
