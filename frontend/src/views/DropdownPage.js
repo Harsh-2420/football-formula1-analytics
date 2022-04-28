@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react"
 import "../App.css"
 import { DropdownItem } from "../Components/DropdownItem"
-import Select from "react-select"
 import "bootstrap/dist/css/bootstrap.min.css"
 import {
     LineChart,
@@ -14,6 +13,11 @@ import {
     Legend,
 } from "recharts"
 import moment from "moment"
+import InputLabel from "@mui/material/InputLabel"
+import MenuItem from "@mui/material/MenuItem"
+import FormHelperText from "@mui/material/FormHelperText"
+import FormControl from "@mui/material/FormControl"
+import Select from "@mui/material/Select"
 
 export const DropdownPage = () => {
     const [years, setYears] = useState([])
@@ -171,7 +175,7 @@ export const DropdownPage = () => {
     }
     const handleDropdownSelectDriver = (e) => {
         const values = [...e.target.selectedOptions].map((opt) => opt.value)
-        // console.log(values)
+        console.log(values)
         setSelectedDriver(values)
     }
     const getLatestRace = () => {
@@ -211,54 +215,89 @@ export const DropdownPage = () => {
         setOpacity({ ...opacity, [dataKey]: 1 })
     }
 
-    // const dateFormatter = date => {
-    //     // return moment(date).unix();
-    //     return moment(date).format('DD/MM/YY HH:mm');
-    //   };
     return (
         <div>
-            <div className="row">
-                <div>
-                    {/* <Select
-                        options={years}
-                        getOptionLabel={(option) => option.content}
-                        // getOptionValue={(option) => option.content}
-                        // onChange={(option) => handleDropdownSelectYear(option)}
-                        onChange={handleDropdownSelectYear}
-                    /> */}
-                    <select onChange={handleDropdownSelectYear}>
-                        <option value="">Select Year</option>
-                        {years.map((year) => (
-                            <option key={year.id}>{year.content}</option>
-                        ))}
-                    </select>
-                </div>
-                <div>
-                    <select onChange={handleDropdownSelectRace}>
-                        <option value="">Select Race</option>
-                        {races.map((race) => (
-                            <option key={race.id}>{race.content}</option>
-                        ))}
-                    </select>
-                    {/* <DropdownItem setEvents={setEvents} /> */}
-                </div>
-                <div>
-                    <select onChange={handleDropdownSelectEvent}>
-                        <option value="">Select Event</option>
-                        {events.map((event) => (
-                            <option key={event.id}>{event.content}</option>
-                        ))}
-                    </select>
-                </div>
-                <div>
-                    <select onChange={handleDropdownSelectDriver} multiple>
-                        <option value="">Select Drivers</option>
-                        {drivers.map((event) => (
-                            <option key={event.id}>{event.content}</option>
-                        ))}
-                    </select>
-                </div>
+            <FormControl sx={{ m: 1, minWidth: 120 }}>
+                <InputLabel id="demo-simple-select-label">Year</InputLabel>
+                <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={selectedYear || ""}
+                    label="Year"
+                    onChange={handleDropdownSelectYear}
+                >
+                    {years.map((year) => (
+                        <MenuItem value={year.content} key={year.id}>
+                            {year.content}
+                        </MenuItem>
+                    ))}
+                </Select>
+                <FormHelperText>Year</FormHelperText>
+            </FormControl>
+            <FormControl sx={{ m: 1, minWidth: 120 }}>
+                <InputLabel id="demo-simple-select-label">Circuit</InputLabel>
+                <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={selectedRace || ""}
+                    label="Circuit"
+                    onChange={handleDropdownSelectRace}
+                >
+                    {races.map((race) => (
+                        <MenuItem value={race.content} key={race.id}>
+                            {race.content}
+                        </MenuItem>
+                    ))}
+                </Select>
+                <FormHelperText>Circuit</FormHelperText>
+            </FormControl>
+            <FormControl sx={{ m: 1, minWidth: 120 }}>
+                <InputLabel id="demo-simple-select-label">Session</InputLabel>
+                <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={selectedEvent || ""}
+                    label="Session"
+                    onChange={handleDropdownSelectEvent}
+                >
+                    {events.map((event) => (
+                        <MenuItem value={event.content} key={event.id}>
+                            {event.content}
+                        </MenuItem>
+                    ))}
+                </Select>
+                <FormHelperText>Session</FormHelperText>
+            </FormControl>
+            {/* <FormControl sx={{ m: 1, minWidth: 120 }}>
+                <InputLabel
+                // id="demo-simple-select-label"
+                >
+                    Driver
+                </InputLabel>
+                <Select
+                    multiple={true}
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    label="Age"
+                    onChange={handleDropdownSelectDriver}
+                >
+                    {drivers.map((driver) => (
+                        <MenuItem value={driver.content} key={driver.id}>
+                            {driver.content}
+                        </MenuItem>
+                    ))}
+                </Select>
+                <FormHelperText>Driver</FormHelperText>
+            </FormControl> */}
+            <div>
+                <select onChange={handleDropdownSelectDriver} multiple>
+                    <option value="">Select Drivers</option>
+                    {drivers.map((event) => (
+                        <option key={event.id}>{event.content}</option>
+                    ))}
+                </select>
             </div>
+            {/* </div> */}
             <div className="responsive">
                 <div className="responsive-container">
                     <ResponsiveContainer width="100%" height="100%">
