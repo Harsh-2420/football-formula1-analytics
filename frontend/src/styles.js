@@ -1,15 +1,12 @@
 import { makeStyles } from "@material-ui/styles"
 
-// const styles = makeStyles((theme) => ({
-//     inputLabel: {
-//         color: "#fff",
-//         "&.focused": {
-//             color: "#fff",
-//         },
-//     },
-// }))
-
 const useStyles = makeStyles((theme) => ({
+    inputLabel: {
+        color: "#fff",
+        "&.focused": {
+            color: "#fff",
+        },
+    },
     formControl: {
         margin: theme.spacing(1),
         width: 300,

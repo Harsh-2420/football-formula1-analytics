@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react"
 import "../App.css"
 import "bootstrap/dist/css/bootstrap.min.css"
+import { useTheme, createTheme, ThemeProvider } from "@mui/material/styles"
 import InputLabel from "@mui/material/InputLabel"
 import MenuItem from "@mui/material/MenuItem"
 import FormHelperText from "@mui/material/FormHelperText"
@@ -8,7 +9,36 @@ import FormControl from "@mui/material/FormControl"
 import Select from "@mui/material/Select"
 import Box from "@mui/material/Box"
 import ListItemText from "@material-ui/core/ListItemText"
-// import { MenuProps, useStyles } from "../styles"
+import OutlinedInput from "@mui/material/OutlinedInput"
+import Chip from "@mui/material/Chip"
+import { orange } from "@mui/material/colors"
+
+const ITEM_HEIGHT = 48
+const ITEM_PADDING_TOP = 8
+const MenuProps = {
+    PaperProps: {
+        style: {
+            maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+            width: 250,
+        },
+    },
+}
+const outerTheme = createTheme({
+    palette: {
+        secondary: {
+            main: orange[500],
+        },
+    },
+})
+
+function getStyles(name, personName, theme) {
+    return {
+        fontWeight:
+            personName.indexOf(name) === -1
+                ? theme.typography.fontWeightRegular
+                : theme.typography.fontWeightMedium,
+    }
+}
 
 export const DropdownPage = () => {
     const [years, setYears] = useState([])
@@ -23,7 +53,7 @@ export const DropdownPage = () => {
     const [drivers, setDrivers] = useState([])
     const [selectedDriver, setSelectedDriver] = useState([])
 
-    // const classes = useStyles()
+    const theme = useTheme()
 
     useEffect(() => {
         fetch("http://127.0.0.1:5000/api/getyear", {
@@ -159,17 +189,16 @@ export const DropdownPage = () => {
         console.log(values)
         setSelectedDriver(values)
     }
-    // Use with MUI??:
-    // const handleDropdownSelectDriver = (e) => {
-    //     const value = e.target.value
-    //     if (value[value.length - 1] === "all") {
-    //         setSelectedDriver(
-    //             selectedDriver.length === drivers.length ? [] : drivers
-    //         )
-    //         return
-    //     }
-    //     setSelectedDriver(value)
-    // }
+
+    const handleChange = (event) => {
+        const {
+            target: { value },
+        } = event
+        setSelectedDriver(
+            // On autofill we get a stringified value.
+            typeof value === "string" ? value.split(",") : value
+        )
+    }
     const getLatestRace = () => {
         fetch("http://127.0.0.1:5000/api/getrace")
             .then((response) => {
@@ -200,10 +229,35 @@ export const DropdownPage = () => {
 
     return (
         <div>
-            <Box sx={{ marginTop: 5 }}>
+            <Box
+                sx={{
+                    paddingBottom: 5,
+                    // marginBottom: 7,
+                    // borderColor: "green",
+                    // borderStyle: "solid",
+                }}
+            >
                 <FormControl sx={{ m: 1, minWidth: 120 }}>
-                    <InputLabel id="demo-simple-select-label">Year</InputLabel>
+                    <InputLabel
+                        // className={classes.inputLabel}
+                        id="demo-simple-select-label"
+                    >
+                        Year
+                    </InputLabel>
+                    {/* <ThemeProvider theme={outerTheme}> */}
                     <Select
+                        // color="secondary"
+                        // sx={{
+                        //     color: "red",
+                        //     borderRadius: 10,
+                        //     borderColor: "white",
+                        //     border: "0.1px",
+                        //     borderStyle: "hidden",
+                        // }}
+                        // variant="contained"
+                        classes={{
+                            outlinedSecondary: { color: "secondary" },
+                        }}
                         labelId="demo-simple-select-label"
                         id="demo-simple-select"
                         value={selectedYear || ""}
@@ -216,6 +270,7 @@ export const DropdownPage = () => {
                             </MenuItem>
                         ))}
                     </Select>
+                    {/* </ThemeProvider> */}
                 </FormControl>
                 <FormControl sx={{ m: 1, minWidth: 120 }}>
                     <InputLabel id="demo-simple-select-label">
@@ -235,7 +290,7 @@ export const DropdownPage = () => {
                         ))}
                     </Select>
                 </FormControl>
-                <FormControl sx={{ m: 1, minWidth: 120 }}>
+                <FormControl sx={{ m: 1, minWidth: 320 }}>
                     <InputLabel id="demo-simple-select-label">
                         Session
                     </InputLabel>
@@ -253,25 +308,49 @@ export const DropdownPage = () => {
                         ))}
                     </Select>
                 </FormControl>
-                {/* <FormControl
-                    sx={{ m: 1, minWidth: 120 }}
-                    // className={classes.formControl}
-                >
-                    <InputLabel id="mutiple-select-label">Driver</InputLabel>
+                {/* <FormControl sx={{ m: 1, minWidth: 220 }}>
+                    <InputLabel id="demo-multiple-chip-label">
+                        Driver
+                    </InputLabel>
                     <Select
                         multiple
                         value={selectedDriver}
-                        labelId="mutiple-select-label"
-                        id="demo-simple-select"
+                        labelId="demo-multiple-chip-label"
+                        id="demo-multiple-chip"
                         label="Age"
-                        onChange={handleDropdownSelectDriver}
-                        renderValue={(selectedDriver) =>
-                            selectedDriver.join(", ")
+                        // onChange={handleDropdownSelectDriver}
+                        onChange={handleChange}
+                        input={
+                            <OutlinedInput
+                                id="select-multiple-chip"
+                                label="Chip"
+                            />
                         }
-                        // MenuProps={MenuProps}
+                        renderValue={(selected) => (
+                            <Box
+                                sx={{
+                                    display: "flex",
+                                    flexWrap: "wrap",
+                                    gap: 0.5,
+                                }}
+                            >
+                                {selected.map((value) => (
+                                    <Chip key={value} label={value} />
+                                ))}
+                            </Box>
+                        )}
+                        MenuProps={MenuProps}
                     >
                         {drivers.map((driver) => (
-                            <MenuItem value={driver.content} key={driver.id}>
+                            <MenuItem
+                                value={driver.content}
+                                key={driver.id}
+                                style={getStyles(
+                                    driver.content,
+                                    selectedDriver,
+                                    theme
+                                )}
+                            >
                                 {driver.content}
                                 <ListItemText primary={driver} />
                             </MenuItem>

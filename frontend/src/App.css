@@ -4,6 +4,7 @@
 } */
 .App {
     text-align: center;
+    background-image: "url('https://media.geeksforgeeks.org/wp-content/uploads/rk.png')";
 }
 
 .App-logo {
@@ -42,11 +43,19 @@
 }
 
 .responsive {
-    width: 1200px;
-    height: 500px;
+    width: 100vw;
+    height: 70vh;
 }
 
 .responsive-container {
     width: 100%;
+    align-self: center;
     height: 100%;
+    flex: auto;
+}
+
+.select-button {
+    border-radius: 20;
+    border-color: "#1a5d57";
+    border: "0.1px solid";
 }

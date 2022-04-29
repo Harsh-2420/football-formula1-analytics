@@ -217,12 +217,15 @@ def selectevent():
 
         # selected_year = session.get("YEAR")
         # selected_race = session.get("RACE")
-        round_number = 1
-        # get event_records from session
-        # get round number after getting session:
-        # round_number = event_records[event_records['EventName'] == selected_race]['RoundNumber']
+        # round_number = 1
+
+        f1_season = fastf1.get_event_schedule(int(selected_year))
+        event_records = f1_season[['RoundNumber', 'EventName']]
+        round_number = pd.DataFrame(event_records)[event_records['EventName']
+                                                   == selected_race]['RoundNumber']
+
         driver_list = [x[:3] for x in requests.get(
-            "http://ergast.com/api/f1/{}/{}/drivers".format(selected_year, round_number)).text.split('code="')[1:]]
+            "http://ergast.com/api/f1/{}/{}/drivers".format(selected_year, round_number.iloc[0])).text.split('code="')[1:]]
         db.create_all(bind='driver')
         db.drop_all(bind='driver')
         db.create_all(bind='driver')
@@ -237,6 +240,7 @@ def selectdriver():
     if request.method == 'POST':
         # list of multi select drivers (real-time changes)
         selected_drivers = request.get_json(force=True)
+
         db.create_all(bind='selections')
         if len(Selections.query.all()) < 4:
             db.session.add(Selections(id=4, content=selected_drivers))
@@ -244,6 +248,7 @@ def selectdriver():
             for i in range(4, len(Selections.query.all())+1):
                 Selections.query.filter_by(id=i).delete()
             db.session.add(Selections(id=4, content=selected_drivers))
+
         # session send selected_drivers
         return {"201": selected_drivers}
 
@@ -251,11 +256,17 @@ def selectdriver():
 @app.route('/api/lap_number_time')
 def getChartData():
     # Get Data from Sessions
-    selected_year = 2021
-    selected_race = "Bahrain Grand Prix"
-    selected_event = "Race"
-    round_number = 1
-    selected_drivers = ['HAM', 'ALO', 'LAT']
+    # selected_year = 2021
+    # selected_race = "Bahrain Grand Prix"
+    # selected_event = "Race"
+    # selected_drivers = ['HAM', 'ALO', 'LAT']
+
+    # How to Wait until options are selected?
+    selected_year = Selections.query.filter_by(id=1).first().content
+    selected_race = Selections.query.filter_by(id=2).first().content
+    selected_event = Selections.query.filter_by(id=3).first().content
+    selected_drivers = Selections.query.filter_by(id=4).first().content
+
     selected_drivers.append("LapNumber")
 
     # Call the API with data

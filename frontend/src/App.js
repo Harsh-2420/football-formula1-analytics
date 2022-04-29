@@ -1,16 +1,17 @@
 import * as React from "react"
+import { Component } from "react"
 import "./App.css"
 import "bootstrap/dist/css/bootstrap.min.css"
-import { createTheme } from "@mui/material/styles"
-import { ThemeProvider } from "@mui/material/styles"
+import { createTheme, ThemeProvider } from "@mui/material/styles"
 import Box from "@mui/material/Box"
 import CssBaseline from "@mui/material/CssBaseline"
 import styles from "./styles.js"
 
+import { Header } from "./views/Header"
 import { DropdownPage } from "./views/DropdownPage"
 import { LapTime } from "./views/LapTime"
 import { SpeedDistance } from "./views/SpeedDistance"
-import DemoNavbar from "./views/Navbar.js"
+import NavBar from "./views/Navbar.js"
 
 import "@fontsource/roboto/300.css"
 import "@fontsource/roboto/400.css"
@@ -55,20 +56,30 @@ const theme = createTheme({
     },
 })
 
-function App() {
-    return (
-        <div className="App">
-            <React.Fragment>
-                <ThemeProvider theme={theme}>
-                    <CssBaseline />
-                    <DemoNavbar />
-                    <DropdownPage />
-                    {/* <LapTime />
-                    <SpeedDistance /> */}
-                </ThemeProvider>
-            </React.Fragment>
-        </div>
-    )
+class App extends Component {
+    render() {
+        const myStyle = {
+            backgroundSize: "cover",
+            backgroundRepeat: "no-repeat",
+            root: {
+                borderRadius: "30px",
+            },
+        }
+        return (
+            <div className="App">
+                <React.Fragment>
+                    <ThemeProvider theme={theme}>
+                        <CssBaseline />
+                        <Header />
+                        <NavBar />
+                        <DropdownPage />
+                        <LapTime />
+                        {/* <SpeedDistance /> */}
+                    </ThemeProvider>
+                </React.Fragment>
+            </div>
+        )
+    }
 }
 
 export default App
