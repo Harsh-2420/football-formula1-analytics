@@ -1,5 +1,5 @@
 from flask import Flask, jsonify, request, json, session
-# from flask_session import Session
+from flask_session import Session
 from flask_cors import CORS
 from random import randrange
 from flask_sqlalchemy import SQLAlchemy
@@ -12,15 +12,24 @@ from datetime import timedelta
 from set_values import driver_key_val_pair
 
 app = Flask(__name__)
+
+# Flask Session config
 app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(hours=1)
+app.config['SESSION_TYPE'] = 'filesystem'
+# app.config['SESSION_FILE_DIR'] = './flask_session/'
 app.config['SESSION_FILE_THRESHOLD'] = 5
 app.config["SECRET_KEY"] = "OCML3BRawWEUeaxcuKHLpw"
+app.config['SESSION_COOKIE_NAME'] = "F1 Cookie"
+Session(app)
+
+# SQL Alchemy config
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///example.db'
 app.config['SQLALCHEMY_BINDS'] = {
     "year": "sqlite:///year.db",
     "race": "sqlite:///race.db",
     "event": "sqlite:///event.db",
     "driver": "sqlite:///driver.db",
+    "selections": "sqlite:///selections.db",
 }
 db = SQLAlchemy(app)
 CORS(app)
@@ -30,6 +39,15 @@ fastf1.Cache.enable_cache('../f1_cache')
 
 class Year(db.Model):
     __bind_key__ = 'year'
+    id = db.Column(db.Integer, primary_key=True)
+    content = db.Column(db.String(80), unique=True)
+
+    def __str__(self):
+        return f'{self.id} {self.content}'
+
+
+class Selections(db.Model):
+    __bind_key__ = 'selections'
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.String(80), unique=True)
 
@@ -73,6 +91,7 @@ class Todo(db.Model):
 
 
 db.create_all()
+db.drop_all(bind='selections')
 db.session.commit()
 
 
@@ -95,11 +114,15 @@ def getyear():
 
 @app.route('/api/getrace', methods=['GET'])
 def getrace():
+    # if not Selections.query.all():
+    #     return jsonify([])
     return jsonify([*map(serializer, Race.query.all())])
 
 
 @app.route('/api/getevent', methods=['GET'])
 def getevent():
+    # if len(Selections.query.all()) <= 2:
+    #     return jsonify([])
     return jsonify([*map(serializer, Event.query.all())])
 
 
@@ -114,8 +137,20 @@ def selectyear():
         selected_year = request.get_json(force=True)
 
         session['YEAR'] = str(selected_year)
-        print("######################"+str(session))
-        # app.logger.info(type(selected_year))
+        # print("######################"+str(session))
+        # selected_year_session = session.get("YEAR")
+        # app.logger.info(type(selected_year_session))
+
+        # Setting up Selections db
+        db.create_all(bind='selections')
+        if not Selections.query.all():
+            db.session.add(Selections(id=1, content=selected_year))
+            db.session.commit()
+        else:
+            db.drop_all(bind='selections')
+            db.create_all(bind='selections')
+            db.session.add(Selections(id=1, content=selected_year))
+            db.session.commit()
 
         f1_season = fastf1.get_event_schedule(int(selected_year))
         event_records = f1_season[['RoundNumber', 'EventName']]
@@ -134,9 +169,22 @@ def selectyear():
 def selectrace():
     if request.method == 'POST':
         selected_race = request.get_json(force=True)
+        session['RACE'] = str(selected_race)
         # selected_year = session.get("YEAR")
-        selected_year = 2021
-        f1_session = fastf1.get_event(selected_year, selected_race)
+        # app.logger.info(selected_year)
+        # selected_year = 2021
+
+        # Setting up Selections db
+        db.create_all(bind='selections')
+        if len(Selections.query.all()) < 2:
+            db.session.add(Selections(id=2, content=selected_race))
+        else:
+            for i in range(2, len(Selections.query.all())+1):
+                Selections.query.filter_by(id=i).delete()
+            db.session.add(Selections(id=2, content=selected_race))
+
+        selected_year = Selections.query.filter_by(id=1).first().content
+        f1_session = fastf1.get_event(int(selected_year), selected_race)
         f1_session_list = [f1_session['Session1'], f1_session['Session2'],
                            f1_session['Session3'], f1_session['Session4'], f1_session['Session5']]
         db.create_all(bind='event')
@@ -152,8 +200,23 @@ def selectrace():
 def selectevent():
     if request.method == 'POST':
         selected_event = request.get_json(force=True)
-        selected_year = 2021
-        selected_race = "Bahrain Grand Prix"
+        # selected_year = 2021
+        # selected_race = "Bahrain Grand Prix"
+
+        # Setting up Selections db
+        db.create_all(bind='selections')
+        if len(Selections.query.all()) < 3:
+            db.session.add(Selections(id=3, content=selected_event))
+        else:
+            for i in range(3, len(Selections.query.all())+1):
+                Selections.query.filter_by(id=i).delete()
+            db.session.add(Selections(id=3, content=selected_event))
+
+        selected_year = Selections.query.filter_by(id=1).first().content
+        selected_race = Selections.query.filter_by(id=2).first().content
+
+        # selected_year = session.get("YEAR")
+        # selected_race = session.get("RACE")
         round_number = 1
         # get event_records from session
         # get round number after getting session:
@@ -174,6 +237,13 @@ def selectdriver():
     if request.method == 'POST':
         # list of multi select drivers (real-time changes)
         selected_drivers = request.get_json(force=True)
+        db.create_all(bind='selections')
+        if len(Selections.query.all()) < 4:
+            db.session.add(Selections(id=4, content=selected_drivers))
+        else:
+            for i in range(4, len(Selections.query.all())+1):
+                Selections.query.filter_by(id=i).delete()
+            db.session.add(Selections(id=4, content=selected_drivers))
         # session send selected_drivers
         return {"201": selected_drivers}
 
@@ -222,15 +292,24 @@ def speed_distance():
         selected_year, selected_race, selected_event)
     fastf1_session.load(telemetry=True, laps=True, weather=False)
 
-    driv_tel = {}
+    # driv_tel = {}
+    # for driver in selected_drivers:
+    #     driv_lap = fastf1_session.laps.pick_driver(driver).pick_fastest()
+    #     color = fastf1.plotting.team_color(driv_lap['Team'])
+    #     driv_tel[driver] = driv_lap.get_car_data().add_distance(
+    #     )[['Speed', 'Distance']].rename(columns={"Speed": driver})
+    #     driv_tel[driver]['Color'] = color
+    #     driv_tel[driver] = driv_tel[driver].to_dict('records')
+    final_dict = {}
     for driver in selected_drivers:
+        driv_tel = {}
         driv_lap = fastf1_session.laps.pick_driver(driver).pick_fastest()
         color = fastf1.plotting.team_color(driv_lap['Team'])
-        driv_tel[driver] = driv_lap.get_car_data().add_distance(
-        )[['Speed', 'Distance']].rename(columns={"Speed": driver})
-        driv_tel[driver]['Color'] = color
-        driv_tel[driver] = driv_tel[driver].to_dict('records')
-    return jsonify(driv_tel)
+        driv_tel['Data'] = driv_lap.get_car_data().add_distance(
+        )[['Speed', 'Distance']].rename(columns={"Speed": driver}).to_dict('records')
+        driv_tel['Color'] = color
+        final_dict[driver] = driv_tel
+    return jsonify(final_dict)
 
 
 if __name__ == '__main__':
