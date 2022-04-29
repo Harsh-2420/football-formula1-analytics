@@ -74,7 +74,7 @@ class App extends Component {
                         <NavBar />
                         <DropdownPage />
                         <LapTime />
-                        <SpeedDistance />
+                        {/* <SpeedDistance /> */}
                     </ThemeProvider>
                 </React.Fragment>
             </div>

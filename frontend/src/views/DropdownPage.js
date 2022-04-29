@@ -7,7 +7,6 @@ import MenuItem from "@mui/material/MenuItem"
 import FormControl from "@mui/material/FormControl"
 import Select from "@mui/material/Select"
 import Box from "@mui/material/Box"
-import ListItemText from "@material-ui/core/ListItemText"
 import OutlinedInput from "@mui/material/OutlinedInput"
 import Chip from "@mui/material/Chip"
 import { orange } from "@mui/material/colors"
@@ -186,16 +185,12 @@ export const DropdownPage = () => {
     const handleDropdownSelectEvent = (e) => {
         setSelectedEvent(e.target.value)
     }
-    const handleDropdownSelectDriver = (e) => {
-        const values = [...e.target.selectedOptions].map((opt) => opt.value)
-        console.log(values)
-        setSelectedDriver(values)
-    }
 
     const handleChange = (event) => {
         const {
             target: { value },
         } = event
+        console.log(event)
         setSelectedDriver(
             // On autofill we get a stringified value.
             typeof value === "string" ? value.split(",") : value
@@ -255,7 +250,7 @@ export const DropdownPage = () => {
                     input="Session"
                 />
 
-                {/* <FormControl sx={{ m: 1, minWidth: 220 }}>
+                <FormControl sx={{ m: 1, minWidth: 220 }}>
                     <InputLabel id="demo-multiple-chip-label">
                         Driver
                     </InputLabel>
@@ -265,7 +260,6 @@ export const DropdownPage = () => {
                         labelId="demo-multiple-chip-label"
                         id="demo-multiple-chip"
                         label="Age"
-                        // onChange={handleDropdownSelectDriver}
                         onChange={handleChange}
                         input={
                             <OutlinedInput
@@ -299,19 +293,10 @@ export const DropdownPage = () => {
                                 )}
                             >
                                 {driver.content}
-                                <ListItemText primary={driver} />
                             </MenuItem>
                         ))}
                     </Select>
-                </FormControl> */}
-                <div>
-                    <select onChange={handleDropdownSelectDriver} multiple>
-                        <option value="">Select Drivers</option>
-                        {drivers.map((event) => (
-                            <option key={event.id}>{event.content}</option>
-                        ))}
-                    </select>
-                </div>
+                </FormControl>
             </Box>
         </div>
     )

@@ -16,15 +16,56 @@ import {
 } from "recharts"
 import moment from "moment"
 
+const CustomTooltip = ({ active, payload, label }) => {
+    if (active && payload) {
+        console.log(payload[0])
+        return (
+            <div
+                className="custom-tooltip"
+                style={{
+                    color: "white",
+                    fontFamily: "Montserrat",
+                    fontWeight: "bold",
+                    border: "1px solid",
+                    borderRadius: "7px",
+                    padding: "15px",
+                }}
+            >
+                <p className="label">{`Lap ${label}`}</p>
+                {/* <p className="label">{`${label} : ${payload[0].payload.uv}`}</p> */}
+                {/* Pass the following below: (unixTime) => moment(unixTime).utc().format("mm:ss.SSS") */}
+                <p className="label">
+                    <span
+                        style={{ color: "#8884d8" }} // Dynamically get color from driver
+                    >
+                        {`${payload[0].name}`}
+                    </span>
+                    {`Lap Time : ${payload[0].value}`}
+                </p>
+                <p className="label">
+                    <span
+                        style={{ color: "#8884d8" }} // Dynamically get color from driver
+                    >{`${payload[0].name} `}</span>
+                    {`Tyre : ${payload[0].payload.Compound}`}
+                </p>
+                {/* <p className="intro">{getIntroOfPage(label)}</p> */}
+            </div>
+        )
+    }
+
+    return null
+}
+
 export const LapTime = () => {
     const [currentChartData, setCurrentChartData] = useState([])
-    const [opacity, setOpacity] = useState({ HAM: 1, ALO: 1, LAT: 1 })
+    const [opacity, setOpacity] = useState({ HAM: 1, RIC: 1 })
 
     useEffect(() => {
         fetch("http://127.0.0.1:5000/api/lap_number_time")
             .then((res) => res.json())
             .then((data) => {
                 console.log("first chart data is", data)
+
                 setCurrentChartData(data)
             })
     }, [])
@@ -38,82 +79,43 @@ export const LapTime = () => {
         setOpacity({ ...opacity, [dataKey]: 1 })
     }
     return (
-        <Box
-            sx={
-                {
-                    // alignSelf: "center",
-                    // borderColor: "green",
-                    // borderStyle: "solid",
-                }
-            }
-        >
+        <Box>
             <h3 style={{ color: "#8a9c9b", alignSelf: "left" }}>Lap Chart</h3>
             <div className="responsive">
                 <div className="responsive-container">
-                    <ResponsiveContainer width="100%" height="100%">
-                        <LineChart
-                            width={1000}
-                            height={400}
-                            className="LapTimeNumber"
-                            margin={{
-                                top: 5,
-                                right: 30,
-                                left: 30,
-                                bottom: 5,
-                            }}
-                            data={currentChartData}
-                        >
-                            <Line
-                                type="monotone"
-                                dataKey="HAM"
-                                stroke="#8884d8"
-                                activeDot={{ r: 8 }}
-                                strokeOpacity={opacity.HAM}
-                            />
-                            <Line
-                                type="monotone"
-                                dataKey="ALO"
-                                stroke="#82ca9d"
-                                strokeOpacity={opacity.ALO}
-                            />
-                            <Line
-                                type="monotone"
-                                dataKey="LAT"
-                                stroke="#1a5d57"
-                                strokeOpacity={opacity.LAT}
-                            />
-                            <XAxis
-                                dataKey="LapNumber"
-                                // label={{
-                                //     value: "Lap Number",
-                                //     position: "Bottom",
-                                //     // offset: 5,
-                                // }}
-                            />
-                            {/* <Label value="Pages of my website" offset={0} position="insideBottom" />
-                        <Label value="Pages of my website" offset={0} position="insideBottom" /> */}
-                            <YAxis
-                                domain={["auto", "auto"]}
-                                name="Time"
-                                tickFormatter={(unixTime) =>
-                                    moment(unixTime).utc().format("mm:ss.SSS")
-                                }
-                                type="number"
-                                // label={{
-                                //     value: "Lap Times",
-                                //     angle: -90,
-                                //     position: "Left",
-                                //     // color: "white",
-                                //     // offset: 100,
-                                // }}
-                            />
-                            <Tooltip />
-                            <Legend
-                                onMouseEnter={handleMouseEnter}
-                                onMouseLeave={handleMouseLeave}
-                            />
-                        </LineChart>
-                    </ResponsiveContainer>
+                    <LineChart
+                        width={1000}
+                        height={400}
+                        margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                    >
+                        <XAxis
+                            type="number"
+                            dataKey="LapNumber"
+                            domain={["auto", "auto"]}
+                        />
+                        <YAxis domain={("auto", "auto")} />
+                        {/* <Tooltip content={CustomTooltip} /> */}
+                        <Tooltip />
+                        <Legend
+                            onMouseEnter={handleMouseEnter}
+                            onMouseLeave={handleMouseLeave}
+                        />
+                        <Line
+                            type="monotone" //Recharts
+                            data={currentChartData.HAM} // [{}, {}]
+                            dataKey="HAM"
+                            stroke="#8884d8"
+                            strokeOpacity={opacity.HAM}
+                            active_dot={{ r: 8 }}
+                        />
+                        <Line
+                            type="monotone"
+                            data={currentChartData.RIC}
+                            dataKey="RIC"
+                            stroke="#E0610E"
+                            strokeOpacity={opacity.RIC}
+                        />
+                    </LineChart>
                 </div>
             </div>
         </Box>

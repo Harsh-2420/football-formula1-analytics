@@ -259,7 +259,8 @@ def getChartData():
     selected_year = 2021
     selected_race = "Bahrain Grand Prix"
     selected_event = "Race"
-    selected_drivers = ['HAM', 'ALO', 'LAT']
+    # selected_drivers = ['HAM']
+    selected_drivers = ['NOR', 'RIC']
 
     # How to Wait until options are selected?
     # selected_year = Selections.query.filter_by(id=1).first().content
@@ -267,29 +268,61 @@ def getChartData():
     # selected_event = Selections.query.filter_by(id=3).first().content
     # selected_drivers = Selections.query.filter_by(id=4).first().content
 
-    selected_drivers.append("LapNumber")
-
     # Call the API with data
     fastf1_session = fastf1.get_session(
         selected_year, selected_race, selected_event)
     fastf1_session.load(telemetry=False, laps=True, weather=False)
 
-    keys, values = list((fastf1_session.laps[['DriverNumber']]['DriverNumber']).unique(
-    )), list((fastf1_session.laps[['Driver']]['Driver']).unique())
-    driver_key_val_pair = dict(zip(keys, values))
+    # keys, values = list((fastf1_session.laps[['DriverNumber']]['DriverNumber']).unique(
+    # )), list((fastf1_session.laps[['Driver']]['Driver']).unique())
+    # driver_key_val_pair = dict(zip(keys, values))
 
-    lap_time_number = fastf1_session.laps.iloc[:, 1:4].copy()
-    lap_time_number_piv = lap_time_number.pivot(
-        index="LapNumber", columns='DriverNumber', values='LapTime').rename_axis(None, axis=1).reset_index().fillna(timedelta(0))
-    for col in lap_time_number_piv.columns[1:]:
-        lap_time_number_piv[col] = pd.to_numeric(lap_time_number_piv[col])
-        lap_time_number_piv[col] = lap_time_number_piv[col]/1000000
-    # lap_time_number_piv[lap_time_number_piv < 0] = float("nan")
-    lap_time_number_piv = lap_time_number_piv.rename(
-        columns=driver_key_val_pair)
-    lap_time_number_cov = lap_time_number_piv[selected_drivers].to_dict(
-        'records')
-    return jsonify(lap_time_number_cov)
+    # lap_time_number = fastf1_session.laps.iloc[:, 1:4].copy()
+    # lap_time_number_piv = lap_time_number.pivot(
+    #     index="LapNumber", columns='DriverNumber', values='LapTime').rename_axis(None, axis=1).reset_index().fillna(timedelta(0))
+    # for col in lap_time_number_piv.columns[1:]:
+    #     lap_time_number_piv[col] = pd.to_numeric(lap_time_number_piv[col])
+    #     lap_time_number_piv[col] = lap_time_number_piv[col]/1000000
+    # # lap_time_number_piv[lap_time_number_piv < 0] = float("nan")
+    # lap_time_number_piv = lap_time_number_piv.rename(
+    #     columns=driver_key_val_pair)
+    # lap_time_number_cov = lap_time_number_piv[selected_drivers].to_dict(
+    #     'records')
+    # return jsonify(lap_time_number_cov)
+    selected_drivers = ['HAM', 'RIC']
+    lap_time_number = fastf1_session.laps[[
+        'Driver', 'LapTime', 'Compound', 'TyreLife', 'LapNumber']].copy()
+    lap_time_number = lap_time_number[lap_time_number['Driver'].isin(
+        selected_drivers)]
+    lap_time_number['LapTime'] = lap_time_number['LapTime'].fillna(
+        timedelta(0))
+    lap_time_number['TyreLife'] = lap_time_number['TyreLife'].fillna(-1)
+    lap_time_number['LapTime'] = pd.to_numeric(
+        lap_time_number['LapTime'])/1000000
+
+    # TimeDelta
+    lap_time_number_cov = lap_time_number.to_dict('records')
+    final_dict = {}
+    for data in lap_time_number_cov:
+        primary_key = data['Driver']
+        data[primary_key] = data.pop('LapTime')
+
+        # color
+        driv_lap = fastf1_session.laps.pick_driver(primary_key).pick_fastest()
+        color = fastf1.plotting.team_color(driv_lap['Team'])
+        data['color'] = color
+
+        if primary_key not in final_dict:
+            final_dict[primary_key] = [data]
+        else:
+            final_dict[primary_key].append(data)
+    #     if primary_key not in final_dict:
+    #         final_dict[primary_key] = {}
+    #         final_dict[primary_key]['Data'] = [data]
+    #         final_dict[primary_key]['Color'] = color
+    #     else:
+    #         final_dict[primary_key]['Data'].append(data)
+    return jsonify(final_dict)
 
 
 @app.route('/api/speed_distance')
