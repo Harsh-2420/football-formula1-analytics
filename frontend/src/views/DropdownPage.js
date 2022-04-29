@@ -4,7 +4,6 @@ import "bootstrap/dist/css/bootstrap.min.css"
 import { useTheme, createTheme, ThemeProvider } from "@mui/material/styles"
 import InputLabel from "@mui/material/InputLabel"
 import MenuItem from "@mui/material/MenuItem"
-import FormHelperText from "@mui/material/FormHelperText"
 import FormControl from "@mui/material/FormControl"
 import Select from "@mui/material/Select"
 import Box from "@mui/material/Box"
@@ -12,6 +11,7 @@ import ListItemText from "@material-ui/core/ListItemText"
 import OutlinedInput from "@mui/material/OutlinedInput"
 import Chip from "@mui/material/Chip"
 import { orange } from "@mui/material/colors"
+import { SelectionForm } from "../Components/SelectionForm"
 
 const ITEM_HEIGHT = 48
 const ITEM_PADDING_TOP = 8
@@ -159,6 +159,7 @@ export const DropdownPage = () => {
         }
     }, [selectedEvent])
 
+    // const SelectionComplete = ({selectedDriver}) => {
     useEffect(() => {
         if (selectedDriver) {
             fetch("http://127.0.0.1:5000/api/selectdriver", {
@@ -174,6 +175,7 @@ export const DropdownPage = () => {
                 .catch(console.error)
         }
     }, [selectedDriver])
+    // return selectedDriver}
 
     const handleDropdownSelectYear = (e) => {
         setSelectedYear(e.target.value)
@@ -232,82 +234,27 @@ export const DropdownPage = () => {
             <Box
                 sx={{
                     paddingBottom: 5,
-                    // marginBottom: 7,
-                    // borderColor: "green",
-                    // borderStyle: "solid",
                 }}
             >
-                <FormControl sx={{ m: 1, minWidth: 120 }}>
-                    <InputLabel
-                        // className={classes.inputLabel}
-                        id="demo-simple-select-label"
-                    >
-                        Year
-                    </InputLabel>
-                    {/* <ThemeProvider theme={outerTheme}> */}
-                    <Select
-                        // color="secondary"
-                        // sx={{
-                        //     color: "red",
-                        //     borderRadius: 10,
-                        //     borderColor: "white",
-                        //     border: "0.1px",
-                        //     borderStyle: "hidden",
-                        // }}
-                        // variant="contained"
-                        classes={{
-                            outlinedSecondary: { color: "secondary" },
-                        }}
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={selectedYear || ""}
-                        label="Year"
-                        onChange={handleDropdownSelectYear}
-                    >
-                        {years.map((year) => (
-                            <MenuItem value={year.content} key={year.id}>
-                                {year.content}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                    {/* </ThemeProvider> */}
-                </FormControl>
-                <FormControl sx={{ m: 1, minWidth: 120 }}>
-                    <InputLabel id="demo-simple-select-label">
-                        Circuit
-                    </InputLabel>
-                    <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={selectedRace || ""}
-                        label="Circuit"
-                        onChange={handleDropdownSelectRace}
-                    >
-                        {races.map((race) => (
-                            <MenuItem value={race.content} key={race.id}>
-                                {race.content}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
-                <FormControl sx={{ m: 1, minWidth: 320 }}>
-                    <InputLabel id="demo-simple-select-label">
-                        Session
-                    </InputLabel>
-                    <Select
-                        labelId="demo-simple-select-label"
-                        id="demo-simple-select"
-                        value={selectedEvent || ""}
-                        label="Session"
-                        onChange={handleDropdownSelectEvent}
-                    >
-                        {events.map((event) => (
-                            <MenuItem value={event.content} key={event.id}>
-                                {event.content}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl>
+                <SelectionForm
+                    selection={selectedYear}
+                    data={years}
+                    handleDropdown={handleDropdownSelectYear}
+                    input="Year"
+                />
+                <SelectionForm
+                    selection={selectedRace}
+                    data={races}
+                    handleDropdown={handleDropdownSelectRace}
+                    input="Circuit"
+                />
+                <SelectionForm
+                    selection={selectedEvent}
+                    data={events}
+                    handleDropdown={handleDropdownSelectEvent}
+                    input="Session"
+                />
+
                 {/* <FormControl sx={{ m: 1, minWidth: 220 }}>
                     <InputLabel id="demo-multiple-chip-label">
                         Driver
@@ -369,3 +316,5 @@ export const DropdownPage = () => {
         </div>
     )
 }
+
+// export default SelectionComplete
