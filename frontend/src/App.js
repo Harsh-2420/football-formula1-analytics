@@ -73,8 +73,8 @@ class App extends Component {
                         <Header />
                         <NavBar />
                         <DropdownPage />
-                        {/* <LapTime /> */}
-                        {/* <SpeedDistance /> */}
+                        <LapTime />
+                        <SpeedDistance />
                     </ThemeProvider>
                 </React.Fragment>
             </div>
