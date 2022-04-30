@@ -268,7 +268,7 @@ def getChartData():
     selected_year = 2021
     selected_race = "British Grand Prix"
     selected_event = "Race"
-    selected_drivers = ['VER', 'RUS', "HAM", 'GAS', 'ALO', 'SAI', 'RAI', 'MSC']
+    selected_drivers = ["HAM", 'MSC']
 
     # How to Wait until options are selected?
     # selected_year = Selections.query.filter_by(id=1).first().content
@@ -312,16 +312,6 @@ def getChartData():
             final_dict[primary_key] = [data]
         else:
             final_dict[primary_key].append(data)
-    #     if primary_key not in final_dict:
-    #         final_dict[primary_key] = {}
-    #         final_dict[primary_key]['Data'] = [data]
-    #         final_dict[primary_key]['Color'] = color
-    #     else:
-    #         final_dict[primary_key]['Data'].append(data)
-
-    # for driv in final_dict:
-    #     thelist = final_dict[driv]
-    #     thelist[:] = [d for d in thelist if d.get(driv) != 0]
     return jsonify(final_dict)
 
 
@@ -331,7 +321,7 @@ def speed_distance():
     selected_race = "Bahrain Grand Prix"
     selected_event = "Race"
     round_number = 1
-    selected_drivers = ['HAM', 'ALO', 'LAT']
+    selected_drivers = ['HAM', 'MSC']
     fastf1_session = fastf1.get_session(
         selected_year, selected_race, selected_event)
     fastf1_session.load(telemetry=True, laps=True, weather=False)
@@ -341,20 +331,11 @@ def speed_distance():
         driv_lap = fastf1_session.laps.pick_driver(driver).pick_fastest()
         color = fastf1.plotting.team_color(driv_lap['Team'])
         driv_tel[driver] = driv_lap.get_car_data().add_distance(
-        )[['Speed', 'Distance']].rename(columns={"Speed": driver})
-        driv_tel[driver]['Color'] = color
+        )[['Speed', 'Distance', 'RPM', 'nGear', 'Throttle', 'Brake', 'DRS']]
+        driv_tel[driver]['Brake'] = driv_tel[driver]['Brake'].astype(int)
+        driv_tel[driver]['color'] = color
         driv_tel[driver] = driv_tel[driver].to_dict('records')
     return jsonify(driv_tel)
-    # final_dict = {}
-    # for driver in selected_drivers:
-    #     driv_tel = {}
-    #     driv_lap = fastf1_session.laps.pick_driver(driver).pick_fastest()
-    #     color = fastf1.plotting.team_color(driv_lap['Team'])
-    #     driv_tel['Data'] = driv_lap.get_car_data().add_distance(
-    #     )[['Speed', 'Distance']].rename(columns={"Speed": driver}).to_dict('records')
-    #     driv_tel['Color'] = color
-    #     final_dict[driver] = driv_tel
-    # return jsonify(final_dict)
 
 
 if __name__ == '__main__':

@@ -71,11 +71,11 @@ class App extends Component {
                     <ThemeProvider theme={theme}>
                         <CssBaseline />
                         <Header />
-                        <NavBar />
+                        {/* <NavBar /> */}
                         <DropdownPage />
                         {/* <Suspense fallback={<DropdownPage />}> */}
                         <LapTime />
-                        {/* <SpeedDistance /> */}
+                        <SpeedDistance />
                         {/* </Suspense> */}
                     </ThemeProvider>
                 </React.Fragment>

@@ -165,49 +165,50 @@ export const LapTime = () => {
             >
                 Lap Chart
             </h3>
-            <div className="responsive">
-                <div className="responsive-container">
-                    <ResponsiveContainer width={"100%"} height={"100%"}>
-                        <LineChart
-                            width={1300}
-                            height={400}
-                            margin={{ top: 5, right: 0, left: 150, bottom: 0 }}
-                        >
-                            <XAxis
-                                type="number"
-                                dataKey="LapNumber"
-                                domain={["auto", "auto"]}
-                            />
-                            <YAxis
-                                domain={("auto", "auto")}
-                                tickFormatter={(unixTime) =>
-                                    moment(unixTime).utc().format("mm:ss.SSS")
-                                }
-                            />
-                            <Tooltip content={CustomTooltip} />
-                            <Legend
-                            // onMouseEnter={handleMouseEnter}
-                            // onMouseLeave={handleMouseLeave}
-                            />
-                            {Object.keys(currentChartData).map((key, index) => {
-                                const data = currentChartData[key]
-                                return (
-                                    <Line
-                                        key={key}
-                                        type="monotone"
-                                        data={data}
-                                        dataKey={key}
-                                        stroke={data[0].color}
-                                        // stroke={currentChartData.HAM.color}
-                                        // strokeOpacity={opacity.HAM}
-                                        // active_dot={{ r: 8 }}
-                                    />
-                                )
-                            })}
-                        </LineChart>
-                    </ResponsiveContainer>
-                </div>
+            {/* <div className="responsive"> */}
+            <div className="responsive-container">
+                <ResponsiveContainer width={"100%"} height={"100%"}>
+                    <LineChart
+                        width={1300}
+                        height={400}
+                        margin={{ top: 5, right: 0, left: 150, bottom: 0 }}
+                    >
+                        <XAxis
+                            type="number"
+                            dataKey="LapNumber"
+                            domain={["auto", "auto"]}
+                        />
+                        <YAxis
+                            domain={("auto", "auto")}
+                            tickFormatter={(unixTime) =>
+                                moment(unixTime).utc().format("mm:ss.SSS")
+                            }
+                        />
+                        <Tooltip content={CustomTooltip} />
+                        <Legend
+                        // onMouseEnter={handleMouseEnter}
+                        // onMouseLeave={handleMouseLeave}
+                        />
+                        {Object.keys(currentChartData).map((key, index) => {
+                            const data = currentChartData[key]
+                            return (
+                                <Line
+                                    key={key}
+                                    dot={false}
+                                    type="monotone"
+                                    data={data}
+                                    dataKey={key}
+                                    stroke={data[0].color}
+                                    // stroke={currentChartData.HAM.color}
+                                    // strokeOpacity={opacity.HAM}
+                                    // active_dot={{ r: 8 }}
+                                />
+                            )
+                        })}
+                    </LineChart>
+                </ResponsiveContainer>
             </div>
+            {/* </div> */}
         </Box>
     )
 }
