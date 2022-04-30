@@ -265,10 +265,10 @@ def get_selections():
 @app.route('/api/lap_number_time')
 def getChartData():
     # Get Data from Sessions
-    selected_year = 2021
-    selected_race = "Bahrain Grand Prix"
+    selected_year = 2020
+    selected_race = "Hungarian Grand Prix"
     selected_event = "Race"
-    selected_drivers = ['NOR', 'RIC']
+    selected_drivers = ['HAM', 'RIC']
 
     # How to Wait until options are selected?
     # selected_year = Selections.query.filter_by(id=1).first().content
@@ -281,29 +281,14 @@ def getChartData():
         selected_year, selected_race, selected_event)
     fastf1_session.load(telemetry=False, laps=True, weather=False)
 
-    # keys, values = list((fastf1_session.laps[['DriverNumber']]['DriverNumber']).unique(
-    # )), list((fastf1_session.laps[['Driver']]['Driver']).unique())
-    # driver_key_val_pair = dict(zip(keys, values))
-
-    # lap_time_number = fastf1_session.laps.iloc[:, 1:4].copy()
-    # lap_time_number_piv = lap_time_number.pivot(
-    #     index="LapNumber", columns='DriverNumber', values='LapTime').rename_axis(None, axis=1).reset_index().fillna(timedelta(0))
-    # for col in lap_time_number_piv.columns[1:]:
-    #     lap_time_number_piv[col] = pd.to_numeric(lap_time_number_piv[col])
-    #     lap_time_number_piv[col] = lap_time_number_piv[col]/1000000
-    # # lap_time_number_piv[lap_time_number_piv < 0] = float("nan")
-    # lap_time_number_piv = lap_time_number_piv.rename(
-    #     columns=driver_key_val_pair)
-    # lap_time_number_cov = lap_time_number_piv[selected_drivers].to_dict(
-    #     'records')
-    # return jsonify(lap_time_number_cov)
-    selected_drivers = ['HAM', 'RIC']
     lap_time_number = fastf1_session.laps[[
         'Driver', 'LapTime', 'Compound', 'TyreLife', 'LapNumber']].copy()
     lap_time_number = lap_time_number[lap_time_number['Driver'].isin(
         selected_drivers)]
     lap_time_number['LapTime'] = lap_time_number['LapTime'].fillna(
         timedelta(0))
+    lap_time_number['Year'] = selected_year
+    lap_time_number['Compound'] = lap_time_number['Compound'].fillna("")
     lap_time_number['TyreLife'] = lap_time_number['TyreLife'].fillna(-1)
     lap_time_number['LapTime'] = pd.to_numeric(
         lap_time_number['LapTime'])/1000000
@@ -330,6 +315,10 @@ def getChartData():
     #         final_dict[primary_key]['Color'] = color
     #     else:
     #         final_dict[primary_key]['Data'].append(data)
+
+    # for driv in final_dict:
+    #     thelist = final_dict[driv]
+    #     thelist[:] = [d for d in thelist if d.get(driv) != 0]
     return jsonify(final_dict)
 
 

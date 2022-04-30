@@ -13,10 +13,10 @@ import { LapTime } from "./views/LapTime"
 import { SpeedDistance } from "./views/SpeedDistance"
 import NavBar from "./views/Navbar.js"
 
-import "@fontsource/roboto/300.css"
-import "@fontsource/roboto/400.css"
-import "@fontsource/roboto/500.css"
-import "@fontsource/roboto/700.css"
+import "@fontsource/montserrat/300.css"
+import "@fontsource/montserrat/400.css"
+import "@fontsource/montserrat/500.css"
+import "@fontsource/montserrat/700.css"
 
 const theme = createTheme({
     palette: {
@@ -66,7 +66,7 @@ class App extends Component {
             },
         }
         return (
-            <div className="App">
+            <div className="App" style={{ fontFamily: "Montserrat" }}>
                 <React.Fragment>
                     <ThemeProvider theme={theme}>
                         <CssBaseline />

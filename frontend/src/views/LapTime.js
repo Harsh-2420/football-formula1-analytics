@@ -16,40 +16,93 @@ import {
 } from "recharts"
 import moment from "moment"
 
-const getIntroOfPage = (label) => {
-    if (label === "SOFT") {
-        return (
-            <span style={{ color: "#FF0000", fontWeight: "bold" }}>SOFT</span>
-        )
-    } else if (label === "MEDIUM") {
-        return (
-            <span style={{ color: "#FFA500", fontWeight: "bold" }}>MEDIUM</span>
-        )
+const getIntroOfPage = (year, label) => {
+    if (year !== 2018) {
+        if (label === "SOFT") {
+            return (
+                <span style={{ color: "#FF0000", fontWeight: "bold" }}>
+                    SOFT
+                </span>
+            )
+        } else if (label === "MEDIUM") {
+            return (
+                <span style={{ color: "#FFA500", fontWeight: "bold" }}>
+                    MEDIUM
+                </span>
+            )
+        } else {
+            return (
+                <span style={{ color: "#ffff", fontWeight: "bold" }}>HARD</span>
+            )
+        }
     } else {
-        return <span style={{ color: "white", fontWeight: "bold" }}>HARD</span>
+        if (label === "SUPERHARD") {
+            return (
+                <span style={{ color: "#FF8633", fontWeight: "bold" }}>
+                    SUPERHARD
+                </span>
+            )
+        } else if (label === "HARD") {
+            return (
+                <span style={{ color: "#336BFF", fontWeight: "bold" }}>
+                    HARD
+                </span>
+            )
+        } else if (label === "MEDIUM") {
+            return (
+                <span style={{ color: "#fffff", fontWeight: "bold" }}>
+                    MEDIUM
+                </span>
+            )
+        } else if (label === "SOFT") {
+            return (
+                <span style={{ color: "#FFF633", fontWeight: "bold" }}>
+                    SOFT
+                </span>
+            )
+        } else if (label === "SUPERSOFT") {
+            return (
+                <span style={{ color: "#FF3333", fontWeight: "bold" }}>
+                    SUPERSOFT
+                </span>
+            )
+        } else if (label === "ULTRASOFT") {
+            return (
+                <span style={{ color: "#9333FF", fontWeight: "bold" }}>
+                    ULTRASOFT
+                </span>
+            )
+        } else {
+            return (
+                <span style={{ color: "#EEACE6", fontWeight: "bold" }}>
+                    HYPERSOFT
+                </span>
+            )
+        }
     }
 }
 
 const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload) {
-        // console.log(payload[0])
+        console.log(payload[0])
         return (
             <div
                 className="custom-tooltip"
                 style={{
                     color: "white",
                     fontFamily: "Montserrat",
-                    fontWeight: "bold",
+                    fontWeight: 300,
                     border: "1px solid",
                     borderRadius: "7px",
                     padding: "15px",
                 }}
             >
-                <p className="label">{`Lap ${label}`}</p>
+                <p
+                    className="label"
+                    style={{ fontWeight: "bold" }}
+                >{`Lap ${label}`}</p>
                 <p className="label">
-                    <span
-                        style={{ color: `${payload[0].color}` }} // Dynamically get color from driver
-                    >
+                    <span style={{ color: `${payload[0].color}` }}>
                         {`${payload[0].name} `}
                     </span>
                     {`Lap Time: ${moment(payload[0].value)
@@ -58,11 +111,13 @@ const CustomTooltip = ({ active, payload, label }) => {
                 </p>
                 <p className="label">
                     <span
-                        style={{ color: `${payload[0].color}` }} // Dynamically get color from driver
+                        style={{ color: `${payload[0].color}` }}
                     >{`${payload[0].name} `}</span>
-                    {/* {`Tyre: ${payload[0].payload.Compound}`} */}
                     {`Tyre: `}
-                    {getIntroOfPage(`${payload[0].payload.Compound}`)}
+                    {getIntroOfPage(
+                        `${payload[0].payload.Year}`,
+                        `${payload[0].payload.Compound}`
+                    )}
                 </p>
             </div>
         )
@@ -99,14 +154,24 @@ export const LapTime = () => {
         setOpacity({ ...opacity, [dataKey]: 1 })
     }
     return (
-        <Box>
-            <h3 style={{ color: "#8a9c9b", alignSelf: "left" }}>Lap Chart</h3>
+        <Box
+            sx={{ fontFamily: "Montserrat" }}
+            // sx={{ width: "80%", marginLeft: 10 }}
+        >
+            <h3
+                style={{
+                    color: "#8a9c9b",
+                    alignSelf: "left",
+                }}
+            >
+                Lap Chart
+            </h3>
             <div className="responsive">
                 <div className="responsive-container">
                     <LineChart
-                        width={1000}
+                        width={1300}
                         height={400}
-                        margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
+                        margin={{ top: 5, right: 0, left: 150, bottom: 0 }}
                     >
                         <XAxis
                             type="number"
@@ -120,7 +185,6 @@ export const LapTime = () => {
                             }
                         />
                         <Tooltip content={CustomTooltip} />
-                        {/* <Tooltip /> */}
                         <Legend
                             onMouseEnter={handleMouseEnter}
                             onMouseLeave={handleMouseLeave}
