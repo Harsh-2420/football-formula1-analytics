@@ -11,6 +11,7 @@ import OutlinedInput from "@mui/material/OutlinedInput"
 import Chip from "@mui/material/Chip"
 import { orange } from "@mui/material/colors"
 import { SelectionForm } from "../Components/SelectionForm"
+import { MultipleSelectionForm } from "../Components/MultipleSelectionForm"
 
 const ITEM_HEIGHT = 48
 const ITEM_PADDING_TOP = 8
@@ -185,8 +186,7 @@ export const DropdownPage = () => {
     const handleDropdownSelectEvent = (e) => {
         setSelectedEvent(e.target.value)
     }
-
-    const handleChange = (event) => {
+    const handleDropdownSelectDriver = (event) => {
         const {
             target: { value },
         } = event
@@ -249,8 +249,14 @@ export const DropdownPage = () => {
                     handleDropdown={handleDropdownSelectEvent}
                     input="Session"
                 />
+                <MultipleSelectionForm
+                    selection={selectedDriver}
+                    data={drivers}
+                    handleDropdown={handleDropdownSelectDriver}
+                    input="Drivers"
+                />
 
-                <FormControl sx={{ m: 1, minWidth: 220 }}>
+                {/* <FormControl sx={{ m: 1, minWidth: 220 }}>
                     <InputLabel id="demo-multiple-chip-label">
                         Driver
                     </InputLabel>
@@ -260,7 +266,7 @@ export const DropdownPage = () => {
                         labelId="demo-multiple-chip-label"
                         id="demo-multiple-chip"
                         label="Age"
-                        onChange={handleChange}
+                        onChange={handleDropdownSelectDriver}
                         input={
                             <OutlinedInput
                                 id="select-multiple-chip"
@@ -296,7 +302,7 @@ export const DropdownPage = () => {
                             </MenuItem>
                         ))}
                     </Select>
-                </FormControl>
+                </FormControl> */}
             </Box>
         </div>
     )

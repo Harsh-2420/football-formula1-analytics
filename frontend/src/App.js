@@ -73,8 +73,10 @@ class App extends Component {
                         <Header />
                         <NavBar />
                         <DropdownPage />
+                        {/* <Suspense fallback={<DropdownPage />}> */}
                         <LapTime />
                         {/* <SpeedDistance /> */}
+                        {/* </Suspense> */}
                     </ThemeProvider>
                 </React.Fragment>
             </div>

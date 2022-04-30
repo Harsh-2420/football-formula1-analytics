@@ -16,9 +16,23 @@ import {
 } from "recharts"
 import moment from "moment"
 
+const getIntroOfPage = (label) => {
+    if (label === "SOFT") {
+        return (
+            <span style={{ color: "#FF0000", fontWeight: "bold" }}>SOFT</span>
+        )
+    } else if (label === "MEDIUM") {
+        return (
+            <span style={{ color: "#FFA500", fontWeight: "bold" }}>MEDIUM</span>
+        )
+    } else {
+        return <span style={{ color: "white", fontWeight: "bold" }}>HARD</span>
+    }
+}
+
 const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload) {
-        console.log(payload[0])
+        // console.log(payload[0])
         return (
             <div
                 className="custom-tooltip"
@@ -32,23 +46,24 @@ const CustomTooltip = ({ active, payload, label }) => {
                 }}
             >
                 <p className="label">{`Lap ${label}`}</p>
-                {/* <p className="label">{`${label} : ${payload[0].payload.uv}`}</p> */}
-                {/* Pass the following below: (unixTime) => moment(unixTime).utc().format("mm:ss.SSS") */}
                 <p className="label">
                     <span
-                        style={{ color: "#8884d8" }} // Dynamically get color from driver
+                        style={{ color: `${payload[0].color}` }} // Dynamically get color from driver
                     >
-                        {`${payload[0].name}`}
+                        {`${payload[0].name} `}
                     </span>
-                    {`Lap Time : ${payload[0].value}`}
+                    {`Lap Time: ${moment(payload[0].value)
+                        .utc()
+                        .format("mm:ss.SSS")}`}
                 </p>
                 <p className="label">
                     <span
-                        style={{ color: "#8884d8" }} // Dynamically get color from driver
+                        style={{ color: `${payload[0].color}` }} // Dynamically get color from driver
                     >{`${payload[0].name} `}</span>
-                    {`Tyre : ${payload[0].payload.Compound}`}
+                    {/* {`Tyre: ${payload[0].payload.Compound}`} */}
+                    {`Tyre: `}
+                    {getIntroOfPage(`${payload[0].payload.Compound}`)}
                 </p>
-                {/* <p className="intro">{getIntroOfPage(label)}</p> */}
             </div>
         )
     }
@@ -64,6 +79,11 @@ export const LapTime = () => {
         fetch("http://127.0.0.1:5000/api/lap_number_time")
             .then((res) => res.json())
             .then((data) => {
+                Object.keys(data).map(function (key, index) {
+                    data[key]
+                        .filter((v) => v[key] === 0)
+                        .forEach((v) => (v[key] = NaN))
+                })
                 console.log("first chart data is", data)
 
                 setCurrentChartData(data)
@@ -93,18 +113,29 @@ export const LapTime = () => {
                             dataKey="LapNumber"
                             domain={["auto", "auto"]}
                         />
-                        <YAxis domain={("auto", "auto")} />
-                        {/* <Tooltip content={CustomTooltip} /> */}
-                        <Tooltip />
+                        <YAxis
+                            domain={("auto", "auto")}
+                            tickFormatter={(unixTime) =>
+                                moment(unixTime).utc().format("mm:ss.SSS")
+                            }
+                        />
+                        <Tooltip content={CustomTooltip} />
+                        {/* <Tooltip /> */}
                         <Legend
                             onMouseEnter={handleMouseEnter}
                             onMouseLeave={handleMouseLeave}
                         />
                         <Line
-                            type="monotone" //Recharts
-                            data={currentChartData.HAM} // [{}, {}]
+                            type="monotone"
+                            data={currentChartData.HAM}
+                            // data={
+                            //     (currentChartData.HAM.find(
+                            //         (v) => v.HAM === 0
+                            //     ).HAM = NaN)
+                            // }
                             dataKey="HAM"
                             stroke="#8884d8"
+                            // stroke={currentChartData.HAM.color}
                             strokeOpacity={opacity.HAM}
                             active_dot={{ r: 8 }}
                         />

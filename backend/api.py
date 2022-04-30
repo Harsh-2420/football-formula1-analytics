@@ -10,6 +10,7 @@ import requests
 import datetime
 from datetime import timedelta
 from set_values import driver_key_val_pair
+# import asyncio
 
 app = Flask(__name__)
 
@@ -253,13 +254,20 @@ def selectdriver():
         return {"201": selected_drivers}
 
 
+def get_selections():
+    selected_year = Selections.query.filter_by(id=1).first().content
+    selected_race = Selections.query.filter_by(id=2).first().content
+    selected_event = Selections.query.filter_by(id=3).first().content
+    selected_drivers = Selections.query.filter_by(id=4).first().content
+    return selected_year, selected_race, selected_event, selected_drivers
+
+
 @app.route('/api/lap_number_time')
 def getChartData():
     # Get Data from Sessions
     selected_year = 2021
     selected_race = "Bahrain Grand Prix"
     selected_event = "Race"
-    # selected_drivers = ['HAM']
     selected_drivers = ['NOR', 'RIC']
 
     # How to Wait until options are selected?
