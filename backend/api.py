@@ -9,7 +9,7 @@ import pandas as pd
 import requests
 import datetime
 from datetime import timedelta
-from set_values import driver_key_val_pair
+from set_values import driver_key_val_pair, team_color_pair
 # import asyncio
 
 app = Flask(__name__)
@@ -265,10 +265,10 @@ def get_selections():
 @app.route('/api/lap_number_time')
 def getChartData():
     # Get Data from Sessions
-    selected_year = 2020
-    selected_race = "Hungarian Grand Prix"
+    selected_year = 2021
+    selected_race = "British Grand Prix"
     selected_event = "Race"
-    selected_drivers = ['HAM', 'RIC']
+    selected_drivers = ['VER', 'RUS', "HAM", 'GAS', 'ALO', 'SAI', 'RAI', 'MSC']
 
     # How to Wait until options are selected?
     # selected_year = Selections.query.filter_by(id=1).first().content
@@ -300,9 +300,12 @@ def getChartData():
         primary_key = data['Driver']
         data[primary_key] = data.pop('LapTime')
 
-        # color
         driv_lap = fastf1_session.laps.pick_driver(primary_key).pick_fastest()
-        color = fastf1.plotting.team_color(driv_lap['Team'])
+        try:
+            team = driv_lap['Team']
+            color = team_color_pair[team]
+        except:
+            color = "#ffffff"
         data['color'] = color
 
         if primary_key not in final_dict:

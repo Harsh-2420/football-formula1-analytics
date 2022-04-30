@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react"
 import "../App.css"
 import { Row, Column } from "react-bootstrap"
+import { LapTimeNumber } from "../Components/LapTimeNumber"
 import Box from "@mui/material/Box"
 import "bootstrap/dist/css/bootstrap.min.css"
 import {
@@ -84,7 +85,7 @@ const getIntroOfPage = (year, label) => {
 
 const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload) {
-        console.log(payload[0])
+        // console.log(payload[0])
         return (
             <div
                 className="custom-tooltip"
@@ -128,7 +129,8 @@ const CustomTooltip = ({ active, payload, label }) => {
 
 export const LapTime = () => {
     const [currentChartData, setCurrentChartData] = useState([])
-    const [opacity, setOpacity] = useState({ HAM: 1, RIC: 1 })
+    // How to set opacity to driver keys from currentChartData??
+    // const [opacity, setOpacity] = useState({ HAM: 1, RIC: 1 })
 
     useEffect(() => {
         fetch("http://127.0.0.1:5000/api/lap_number_time")
@@ -144,20 +146,17 @@ export const LapTime = () => {
                 setCurrentChartData(data)
             })
     }, [])
-    const handleMouseEnter = (o) => {
-        const { dataKey } = o
-        setOpacity({ ...opacity, [dataKey]: 0.5 })
-    }
+    // const handleMouseEnter = (o) => {
+    //     const { dataKey } = o
+    //     setOpacity({ ...opacity, [dataKey]: 0.5 })
+    // }
 
-    const handleMouseLeave = (o) => {
-        const { dataKey } = o
-        setOpacity({ ...opacity, [dataKey]: 1 })
-    }
+    // const handleMouseLeave = (o) => {
+    //     const { dataKey } = o
+    //     setOpacity({ ...opacity, [dataKey]: 1 })
+    // }
     return (
-        <Box
-            sx={{ fontFamily: "Montserrat" }}
-            // sx={{ width: "80%", marginLeft: 10 }}
-        >
+        <Box>
             <h3
                 style={{
                     color: "#8a9c9b",
@@ -168,49 +167,45 @@ export const LapTime = () => {
             </h3>
             <div className="responsive">
                 <div className="responsive-container">
-                    <LineChart
-                        width={1300}
-                        height={400}
-                        margin={{ top: 5, right: 0, left: 150, bottom: 0 }}
-                    >
-                        <XAxis
-                            type="number"
-                            dataKey="LapNumber"
-                            domain={["auto", "auto"]}
-                        />
-                        <YAxis
-                            domain={("auto", "auto")}
-                            tickFormatter={(unixTime) =>
-                                moment(unixTime).utc().format("mm:ss.SSS")
-                            }
-                        />
-                        <Tooltip content={CustomTooltip} />
-                        <Legend
-                            onMouseEnter={handleMouseEnter}
-                            onMouseLeave={handleMouseLeave}
-                        />
-                        <Line
-                            type="monotone"
-                            data={currentChartData.HAM}
-                            // data={
-                            //     (currentChartData.HAM.find(
-                            //         (v) => v.HAM === 0
-                            //     ).HAM = NaN)
-                            // }
-                            dataKey="HAM"
-                            stroke="#8884d8"
-                            // stroke={currentChartData.HAM.color}
-                            strokeOpacity={opacity.HAM}
-                            active_dot={{ r: 8 }}
-                        />
-                        <Line
-                            type="monotone"
-                            data={currentChartData.RIC}
-                            dataKey="RIC"
-                            stroke="#E0610E"
-                            strokeOpacity={opacity.RIC}
-                        />
-                    </LineChart>
+                    <ResponsiveContainer width={"100%"} height={"100%"}>
+                        <LineChart
+                            width={1300}
+                            height={400}
+                            margin={{ top: 5, right: 0, left: 150, bottom: 0 }}
+                        >
+                            <XAxis
+                                type="number"
+                                dataKey="LapNumber"
+                                domain={["auto", "auto"]}
+                            />
+                            <YAxis
+                                domain={("auto", "auto")}
+                                tickFormatter={(unixTime) =>
+                                    moment(unixTime).utc().format("mm:ss.SSS")
+                                }
+                            />
+                            <Tooltip content={CustomTooltip} />
+                            <Legend
+                            // onMouseEnter={handleMouseEnter}
+                            // onMouseLeave={handleMouseLeave}
+                            />
+                            {Object.keys(currentChartData).map((key, index) => {
+                                const data = currentChartData[key]
+                                return (
+                                    <Line
+                                        key={key}
+                                        type="monotone"
+                                        data={data}
+                                        dataKey={key}
+                                        stroke={data[0].color}
+                                        // stroke={currentChartData.HAM.color}
+                                        // strokeOpacity={opacity.HAM}
+                                        // active_dot={{ r: 8 }}
+                                    />
+                                )
+                            })}
+                        </LineChart>
+                    </ResponsiveContainer>
                 </div>
             </div>
         </Box>

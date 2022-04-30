@@ -18,3 +18,15 @@ driver_key_val_pair = {'RIC': '3',
                        'VER': '33',
                        'GAS': '10',
                        'TSU': '22'}
+
+team_color_pair = {'Red Bull Racing': '#0600ef',
+                   'Williams': '#ADD8E6',
+                   'Mercedes': '#00D2BE',
+                   'AlphaTauri': '#3e454d',
+                   'Alpine': '#0090ff',
+                   'Ferrari': '#dc0000',
+                   'Alpha Romeo': '#900000',
+                   'Haas F1 Team': '#ffffff',
+                   'McLaren': '#ffa112',
+                   'Aston Martin': '#006f62',
+                   }
