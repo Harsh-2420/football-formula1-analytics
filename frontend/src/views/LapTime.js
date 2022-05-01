@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react"
 import "../App.css"
 import { Row, Column } from "react-bootstrap"
-import { LapTimeNumber } from "../Components/LapTimeNumber"
 import Box from "@mui/material/Box"
 import "bootstrap/dist/css/bootstrap.min.css"
 import {
@@ -14,6 +13,7 @@ import {
     ResponsiveContainer,
     Tooltip,
     Legend,
+    Brush,
 } from "recharts"
 import moment from "moment"
 
@@ -85,17 +85,20 @@ const getIntroOfPage = (year, label) => {
 
 const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload) {
-        // console.log(payload[0])
+        console.log(payload)
         return (
             <div
                 className="custom-tooltip"
                 style={{
-                    color: "white",
+                    color: "#fff",
                     fontFamily: "Montserrat",
                     fontWeight: 300,
                     border: "1px solid",
-                    borderRadius: "7px",
-                    padding: "15px",
+                    borderRadius: "0.75rem",
+                    padding: "1rem",
+                    textAlign: "center",
+                    // background: "#1a5d57",
+                    // boxShadow: "5px 5px 5px rgba(0, 0, 0, 0.2)",
                 }}
             >
                 <p
@@ -171,23 +174,35 @@ export const LapTime = () => {
                     <LineChart
                         width={1300}
                         height={400}
-                        margin={{ top: 5, right: 0, left: 150, bottom: 0 }}
+                        margin={{ top: 5, right: 0, left: 150, bottom: 10 }}
                     >
                         <XAxis
                             type="number"
                             dataKey="LapNumber"
                             domain={["auto", "auto"]}
+                            axisLine={false}
+                            tickLine={false}
+                            // tickCount={ticknumber}
                         />
                         <YAxis
                             domain={("auto", "auto")}
+                            axisLine={false}
+                            tickCount={5}
+                            tickLine={false}
                             tickFormatter={(unixTime) =>
                                 moment(unixTime).utc().format("mm:ss.SSS")
                             }
                         />
+
                         <Tooltip content={CustomTooltip} />
                         <Legend
                         // onMouseEnter={handleMouseEnter}
                         // onMouseLeave={handleMouseLeave}
+                        />
+                        <Brush
+                            // tickFormatter={xAxisTickFormatter}
+                            dataKey="LapNumber"
+                            // height={50}
                         />
                         {Object.keys(currentChartData).map((key, index) => {
                             const data = currentChartData[key]

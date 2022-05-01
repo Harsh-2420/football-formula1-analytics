@@ -14,6 +14,7 @@ import {
     ResponsiveContainer,
     Tooltip,
     Legend,
+    Brush,
 } from "recharts"
 import moment from "moment"
 
@@ -70,14 +71,6 @@ const CustomTooltip = ({ active, payload, label }) => {
                     {getYAxis(`${payload[0].dataKey}`, `${payload[0].value}`)}
                     {/* {` ${payload[0].dataKey}: ${payload[0].value} km/h`} */}
                 </p>
-
-                {/* <p className="label">
-                    <span
-                        style={{ color: `${payload[0].color}` }}
-                    >{`${payload[0].name} `}</span>
-                    {`Tyre: `}
-
-                </p> */}
             </div>
         )
     }
@@ -317,6 +310,11 @@ export const SpeedDistance = () => {
                             type="number"
                         />
                         <Tooltip content={CustomTooltip} />
+                        <Brush
+                            // tickFormatter={xAxisTickFormatter}
+                            dataKey="LapNumber"
+                            height={30}
+                        />
                         <Legend
                         // onMouseEnter={handleMouseEnter}
                         // onMouseLeave={handleMouseLeave}
