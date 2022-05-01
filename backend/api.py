@@ -1,3 +1,4 @@
+from hashlib import new
 from flask import Flask, jsonify, request, json, session
 from flask_session import Session
 from flask_cors import CORS
@@ -51,6 +52,7 @@ class Selections(db.Model):
     __bind_key__ = 'selections'
     id = db.Column(db.Integer, primary_key=True)
     content = db.Column(db.String(80), unique=True)
+    # driver_list = db.Column(db.JSON, unique=True)
 
     def __str__(self):
         return f'{self.id} {self.content}'
@@ -183,7 +185,7 @@ def selectrace():
             for i in range(2, len(Selections.query.all())+1):
                 Selections.query.filter_by(id=i).delete()
             db.session.add(Selections(id=2, content=selected_race))
-
+        db.session.commit()
         selected_year = Selections.query.filter_by(id=1).first().content
         f1_session = fastf1.get_event(int(selected_year), selected_race)
         f1_session_list = [f1_session['Session1'], f1_session['Session2'],
@@ -241,44 +243,53 @@ def selectdriver():
     if request.method == 'POST':
         # list of multi select drivers (real-time changes)
         selected_drivers = request.get_json(force=True)
+        new_s = ''.join(selected_drivers)
+        # app.logger.info("##########", selected_drivers)
+        # new_s = json.dumps(selected_drivers)
 
         db.create_all(bind='selections')
         if len(Selections.query.all()) < 4:
-            db.session.add(Selections(id=4, content=selected_drivers))
+            try:
+                Selections.query.filter_by(id=4).delete()
+                db.session.add(Selections(id=4, content=new_s))
+            except:
+                db.session.add(Selections(id=4, content=new_s))
+            db.session.commit()
         else:
             for i in range(4, len(Selections.query.all())+1):
                 Selections.query.filter_by(id=i).delete()
-            db.session.add(Selections(id=4, content=selected_drivers))
-
-        # session send selected_drivers
+                db.session.commit()
+            db.session.add(Selections(id=4, content=new_s))
+        db.session.commit()
+        # app.logger.info(
+        #     "##########", Selections.query.filter_by(id=4).first().content)
         return {"201": selected_drivers}
-
-
-def get_selections():
-    selected_year = Selections.query.filter_by(id=1).first().content
-    selected_race = Selections.query.filter_by(id=2).first().content
-    selected_event = Selections.query.filter_by(id=3).first().content
-    selected_drivers = Selections.query.filter_by(id=4).first().content
-    return selected_year, selected_race, selected_event, selected_drivers
 
 
 @app.route('/api/lap_number_time')
 def getChartData():
     # Get Data from Sessions
-    selected_year = 2022
-    selected_race = "Emilia Romagna Grand Prix"
-    selected_event = "Race"
-    selected_drivers = ["HAM", 'MSC']
+    # selected_year = 2022
+    # selected_race = "Emilia Romagna Grand Prix"
+    # selected_event = "Race"
+    # selected_drivers = ["HAM", 'MSC']
 
     # How to Wait until options are selected?
-    # selected_year = Selections.query.filter_by(id=1).first().content
-    # selected_race = Selections.query.filter_by(id=2).first().content
-    # selected_event = Selections.query.filter_by(id=3).first().content
-    # selected_drivers = Selections.query.filter_by(id=4).first().content
+    selected_year = Selections.query.filter_by(id=1).first().content
+    selected_race = Selections.query.filter_by(id=2).first().content
+    selected_event = Selections.query.filter_by(id=3).first().content
+    app.logger.info(
+        "###########Year Race Event Selections done", selected_event)
+    # try:
+    new_s = Selections.query.filter_by(id=4).first().content
+    # selected_drivers = json.loads(new_s)
+    selected_drivers = []
+    for index in range(0, len(new_s), 3):
+        selected_drivers. append(new_s[index: index + 3])
 
     # Call the API with data
     fastf1_session = fastf1.get_session(
-        selected_year, selected_race, selected_event)
+        int(selected_year), selected_race, selected_event)
     fastf1_session.load(telemetry=False, laps=True, weather=False)
 
     lap_time_number = fastf1_session.laps[[

@@ -85,7 +85,7 @@ const getIntroOfPage = (year, label) => {
 
 const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload) {
-        console.log(payload)
+        // console.log(payload)
         return (
             <div
                 className="custom-tooltip"

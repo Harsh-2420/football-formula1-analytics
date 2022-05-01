@@ -12,6 +12,7 @@ import Chip from "@mui/material/Chip"
 import { orange } from "@mui/material/colors"
 import { SelectionForm } from "../Components/SelectionForm"
 import { MultipleSelectionForm } from "../Components/MultipleSelectionForm"
+import { LapTime } from "./LapTime"
 
 const ITEM_HEIGHT = 48
 const ITEM_PADDING_TOP = 8
@@ -255,54 +256,10 @@ export const DropdownPage = () => {
                     handleDropdown={handleDropdownSelectDriver}
                     input="Drivers"
                 />
-
-                {/* <FormControl sx={{ m: 1, minWidth: 220 }}>
-                    <InputLabel id="demo-multiple-chip-label">
-                        Driver
-                    </InputLabel>
-                    <Select
-                        multiple
-                        value={selectedDriver}
-                        labelId="demo-multiple-chip-label"
-                        id="demo-multiple-chip"
-                        label="Age"
-                        onChange={handleDropdownSelectDriver}
-                        input={
-                            <OutlinedInput
-                                id="select-multiple-chip"
-                                label="Chip"
-                            />
-                        }
-                        renderValue={(selected) => (
-                            <Box
-                                sx={{
-                                    display: "flex",
-                                    flexWrap: "wrap",
-                                    gap: 0.5,
-                                }}
-                            >
-                                {selected.map((value) => (
-                                    <Chip key={value} label={value} />
-                                ))}
-                            </Box>
-                        )}
-                        MenuProps={MenuProps}
-                    >
-                        {drivers.map((driver) => (
-                            <MenuItem
-                                value={driver.content}
-                                key={driver.id}
-                                style={getStyles(
-                                    driver.content,
-                                    selectedDriver,
-                                    theme
-                                )}
-                            >
-                                {driver.content}
-                            </MenuItem>
-                        ))}
-                    </Select>
-                </FormControl> */}
+                {selectedYear &&
+                    selectedRace &&
+                    selectedEvent &&
+                    selectedDriver.length > 0 && <LapTime />}
             </Box>
         </div>
     )
