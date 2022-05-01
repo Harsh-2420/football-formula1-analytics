@@ -265,8 +265,8 @@ def get_selections():
 @app.route('/api/lap_number_time')
 def getChartData():
     # Get Data from Sessions
-    selected_year = 2021
-    selected_race = "British Grand Prix"
+    selected_year = 2022
+    selected_race = "Emilia Romagna Grand Prix"
     selected_event = "Race"
     selected_drivers = ["HAM", 'MSC']
 
