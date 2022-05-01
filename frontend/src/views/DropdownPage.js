@@ -13,6 +13,9 @@ import { orange } from "@mui/material/colors"
 import { SelectionForm } from "../Components/SelectionForm"
 import { MultipleSelectionForm } from "../Components/MultipleSelectionForm"
 import { LapTime } from "./LapTime"
+import Button from "@mui/material/Button"
+import DeleteIcon from "@mui/icons-material/Delete"
+import SendIcon from "@mui/icons-material/Send"
 
 const ITEM_HEIGHT = 48
 const ITEM_PADDING_TOP = 8
@@ -54,6 +57,7 @@ export const DropdownPage = () => {
     const [drivers, setDrivers] = useState([])
     const [selectedDriver, setSelectedDriver] = useState([])
 
+    const [buttonClick, setButtonClick] = useState(false)
     const theme = useTheme()
 
     useEffect(() => {
@@ -224,7 +228,9 @@ export const DropdownPage = () => {
             })
             .then((response) => setDrivers(response))
     }
-
+    const onButtonClick = () => {
+        setButtonClick(true)
+    }
     return (
         <div>
             <Box
@@ -256,10 +262,22 @@ export const DropdownPage = () => {
                     handleDropdown={handleDropdownSelectDriver}
                     input="Drivers"
                 />
+                {/* <Button
+                    onClick={onButtonClick}
+                    variant="contained"
+                    endIcon={<SendIcon />}
+                >
+                    {buttonClick ? <LapTime /> : null}
+                    Go
+                </Button> */}
                 {selectedYear &&
-                    selectedRace &&
-                    selectedEvent &&
-                    selectedDriver.length > 0 && <LapTime />}
+                selectedRace &&
+                selectedEvent &&
+                selectedDriver.length > 0 ? (
+                    <LapTime />
+                ) : (
+                    console.log("selection not made")
+                )}
             </Box>
         </div>
     )

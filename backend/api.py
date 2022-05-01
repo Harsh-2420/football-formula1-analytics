@@ -278,14 +278,12 @@ def getChartData():
     selected_year = Selections.query.filter_by(id=1).first().content
     selected_race = Selections.query.filter_by(id=2).first().content
     selected_event = Selections.query.filter_by(id=3).first().content
-    app.logger.info(
-        "###########Year Race Event Selections done", selected_event)
     # try:
     new_s = Selections.query.filter_by(id=4).first().content
     # selected_drivers = json.loads(new_s)
     selected_drivers = []
     for index in range(0, len(new_s), 3):
-        selected_drivers. append(new_s[index: index + 3])
+        selected_drivers.append(new_s[index: index + 3])
 
     # Call the API with data
     fastf1_session = fastf1.get_session(
