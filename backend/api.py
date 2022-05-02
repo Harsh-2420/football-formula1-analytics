@@ -335,8 +335,8 @@ def speed_distance():
     for driver in selected_drivers:
         driv_lap = fastf1_session.laps.pick_driver(driver).pick_fastest()
         color = fastf1.plotting.team_color(driv_lap['Team'])
-        driv_tel[driver] = driv_lap.get_car_data().add_distance(
-        )[['Speed', 'Distance', 'RPM', 'nGear', 'Throttle', 'Brake', 'DRS']]
+        driv_tel[driver] = driv_lap.get_telemetry(
+        )[['Speed', 'Distance', 'RPM', 'nGear', 'Throttle', 'Brake', 'DRS', 'X', 'Y']]
         driv_tel[driver]['Brake'] = driv_tel[driver]['Brake'].astype(int)
         driv_tel[driver]['color'] = color
         driv_tel[driver] = driv_tel[driver].to_dict('records')

@@ -7,10 +7,12 @@ import Box from "@mui/material/Box"
 import {
     LineChart,
     Label,
+    Scatter,
     Line,
     XAxis,
     YAxis,
     CartesianGrid,
+    ScatterChart,
     ResponsiveContainer,
     Tooltip,
     Legend,
@@ -59,7 +61,6 @@ const CustomTooltip = ({ active, payload, label }) => {
                     border: "1px solid",
                     borderRadius: "7px",
                     padding: "15px",
-                    // backgroundColor: "rgb(138, 156, 155)",
                     backgroundColor: "rgb(37, 41, 47, 0.9)",
                 }}
             >
@@ -122,20 +123,53 @@ export const SpeedDistance = () => {
             </h3>
             {/* <div className="responsive"> */}
             <div className="responsive-container">
-                {/* <Telemetry
-                    currentChartData={currentChartData}
-                    CustomTooltip={CustomTooltip}
-                /> */}
+                <ResponsiveContainer width={"70%"} height={"70%"}>
+                    <LineChart
+                        width={600}
+                        height={600}
+                        // syncId="anyId"
+                        data={currentChartData.HAM}
+                        margin={{
+                            top: 35,
+                            right: 30,
+                            left: 30,
+                            bottom: 45,
+                        }}
+                    >
+                        <Line
+                            type="monotone"
+                            stroke="#fff"
+                            dot={false}
+                            dataKey="Y"
+                            strokeWidth={4}
+                        />
+                        <XAxis
+                            axisLine={false}
+                            tickLine={false}
+                            tick={false}
+                            type="number"
+                            dataKey="X"
+                            domain={["auto", "auto"]}
+                        />
+                        <YAxis
+                            axisLine={false}
+                            tickLine={false}
+                            tick={false}
+                            domain={["auto", "auto"]}
+                        />
+                    </LineChart>
+                </ResponsiveContainer>
+
                 <ResponsiveContainer width={"100%"} height={"70%"}>
                     <LineChart
                         width={1000}
                         height={400}
                         syncId="anyId"
                         margin={{
-                            top: 5,
+                            top: 35,
                             right: 30,
                             left: 30,
-                            bottom: 5,
+                            bottom: 45,
                         }}
                     >
                         {Object.keys(currentChartData).map((key, index) => {
@@ -160,11 +194,15 @@ export const SpeedDistance = () => {
                             )
                         })}
                         <XAxis
+                            axisLine={false}
+                            tickLine={false}
                             type="number"
                             dataKey="Distance"
                             domain={["auto", "auto"]}
                         />
                         <YAxis
+                            axisLine={false}
+                            tickLine={false}
                             domain={["auto", "auto"]}
                             name="Speed"
                             type="number"
@@ -183,10 +221,10 @@ export const SpeedDistance = () => {
                         height={400}
                         syncId="anyId"
                         margin={{
-                            top: 5,
+                            top: 35,
                             right: 30,
                             left: 30,
-                            bottom: 5,
+                            bottom: 45,
                         }}
                     >
                         {Object.keys(currentChartData).map((key, index) => {
@@ -211,11 +249,15 @@ export const SpeedDistance = () => {
                             )
                         })}
                         <XAxis
+                            axisLine={false}
+                            tickLine={false}
                             type="number"
                             dataKey="Distance"
                             domain={["auto", "auto"]}
                         />
                         <YAxis
+                            axisLine={false}
+                            tickLine={false}
                             domain={["auto", "auto"]}
                             name="nGear"
                             type="number"
@@ -233,10 +275,10 @@ export const SpeedDistance = () => {
                         height={400}
                         syncId="anyId"
                         margin={{
-                            top: 5,
+                            top: 35,
                             right: 30,
                             left: 30,
-                            bottom: 5,
+                            bottom: 45,
                         }}
                     >
                         {Object.keys(currentChartData).map((key, index) => {
@@ -261,11 +303,15 @@ export const SpeedDistance = () => {
                             )
                         })}
                         <XAxis
+                            axisLine={false}
+                            tickLine={false}
                             type="number"
                             dataKey="Distance"
                             domain={["auto", "auto"]}
                         />
                         <YAxis
+                            axisLine={false}
+                            tickLine={false}
                             domain={["auto", "auto"]}
                             name="nGear"
                             type="number"
@@ -283,10 +329,10 @@ export const SpeedDistance = () => {
                         height={400}
                         syncId="anyId"
                         margin={{
-                            top: 5,
+                            top: 35,
                             right: 30,
                             left: 30,
-                            bottom: 5,
+                            bottom: 45,
                         }}
                     >
                         {Object.keys(currentChartData).map((key, index) => {
@@ -311,11 +357,15 @@ export const SpeedDistance = () => {
                             )
                         })}
                         <XAxis
+                            axisLine={false}
+                            tickLine={false}
                             type="number"
                             dataKey="Distance"
                             domain={["auto", "auto"]}
                         />
                         <YAxis
+                            axisLine={false}
+                            tickLine={false}
                             domain={["auto", "auto"]}
                             name="nGear"
                             type="number"
