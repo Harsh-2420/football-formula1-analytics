@@ -48,7 +48,7 @@ const getYAxis = (dataKey, value) => {
 
 const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload) {
-        console.log(payload[0])
+        // console.log(payload[1])
         return (
             <div
                 className="custom-tooltip"
@@ -59,6 +59,8 @@ const CustomTooltip = ({ active, payload, label }) => {
                     border: "1px solid",
                     borderRadius: "7px",
                     padding: "15px",
+                    // backgroundColor: "rgb(138, 156, 155)",
+                    backgroundColor: "rgb(37, 41, 47, 0.9)",
                 }}
             >
                 <p className="label" style={{ fontWeight: "normal" }}>
@@ -69,6 +71,11 @@ const CustomTooltip = ({ active, payload, label }) => {
                         {`${payload[0].name} `}
                     </span>
                     {getYAxis(`${payload[0].dataKey}`, `${payload[0].value}`)}
+                    <br></br>
+                    <span style={{ color: `${payload[1].color}` }}>
+                        {`${payload[1].name} `}
+                    </span>
+                    {getYAxis(`${payload[1].dataKey}`, `${payload[1].value}`)}
                     {/* {` ${payload[0].dataKey}: ${payload[0].value} km/h`} */}
                 </p>
             </div>
@@ -123,6 +130,7 @@ export const SpeedDistance = () => {
                     <LineChart
                         width={1000}
                         height={400}
+                        syncId="anyId"
                         margin={{
                             top: 5,
                             right: 30,
@@ -173,6 +181,7 @@ export const SpeedDistance = () => {
                     <LineChart
                         width={1000}
                         height={400}
+                        syncId="anyId"
                         margin={{
                             top: 5,
                             right: 30,
@@ -222,6 +231,7 @@ export const SpeedDistance = () => {
                     <LineChart
                         width={1000}
                         height={400}
+                        syncId="anyId"
                         margin={{
                             top: 5,
                             right: 30,
@@ -271,6 +281,7 @@ export const SpeedDistance = () => {
                     <LineChart
                         width={1000}
                         height={400}
+                        syncId="anyId"
                         margin={{
                             top: 5,
                             right: 30,

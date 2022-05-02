@@ -270,14 +270,14 @@ export const DropdownPage = () => {
                     {buttonClick ? <LapTime /> : null}
                     Go
                 </Button> */}
-                {selectedYear &&
+                {/* {selectedYear &&
                 selectedRace &&
                 selectedEvent &&
                 selectedDriver.length > 0 ? (
                     <LapTime />
                 ) : (
                     console.log("selection not made")
-                )}
+                )} */}
             </Box>
         </div>
     )
