@@ -11,7 +11,7 @@
 //     const [selectedRace, setSelectedRace] = useState()
 
 //     useEffect(() => {
-//         fetch("http://127.0.0.1:5000/api/getrace", {
+//         fetch("http://127.0.0.1:5000/formula/getrace", {
 //             method: "GET",
 //             headers: {
 //                 "Content-type": "application/json",
@@ -24,7 +24,7 @@
 //     }, [])
 //     useEffect(() => {
 //         if (selectedRace) {
-//             fetch("http://127.0.0.1:5000/api/selectrace", {
+//             fetch("http://127.0.0.1:5000/formula/selectrace", {
 //                 method: "POST",
 //                 body: JSON.stringify(selectedRace),
 //                 headers: { "content-type": "application/json" },
@@ -43,7 +43,7 @@
 //         setSelectedRace(e.target.value)
 //     }
 //     const getLatestEvent = () => {
-//         fetch("http://127.0.0.1:5000/api/getevent")
+//         fetch("http://127.0.0.1:5000/formula/getevent")
 //             .then((response) => {
 //                 if (response.ok) {
 //                     return response.json()

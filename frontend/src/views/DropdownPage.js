@@ -61,7 +61,7 @@ export const DropdownPage = () => {
     const theme = useTheme()
 
     useEffect(() => {
-        fetch("http://127.0.0.1:5000/api/getyear", {
+        fetch("http://127.0.0.1:5000/formula/getyear", {
             method: "GET",
             headers: {
                 "Content-type": "application/json",
@@ -74,7 +74,7 @@ export const DropdownPage = () => {
     }, [])
 
     useEffect(() => {
-        fetch("http://127.0.0.1:5000/api/getrace", {
+        fetch("http://127.0.0.1:5000/formula/getrace", {
             method: "GET",
             headers: {
                 "Content-type": "application/json",
@@ -86,7 +86,7 @@ export const DropdownPage = () => {
             })
     }, [])
     useEffect(() => {
-        fetch("http://127.0.0.1:5000/api/getevent", {
+        fetch("http://127.0.0.1:5000/formula/getevent", {
             method: "GET",
             headers: {
                 "Content-type": "application/json",
@@ -98,7 +98,7 @@ export const DropdownPage = () => {
             })
     }, [])
     useEffect(() => {
-        fetch("http://127.0.0.1:5000/api/getdriver", {
+        fetch("http://127.0.0.1:5000/formula/getdriver", {
             method: "GET",
             headers: {
                 "Content-type": "application/json",
@@ -112,7 +112,7 @@ export const DropdownPage = () => {
 
     useEffect(() => {
         if (selectedYear) {
-            fetch("http://127.0.0.1:5000/api/selectyear", {
+            fetch("http://127.0.0.1:5000/formula/selectyear", {
                 method: "POST",
                 body: JSON.stringify(selectedYear),
                 headers: { "content-type": "application/json" },
@@ -130,7 +130,7 @@ export const DropdownPage = () => {
 
     useEffect(() => {
         if (selectedRace) {
-            fetch("http://127.0.0.1:5000/api/selectrace", {
+            fetch("http://127.0.0.1:5000/formula/selectrace", {
                 method: "POST",
                 body: JSON.stringify(selectedRace),
                 headers: { "content-type": "application/json" },
@@ -148,7 +148,7 @@ export const DropdownPage = () => {
 
     useEffect(() => {
         if (selectedEvent) {
-            fetch("http://127.0.0.1:5000/api/selectevent", {
+            fetch("http://127.0.0.1:5000/formula/selectevent", {
                 method: "POST",
                 body: JSON.stringify(selectedEvent),
                 headers: { "content-type": "application/json" },
@@ -167,7 +167,7 @@ export const DropdownPage = () => {
     // const SelectionComplete = ({selectedDriver}) => {
     useEffect(() => {
         if (selectedDriver) {
-            fetch("http://127.0.0.1:5000/api/selectdriver", {
+            fetch("http://127.0.0.1:5000/formula/selectdriver", {
                 method: "POST",
                 body: JSON.stringify(selectedDriver),
                 headers: { "content-type": "application/json" },
@@ -202,7 +202,7 @@ export const DropdownPage = () => {
         )
     }
     const getLatestRace = () => {
-        fetch("http://127.0.0.1:5000/api/getrace")
+        fetch("http://127.0.0.1:5000/formula/getrace")
             .then((response) => {
                 if (response.ok) {
                     return response.json()
@@ -211,7 +211,7 @@ export const DropdownPage = () => {
             .then((response) => setRaces(response))
     }
     const getLatestEvent = () => {
-        fetch("http://127.0.0.1:5000/api/getevent")
+        fetch("http://127.0.0.1:5000/formula/getevent")
             .then((response) => {
                 if (response.ok) {
                     return response.json()
@@ -220,7 +220,7 @@ export const DropdownPage = () => {
             .then((response) => setEvents(response))
     }
     const getLatestDriver = () => {
-        fetch("http://127.0.0.1:5000/api/getdriver")
+        fetch("http://127.0.0.1:5000/formula/getdriver")
             .then((response) => {
                 if (response.ok) {
                     return response.json()

@@ -135,7 +135,7 @@ export const LapTime = () => {
     // const [opacity, setOpacity] = useState({ HAM: 1, RIC: 1 })
 
     useEffect(() => {
-        fetch("http://127.0.0.1:5000/api/lap_number_time")
+        fetch("http://127.0.0.1:5000/formula/lap_number_time")
             .then((res) => res.json())
             .then((data) => {
                 Object.keys(data).map(function (key, index) {

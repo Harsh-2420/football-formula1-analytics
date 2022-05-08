@@ -135,7 +135,7 @@ def getfbdata():
     return 'Data Unpacked'
 
 
-@app.route('/api/getyear', methods=['GET'])
+@app.route('/formula/getyear', methods=['GET'])
 def getyear():
     curr_year = datetime.datetime.now().year+1
     year_db_len = len(Year.query.all())
@@ -147,26 +147,26 @@ def getyear():
     return jsonify([*map(serializer, Year.query.all())])
 
 
-@app.route('/api/getrace', methods=['GET'])
+@app.route('/formula/getrace', methods=['GET'])
 def getrace():
     # if not Selections.query.all():
     #     return jsonify([])
     return jsonify([*map(serializer, Race.query.all())])
 
 
-@app.route('/api/getevent', methods=['GET'])
+@app.route('/formula/getevent', methods=['GET'])
 def getevent():
     # if len(Selections.query.all()) <= 2:
     #     return jsonify([])
     return jsonify([*map(serializer, Event.query.all())])
 
 
-@app.route('/api/getdriver', methods=['GET'])
+@app.route('/formula/getdriver', methods=['GET'])
 def getdriver():
     return jsonify([*map(serializer, Driver.query.all())])
 
 
-@app.route('/api/selectyear', methods=['POST'])
+@app.route('/formula/selectyear', methods=['POST'])
 def selectyear():
     if request.method == 'POST':
         selected_year = request.get_json(force=True)
@@ -200,7 +200,7 @@ def selectyear():
         return {"201": selected_year}
 
 
-@app.route('/api/selectrace', methods=['POST'])
+@app.route('/formula/selectrace', methods=['POST'])
 def selectrace():
     if request.method == 'POST':
         selected_race = request.get_json(force=True)
@@ -231,7 +231,7 @@ def selectrace():
         return {"201": selected_race}
 
 
-@app.route('/api/selectevent', methods=['POST'])
+@app.route('/formula/selectevent', methods=['POST'])
 def selectevent():
     if request.method == 'POST':
         selected_event = request.get_json(force=True)
@@ -270,7 +270,7 @@ def selectevent():
         return {"201": selected_event}
 
 
-@app.route('/api/selectdriver', methods=['POST'])
+@app.route('/formula/selectdriver', methods=['POST'])
 def selectdriver():
     if request.method == 'POST':
         selected_drivers = request.get_json(force=True)
@@ -294,7 +294,7 @@ def selectdriver():
         return {"201": selected_drivers}
 
 
-@app.route('/api/lap_number_time')
+@app.route('/formula/lap_number_time')
 def getChartData():
     # Get Data from Sessions
     selected_year = 2022
@@ -352,7 +352,7 @@ def getChartData():
     return jsonify(final_dict)
 
 
-@app.route('/api/speed_distance')
+@app.route('/formula/speed_distance')
 def speed_distance():
     selected_year = 2022
     selected_race = "Bahrain Grand Prix"

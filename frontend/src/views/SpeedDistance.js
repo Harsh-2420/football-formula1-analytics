@@ -94,7 +94,7 @@ export const SpeedDistance = () => {
     // const [opacity, setOpacity] = useState({ HAM: 1, ALO: 1, LAT: 1 })
 
     useEffect(() => {
-        fetch("http://127.0.0.1:5000/api/speed_distance")
+        fetch("http://127.0.0.1:5000/formula/speed_distance")
             .then((res) => res.json())
             .then((data) => {
                 console.log("speed distance data: ", data)
