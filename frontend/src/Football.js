@@ -6,10 +6,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles"
 import Box from "@mui/material/Box"
 import CssBaseline from "@mui/material/CssBaseline"
 
-import { Header } from "./formulaViews/Header"
-import { DropdownPage } from "./formulaViews/DropdownPage"
-import { LapTime } from "./formulaViews/LapTime"
-import { SpeedDistance } from "./formulaViews/SpeedDistance"
+import { Header } from "./footballViews/Header"
 
 import "@fontsource/montserrat/300.css"
 import "@fontsource/montserrat/400.css"
@@ -69,12 +66,6 @@ class Formula extends Component {
                     <ThemeProvider theme={theme}>
                         <CssBaseline />
                         <Header />
-                        {/* <Navbar /> */}
-                        <DropdownPage />
-                        {/* <Suspense fallback={<DropdownPage />}> */}
-                        <LapTime />
-                        <SpeedDistance />
-                        {/* </Suspense> */}
                     </ThemeProvider>
                 </React.Fragment>
             </div>
