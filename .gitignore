@@ -1,9 +1,22 @@
+# backend
+f1_cache/
+databases/
+flask_session
+__pycache__
+football_data
+
+# jupyter
+.ipynb_checkpoints/
+
+# frontend
+node_modules/
+
+
 *.pkl
 *.ff1pkl
+
 *.pyc
-node_modules/
+*.csv
 *.db
 *.sqlite
-.ipynb_checkpoints/
-flask_session/
-/*_session/
+

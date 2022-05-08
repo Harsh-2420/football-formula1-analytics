@@ -101,6 +101,9 @@ export const SpeedDistance = () => {
                 setCurrentChartData(data)
             })
     }, [])
+    const renderLabel = function (entry) {
+        return entry.name
+    }
     // const handleMouseEnter = (o) => {
     //     const { dataKey } = o
     //     setOpacity({ ...opacity, [dataKey]: 0.5 })
@@ -128,7 +131,9 @@ export const SpeedDistance = () => {
                         width={600}
                         height={600}
                         // syncId="anyId"
-                        data={currentChartData.HAM}
+                        data={
+                            currentChartData[Object.keys(currentChartData)[0]]
+                        }
                         margin={{
                             top: 35,
                             right: 30,
@@ -171,6 +176,8 @@ export const SpeedDistance = () => {
                             left: 30,
                             bottom: 45,
                         }}
+                        // label="Speed"
+                        // label={renderLabel}
                     >
                         {Object.keys(currentChartData).map((key, index) => {
                             const data = currentChartData[key]

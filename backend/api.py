@@ -11,6 +11,11 @@ import requests
 import datetime
 from datetime import timedelta
 from set_values import driver_key_val_pair, team_color_pair
+import pandas as pd
+import csv
+import re
+from bs4 import BeautifulSoup
+import urllib.request
 # import asyncio
 
 app = Flask(__name__)
@@ -22,6 +27,7 @@ app.config['SESSION_TYPE'] = 'filesystem'
 app.config['SESSION_FILE_THRESHOLD'] = 5
 app.config["SECRET_KEY"] = "OCML3BRawWEUeaxcuKHLpw"
 app.config['SESSION_COOKIE_NAME'] = "F1 Cookie"
+app.config['UPLOAD_FOLDER'] = './databases/'
 Session(app)
 
 # SQL Alchemy config
@@ -35,7 +41,7 @@ app.config['SQLALCHEMY_BINDS'] = {
 }
 db = SQLAlchemy(app)
 CORS(app)
-fastf1.Cache.enable_cache('../f1_cache')
+fastf1.Cache.enable_cache('./f1_cache')
 # global g_selected_year
 
 
@@ -101,6 +107,32 @@ db.session.commit()
 def serializer(todo):
     return {'id': todo.id,
             'content': todo.content}
+
+
+def dataunpack(basepath, datacurr):
+    with urllib.request.urlopen(str(basepath + datacurr)) as f:
+        html = f.read().decode('utf-8')
+    with open("./football_data/unpack_data.txt", "a") as myfile:
+        myfile.write(html)
+
+    with open('./football_data/unpack_data.txt', 'r') as in_file:
+        stripped = (line.strip() for line in in_file)
+        lines = (line.split(",") for line in stripped if line)
+        with open(str('./football_data/' + datacurr), 'w') as out_file:
+            writer = csv.writer(out_file)
+            writer.writerows(lines)
+
+
+@app.route('/football/getfbdata', methods=['GET'])
+def getfbdata():
+    basepath = 'https://projects.fivethirtyeight.com/soccer-api/club/'
+    datapath = ['spi_matches_latest.csv', 'spi_matches.csv',
+                'spi_global_rankings.csv']
+    for datacurr in datapath:
+        dataunpack(basepath, datacurr)
+    dataunpack('https://projects.fivethirtyeight.com/soccer-api/international/',
+               'spi_global_rankings_intl.csv')
+    return 'Data Unpacked'
 
 
 @app.route('/api/getyear', methods=['GET'])
@@ -266,9 +298,9 @@ def selectdriver():
 def getChartData():
     # Get Data from Sessions
     selected_year = 2022
-    selected_race = "Emilia Romagna Grand Prix"
+    selected_race = "Bahrain Grand Prix"
     selected_event = "Race"
-    selected_drivers = ["HAM", 'MSC']
+    selected_drivers = ["HAM", 'LEC']
 
     # How to Wait until options are selected?
     # selected_year = Selections.query.filter_by(id=1).first().content
@@ -322,11 +354,11 @@ def getChartData():
 
 @app.route('/api/speed_distance')
 def speed_distance():
-    selected_year = 2021
+    selected_year = 2022
     selected_race = "Bahrain Grand Prix"
     selected_event = "Race"
     round_number = 1
-    selected_drivers = ['HAM', 'MSC']
+    selected_drivers = ['NOR', 'LEC']
     fastf1_session = fastf1.get_session(
         selected_year, selected_race, selected_event)
     fastf1_session.load(telemetry=True, laps=True, weather=False)
