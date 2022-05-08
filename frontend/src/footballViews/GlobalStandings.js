@@ -8,24 +8,30 @@ import TableRow from "@mui/material/TableRow"
 import Paper from "@mui/material/Paper"
 import Typography from "@mui/material/Typography"
 
-export const GlobalStandings = () => {
+import { withStyles } from "@material-ui/core/styles"
+
+const styles = (theme) => ({
+    tablecell: {
+        fontWeight: "bold",
+        color: "red",
+    },
+})
+
+function GlobalStandings(props) {
     const [rows, setRows] = useState([])
+    // const { classes } = props
+
     useEffect(() => {
         fetch("http://127.0.0.1:5000/football/getglobalrankings")
             .then((res) => res.json())
             .then((data) => {
-                // Object.keys(data).map(function (key, index) {
-                //     data[key]
-                //         .filter((v) => v[key] === 0)
-                //         .forEach((v) => (v[key] = NaN))
-                // })
                 console.log("football global ranks:", data)
                 setRows(data)
             })
     }, [])
     return (
-        <Typography variant="h3" color="common.white">
-            <TableContainer component={Paper} sx={{ fontColor: "white" }}>
+        <Paper>
+            <TableContainer component={Paper}>
                 <Table sx={{ minWidth: 650 }} aria-label="simple table">
                     <TableHead>
                         <TableRow>
@@ -54,7 +60,12 @@ export const GlobalStandings = () => {
                                 <TableCell align="right">
                                     {row.Change}
                                 </TableCell>
-                                <TableCell align="right">{row.name}</TableCell>
+                                <TableCell
+                                    // className={classes.tablecell}
+                                    align="right"
+                                >
+                                    {row.name}
+                                </TableCell>
                                 <TableCell align="right">
                                     {row.league}
                                 </TableCell>
@@ -68,6 +79,9 @@ export const GlobalStandings = () => {
                     </TableBody>
                 </Table>
             </TableContainer>
-        </Typography>
+        </Paper>
     )
 }
+
+export default withStyles(styles)(GlobalStandings)
+// export default GlobalStandings

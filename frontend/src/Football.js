@@ -8,7 +8,8 @@ import CssBaseline from "@mui/material/CssBaseline"
 
 import { FootballHeader } from "./footballViews/Header"
 import { Predictions } from "./footballViews/Predictions"
-import { GlobalStandings } from "./footballViews/GlobalStandings"
+// import GlobalStandings from "./footballViews/GlobalStandings"
+import Standings from "./footballViews/Standings"
 
 import "@fontsource/montserrat/300.css"
 import "@fontsource/montserrat/400.css"
@@ -23,6 +24,15 @@ const theme = createTheme({
         },
         secondary: {
             main: "#f50057",
+        },
+    },
+    overrides: {
+        MuiButton: {
+            // Name of the component ⚛️ / style sheet
+            root: {
+                // Name of the rule
+                color: "white", // Some CSS
+            },
         },
     },
 })
@@ -42,7 +52,8 @@ class Formula extends Component {
                     <ThemeProvider theme={theme}>
                         <CssBaseline />
                         <FootballHeader />
-                        <GlobalStandings />
+                        {/* <GlobalStandings /> */}
+                        <Standings />
                     </ThemeProvider>
                 </React.Fragment>
             </div>
