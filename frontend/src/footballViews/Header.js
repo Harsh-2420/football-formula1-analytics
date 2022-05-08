@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react"
 import Box from "@mui/material/Box"
 
-export const Header = () => {
+export const FootballHeader = () => {
     return (
         <div>
             <Box
@@ -16,10 +16,10 @@ export const Header = () => {
                     style={{
                         fontFamily: "Montserrat",
                         fontWeight: "bold",
-                        color: "white",
+                        color: "black",
                     }}
                 >
-                    F1 Discover
+                    Football Predictions
                 </h1>
                 {/* <h6
                     style={{

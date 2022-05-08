@@ -109,32 +109,6 @@ def serializer(todo):
             'content': todo.content}
 
 
-def dataunpack(basepath, datacurr):
-    with urllib.request.urlopen(str(basepath + datacurr)) as f:
-        html = f.read().decode('utf-8')
-    with open("./football_data/unpack_data.txt", "a") as myfile:
-        myfile.write(html)
-
-    with open('./football_data/unpack_data.txt', 'r') as in_file:
-        stripped = (line.strip() for line in in_file)
-        lines = (line.split(",") for line in stripped if line)
-        with open(str('./football_data/' + datacurr), 'w') as out_file:
-            writer = csv.writer(out_file)
-            writer.writerows(lines)
-
-
-@app.route('/football/getfbdata', methods=['GET'])
-def getfbdata():
-    basepath = 'https://projects.fivethirtyeight.com/soccer-api/club/'
-    datapath = ['spi_matches_latest.csv', 'spi_matches.csv',
-                'spi_global_rankings.csv']
-    for datacurr in datapath:
-        dataunpack(basepath, datacurr)
-    dataunpack('https://projects.fivethirtyeight.com/soccer-api/international/',
-               'spi_global_rankings_intl.csv')
-    return 'Data Unpacked'
-
-
 @app.route('/formula/getyear', methods=['GET'])
 def getyear():
     curr_year = datetime.datetime.now().year+1
@@ -373,6 +347,42 @@ def speed_distance():
         driv_tel[driver]['color'] = color
         driv_tel[driver] = driv_tel[driver].to_dict('records')
     return jsonify(driv_tel)
+
+
+def dataunpack(basepath, datacurr):
+    with urllib.request.urlopen(str(basepath + datacurr + '.csv')) as f:
+        html = f.read().decode('utf-8')
+    with open("./football_data/" + datacurr + '.txt', "a") as myfile:
+        myfile.write(html)
+
+    with open('./football_data/' + datacurr + '.txt', 'r') as in_file:
+        stripped = (line.strip() for line in in_file)
+        lines = (line.split(",") for line in stripped if line)
+        with open(str('./football_data/' + datacurr + '.csv'), 'w') as out_file:
+            writer = csv.writer(out_file)
+            writer.writerows(lines)
+
+
+@app.route('/football/getfbdata', methods=['GET'])
+def getfbdata():
+    basepath = 'https://projects.fivethirtyeight.com/soccer-api/club/'
+    datapath = ['spi_matches_latest', 'spi_matches',
+                'spi_global_rankings']
+    for datacurr in datapath:
+        dataunpack(basepath, datacurr)
+    dataunpack('https://projects.fivethirtyeight.com/soccer-api/international/',
+               'spi_global_rankings_intl')
+    return 'Data Unpacked'
+
+
+@app.route('/football/getglobalrankings', methods=['GET'])
+def getglobalrankings():
+    global_ranks_df = pd.read_csv('./football_data/spi_global_rankings.csv')
+    global_ranks_df['Change'] = global_ranks_df['rank'] - \
+        global_ranks_df['prev_rank']
+    global_ranks_df.drop(['prev_rank'], axis=1, inplace=True)
+    global_ranks = global_ranks_df.to_dict('records')
+    return jsonify(global_ranks)
 
 
 if __name__ == '__main__':

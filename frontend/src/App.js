@@ -7,7 +7,7 @@ import "bootstrap/dist/css/bootstrap.min.css"
 import Formula from "./Formula"
 import Football from "./Football"
 import { Home } from "./Home"
-import { NavBar } from "./formulaViews/Navbar"
+import { NavBar } from "./Components/Navbar"
 
 function App() {
     return (

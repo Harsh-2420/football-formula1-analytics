@@ -6,7 +6,9 @@ import { createTheme, ThemeProvider } from "@mui/material/styles"
 import Box from "@mui/material/Box"
 import CssBaseline from "@mui/material/CssBaseline"
 
-import { Header } from "./footballViews/Header"
+import { FootballHeader } from "./footballViews/Header"
+import { Predictions } from "./footballViews/Predictions"
+import { GlobalStandings } from "./footballViews/GlobalStandings"
 
 import "@fontsource/montserrat/300.css"
 import "@fontsource/montserrat/400.css"
@@ -15,38 +17,12 @@ import "@fontsource/montserrat/700.css"
 
 const theme = createTheme({
     palette: {
-        type: "dark",
+        type: "light",
         primary: {
-            main: "#8a9c9b",
+            main: "#3f51b5",
         },
         secondary: {
-            main: "#ffa726",
-            light: "#ff4a13",
-        },
-        background: {
-            default: "#25292f",
-            paper: "#37373d",
-        },
-        error: {
-            main: "#ad2424",
-        },
-    },
-    components: {
-        MuiTypography: {
-            defaultProps: {
-                variantMapping: {
-                    h1: "h2",
-                    h2: "h2",
-                    h3: "h2",
-                    h4: "h2",
-                    h5: "h2",
-                    h6: "h2",
-                    subtitle1: "h2",
-                    subtitle2: "h2",
-                    body1: "span",
-                    body2: "span",
-                },
-            },
+            main: "#f50057",
         },
     },
 })
@@ -65,7 +41,8 @@ class Formula extends Component {
                 <React.Fragment>
                     <ThemeProvider theme={theme}>
                         <CssBaseline />
-                        <Header />
+                        <FootballHeader />
+                        <GlobalStandings />
                     </ThemeProvider>
                 </React.Fragment>
             </div>
