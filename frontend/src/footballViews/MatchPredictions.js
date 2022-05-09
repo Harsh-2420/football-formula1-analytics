@@ -2,15 +2,108 @@ import React, { useEffect, useState } from "react"
 import { DataGrid } from "@mui/x-data-grid"
 import { mean } from "mathjs"
 import moment from "moment"
+import chroma from "chroma-js"
+import { MatchItem } from "../Components/MatchItem"
 
 const handleQuality = (params) => {
-    // console.log(`${params.row.spi1}`, `${params.row.importance1}`)
-    return mean(`${params.row.spi1}`, `${params.row.spi2}`)
+    const colorRange = chroma.scale(["rgb(202,237,231)", "rgb(34,104,92)"])
+    const percent = params.value / 100
+    return (
+        <div
+            style={{
+                color: "black",
+                borderStyle: "solid",
+                borderColor: `${colorRange(percent.toString())}`,
+                borderRadius: "13px",
+                width: "65%",
+                background: `${colorRange(percent.toString())}`,
+            }}
+        >
+            {Math.round(mean(`${params.row.spi1}`, `${params.row.spi2}`))}
+        </div>
+    )
 }
 
-const hanldeDate = (params) => {
+const handleImportance = (params) => {
+    const colorRange = chroma.scale(["rgb(202,237,231)", "rgb(34,104,92)"])
+    const percent = params.value / 100
+    return (
+        <div
+            style={{
+                color: "black",
+                borderStyle: "solid",
+                borderColor: `${colorRange(percent.toString())}`,
+                borderRadius: "13px",
+                width: "65%",
+                background: `${colorRange(percent.toString())}`,
+            }}
+        >
+            {Math.round(
+                mean(`${params.row.importance1}`, `${params.row.importance2}`)
+            )}
+        </div>
+    )
+}
+
+const handleMatchRating = (params) => {
+    const colorRange = chroma.scale(["rgb(202,237,231)", "rgb(34,104,92)"])
+    const percent = params.value / 100
+    return (
+        <div
+            style={{
+                color: "black",
+                borderStyle: "solid",
+                borderColor: `${colorRange(percent.toString())}`,
+                borderRadius: "13px",
+                width: "65%",
+                background: `${colorRange(percent.toString())}`,
+            }}
+        >
+            {Math.round(
+                mean(
+                    mean(`${params.row.spi1}`, `${params.row.spi2}`),
+                    mean(
+                        `${params.row.importance1}`,
+                        `${params.row.importance2}`
+                    )
+                )
+            )}
+        </div>
+    )
+}
+
+const handleDate = (params) => {
     var formatted = moment(params.value).format("D MMMM YYYY")
     return formatted
+}
+
+const handleMatchComponent = (params) => {
+    return (
+        <div>
+            <div
+                style={{
+                    borderStyle: "solid",
+                    borderColor: "#1a5d57",
+                    borderRadius: "13px",
+                    width: "100%",
+                    background: `#1a5d57`,
+                }}
+            >
+                {params.row.team1}
+            </div>
+            <div
+                style={{
+                    borderStyle: "solid",
+                    borderColor: "#1a5d57",
+                    borderRadius: "13px",
+                    width: "100%",
+                    background: `#1a5d57`,
+                }}
+            >
+                {params.row.team2}
+            </div>
+        </div>
+    )
 }
 
 const columns = [
@@ -19,25 +112,19 @@ const columns = [
         headerName: "Date",
         type: "number",
         width: 150,
-        renderCell: hanldeDate,
+        renderCell: handleDate,
     },
     {
         field: "league",
         headerName: "League",
-        width: 150,
+        width: 200,
         // renderCell: handleRenderRankChange,
     },
     {
         field: "team1",
-        headerName: "team1",
-        width: 300,
-        // renderCell: handleRenderTeamImage,
-    },
-    {
-        field: "team2",
-        headerName: "team2",
-        width: 300,
-        // renderCell: handleRenderTeamImage,
+        headerName: "Match",
+        width: 500,
+        renderCell: handleMatchComponent,
     },
     {
         field: "importance2",
@@ -48,10 +135,17 @@ const columns = [
     },
     {
         field: "importance1",
-        headerName: "importance1",
+        headerName: "Importance",
         type: "number",
         width: 120,
-        // renderCell: handleRenderStatOff,
+        renderCell: handleImportance,
+    },
+    {
+        field: "spi2",
+        headerName: "Match Rating",
+        type: "number",
+        width: 120,
+        renderCell: handleMatchRating,
     },
 
     // {
@@ -61,7 +155,6 @@ const columns = [
     //     width: 120,
     // },
 ]
-
 export const MatchPredictions = () => {
     const [rows, setRows] = useState([])
     useEffect(() => {
@@ -72,9 +165,6 @@ export const MatchPredictions = () => {
                 setRows(data)
             })
     }, [])
-
-    // if (rows[0].date) {
-    // }
     return (
         <div
             className="tableHolder"
@@ -104,6 +194,7 @@ export const MatchPredictions = () => {
                             fontWeight: "500",
                         },
                     }}
+                    rowHeight={100}
                     rows={rows}
                     columns={columns}
                     pageSize={100}
