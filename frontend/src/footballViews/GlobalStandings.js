@@ -185,7 +185,6 @@ const columns = [
     },
 ]
 function GlobalStandings(props) {
-    const { classes } = props
     const [rows, setRows] = useState([])
 
     useEffect(() => {
@@ -224,14 +223,6 @@ function GlobalStandings(props) {
                             color: "primary.main",
                             fontWeight: "500",
                         },
-                        // "& .MuiMenuItem-root": {
-                        //     fontFamily: "Montserrat",
-                        // },
-
-                        // "& .MuiButtonBase-root": {
-                        //     // color: "primary.main",
-                        //     fontFamily: "Montserrat",
-                        // },
                     }}
                     rows={rows}
                     columns={columns}

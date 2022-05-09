@@ -413,5 +413,20 @@ def getglobalrankings():
     return jsonify(global_ranks)
 
 
+@app.route('/football/getpredictions', methods=['GET'])
+def getpredictions():
+    global_ranks_df = pd.read_csv('./football_data/spi_matches_latest.csv')
+    global_ranks_df = global_ranks_df.drop(
+        global_ranks_df.index[global_ranks_df['rank'] == 'rank'])
+    # global_ranks_df['Change'] = pd.to_numeric(
+    #     global_ranks_df['prev_rank']) - pd.to_numeric(global_ranks_df['rank'])
+    # global_ranks_df.drop(['prev_rank'], axis=1, inplace=True)
+    # global_ranks_df['teamImage'] = global_ranks_df['name'].map(team_dict)
+    global_ranks_df['image'] = global_ranks_df['league'].map(leg)
+    global_ranks_df = global_ranks_df.fillna('')
+    global_ranks = global_ranks_df.to_dict('records')
+    return jsonify(global_ranks)
+
+
 if __name__ == '__main__':
     app.run(debug=True)
