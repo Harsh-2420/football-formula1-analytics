@@ -10,7 +10,7 @@ import pandas as pd
 import requests
 import datetime
 from datetime import timedelta
-from set_values import driver_key_val_pair, team_color_pair, image_d
+from set_values import driver_key_val_pair, team_color_pair, image_d, leg, team_dict
 import pandas as pd
 import csv
 import re
@@ -390,14 +390,10 @@ def getfbdata():
                'spi_global_rankings_intl')
 
     # Adding Image to Base Data
-    leagues = addleagueimage()
+    # leagues = addleagueimage()
     global_rankings = pd.read_csv('./football_data/spi_global_rankings.csv')
-    leg = {}
-    for league in leagues.json()['response']:
-        leg[league['league']['name']] = league['league']['logo']
-
-    global_rankings['league'].replace(image_d, inplace=True)
     global_rankings['image'] = global_rankings['league'].map(leg)
+    global_rankings['league'].replace(image_d, inplace=True)
     global_rankings.to_csv(
         './football_data/spi_global_rankings.csv', index=False)
     return 'Data Unpacked'
@@ -409,8 +405,9 @@ def getglobalrankings():
     global_ranks_df = global_ranks_df.drop(
         global_ranks_df.index[global_ranks_df['rank'] == 'rank'])
     global_ranks_df['Change'] = pd.to_numeric(
-        global_ranks_df['rank']) - pd.to_numeric(global_ranks_df['prev_rank'])
+        global_ranks_df['prev_rank']) - pd.to_numeric(global_ranks_df['rank'])
     global_ranks_df.drop(['prev_rank'], axis=1, inplace=True)
+    global_ranks_df['teamImage'] = global_ranks_df['name'].map(team_dict)
     global_ranks_df = global_ranks_df.fillna('')
     global_ranks = global_ranks_df.to_dict('records')
     return jsonify(global_ranks)

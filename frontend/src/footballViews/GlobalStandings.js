@@ -102,6 +102,46 @@ const handleRenderStatDef = (params) => {
     )
 }
 
+const handleRenderImage = (params) => {
+    if (params.row.image === "") {
+        return `${params.value}`
+    } else {
+        return (
+            <div style={{ justifyContent: "center", alignSelf: "center" }}>
+                <img
+                    style={{
+                        heightL: "10%",
+                        width: "10%",
+                    }}
+                    alt={params.value}
+                    src={params.row.image}
+                />
+                &nbsp; {params.value}
+            </div>
+        )
+    }
+}
+
+const handleRenderTeamImage = (params) => {
+    if (params.row.teamImage === "") {
+        return `${params.value}`
+    } else {
+        return (
+            <div style={{ justifyContent: "center", alignSelf: "center" }}>
+                <img
+                    style={{
+                        heightL: "10%",
+                        width: "10%",
+                    }}
+                    alt={params.value}
+                    src={params.row.teamImage}
+                />
+                &nbsp; {params.value}
+            </div>
+        )
+    }
+}
+
 const columns = [
     { field: "rank", headerName: "Rank", type: "number", width: 100 },
     {
@@ -111,11 +151,17 @@ const columns = [
         width: 150,
         renderCell: handleRenderRankChange,
     },
-    { field: "name", headerName: "Team", width: 300 },
+    {
+        field: "name",
+        headerName: "Team",
+        width: 300,
+        renderCell: handleRenderTeamImage,
+    },
     {
         field: "league",
         headerName: "League",
         width: 300,
+        renderCell: handleRenderImage,
     },
     {
         field: "off",
