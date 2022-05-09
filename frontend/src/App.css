@@ -68,3 +68,9 @@
     border-radius: "7px";
     padding: "15px";
 }
+
+/* FootBall */
+/* Global Standings */
+.MuiDataGrid-root .MuiDataGrid-cell:focus-within {
+    outline: none !important;
+}
