@@ -1,57 +1,116 @@
 import React, { useEffect, useState } from "react"
-import Box from "@mui/material/Box"
-import Card from "@mui/material/Card"
-import CardActions from "@mui/material/CardActions"
-import CardContent from "@mui/material/CardContent"
-import Button from "@mui/material/Button"
-import Typography from "@mui/material/Typography"
-import Grid from "@mui/material/Grid"
+import { DataGrid } from "@mui/x-data-grid"
+import { mean } from "mathjs"
+import moment from "moment"
+
+const handleQuality = (params) => {
+    // console.log(`${params.row.spi1}`, `${params.row.importance1}`)
+    return mean(`${params.row.spi1}`, `${params.row.spi2}`)
+}
+
+const hanldeDate = (params) => {
+    var formatted = moment(params.value).format("D MMMM YYYY")
+    return formatted
+}
+
+const columns = [
+    {
+        field: "date",
+        headerName: "Date",
+        type: "number",
+        width: 150,
+        renderCell: hanldeDate,
+    },
+    {
+        field: "league",
+        headerName: "League",
+        width: 150,
+        // renderCell: handleRenderRankChange,
+    },
+    {
+        field: "team1",
+        headerName: "team1",
+        width: 300,
+        // renderCell: handleRenderTeamImage,
+    },
+    {
+        field: "team2",
+        headerName: "team2",
+        width: 300,
+        // renderCell: handleRenderTeamImage,
+    },
+    {
+        field: "importance2",
+        headerName: "Quality",
+        type: "number",
+        width: 120,
+        renderCell: handleQuality,
+    },
+    {
+        field: "importance1",
+        headerName: "importance1",
+        type: "number",
+        width: 120,
+        // renderCell: handleRenderStatOff,
+    },
+
+    // {
+    //     field: "spi",
+    //     headerName: "SPI",
+    //     type: "number",
+    //     width: 120,
+    // },
+]
 
 export const MatchPredictions = () => {
     const [rows, setRows] = useState([])
     useEffect(() => {
-        fetch("http://127.0.0.1:5000/football/getpredictions")
+        fetch("http://127.0.0.1:5000/football/getfuturepredictions")
             .then((res) => res.json())
             .then((data) => {
-                console.log("football global ranks:", data)
+                console.log("football match predictions:", data)
                 setRows(data)
             })
     }, [])
+
+    // if (rows[0].date) {
+    // }
     return (
-        <Box sx={{ flexGrow: 1 }}>
-            <Grid
-                container
-                spacing={{ xs: 2, md: 3 }}
-                columns={{ xs: 4, sm: 8, md: 12 }}
+        <div
+            className="tableHolder"
+            style={{
+                display: "flex",
+                justifyContent: "center",
+                paddingLeft: "90px",
+                paddingRight: "90px",
+            }}
+        >
+            <div
+                className="dataTable"
+                style={{
+                    height: "100vh",
+                    width: "100%",
+                    alignSelf: "center",
+                    margin: "0 auto",
+                }}
             >
-                <Grid item xs={2} sm={4} md={4}>
-                    <Card sx={{ minWidth: 275 }}>
-                        <CardContent>
-                            <Typography
-                                sx={{ fontSize: 14 }}
-                                color="text.secondary"
-                                gutterBottom
-                            >
-                                Word of the Day
-                            </Typography>
-                            <Typography variant="h5" component="div">
-                                Match
-                            </Typography>
-                            <Typography sx={{ mb: 1.5 }} color="text.secondary">
-                                adjective
-                            </Typography>
-                            <Typography variant="body2">
-                                well meaning and kindly.
-                                <br />
-                                {'"a benevolent smile"'}
-                            </Typography>
-                        </CardContent>
-                        <CardActions>
-                            <Button size="small">Learn More</Button>
-                        </CardActions>
-                    </Card>
-                </Grid>
-            </Grid>
-        </Box>
+                <DataGrid
+                    sx={{
+                        fontFamily: "Montserrat",
+                        border: 0,
+                        boxShadow: 0,
+                        "& .MuiDataGrid-cell:hover": {
+                            color: "primary.main",
+                            fontWeight: "500",
+                        },
+                    }}
+                    rows={rows}
+                    columns={columns}
+                    pageSize={100}
+                    rowsPerPageOptions={[100]}
+                    getRowId={(r) => r.index}
+                />
+            </div>
+        </div>
     )
 }
