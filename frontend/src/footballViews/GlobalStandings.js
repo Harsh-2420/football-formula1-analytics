@@ -24,6 +24,16 @@ const styles = {
     },
 }
 
+var dataChange = function (params) {
+    if (params.row.Change === 0) {
+        return ``
+    } else if (params.row.Change > 0) {
+        return `+${params.row.Change}`
+    } else {
+        return `${params.row.Change}`
+    }
+}
+
 const columns = [
     { field: "rank", headerName: "Rank", type: "number", width: 100 },
     {
@@ -31,16 +41,7 @@ const columns = [
         headerName: "1-Week Change",
         type: "number",
         width: 150,
-        cellClassName: (params) => {
-            if (params.value == null) {
-                return ""
-            }
-
-            return clsx("super-app", {
-                negative: params.value < 0,
-                positive: params.value > 0,
-            })
-        },
+        valueGetter: dataChange,
     },
     { field: "name", headerName: "Team", width: 300 },
     {
