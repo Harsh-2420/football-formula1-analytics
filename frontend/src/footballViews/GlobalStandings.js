@@ -12,6 +12,7 @@ import PropTypes from "prop-types"
 import Grid from "@mui/material/Grid"
 import { DataGrid } from "@mui/x-data-grid"
 import clsx from "clsx"
+import chroma from "chroma-js"
 
 const styles = {
     root: {
@@ -24,14 +25,81 @@ const styles = {
     },
 }
 
-var dataChange = function (params) {
-    if (params.row.Change === 0) {
+const handleRenderRankChange = (params) => {
+    if (params.value === 0) {
         return ``
-    } else if (params.row.Change > 0) {
-        return `+${params.row.Change}`
+    } else if (params.value > 0) {
+        return (
+            <div
+                style={{
+                    color: "black",
+                    borderStyle: "solid",
+                    borderColor: "rgb(177,254,177)",
+                    borderRadius: "13px",
+                    width: "35%",
+                    background: "rgb(177,254,177)",
+                }}
+            >
+                + {params.value}
+            </div>
+        )
     } else {
-        return `${params.row.Change}`
+        return (
+            <div
+                style={{
+                    color: "black",
+                    // border: "2",
+                    borderStyle: "solid",
+                    borderColor: " rgb(253,177,177)",
+                    borderRadius: "13px",
+                    width: "35%",
+                    background: " rgb(253,177,177)",
+                }}
+            >
+                - {Math.abs(`${params.value}`)}
+            </div>
+        )
     }
+}
+
+const handleRenderStatOff = (params) => {
+    const colorRange = chroma.scale(["rgb(252,155,155)", "rgb(155,252,155)"])
+    const percent = (params.value - 0) / (3 - 0)
+    const outputX = percent * (1 - 0) + 0
+    return (
+        <div
+            style={{
+                color: "black",
+                borderStyle: "solid",
+                borderColor: `${colorRange(outputX.toString())}`,
+                borderRadius: "13px",
+                width: "55%",
+                background: `${colorRange(outputX.toString())}`,
+            }}
+        >
+            {params.value}
+        </div>
+    )
+}
+
+const handleRenderStatDef = (params) => {
+    const colorRange = chroma.scale(["rgb(155,252,155)", "rgb(252,155,155)"])
+    const percent = (params.value - 0) / (3 - 0)
+    const outputX = percent * (1 - 0) + 0
+    return (
+        <div
+            style={{
+                color: "black",
+                borderStyle: "solid",
+                borderColor: `${colorRange(outputX.toString())}`,
+                borderRadius: "13px",
+                width: "55%",
+                background: `${colorRange(outputX.toString())}`,
+            }}
+        >
+            {params.value}
+        </div>
+    )
 }
 
 const columns = [
@@ -41,7 +109,7 @@ const columns = [
         headerName: "1-Week Change",
         type: "number",
         width: 150,
-        valueGetter: dataChange,
+        renderCell: handleRenderRankChange,
     },
     { field: "name", headerName: "Team", width: 300 },
     {
@@ -54,12 +122,14 @@ const columns = [
         headerName: "Offense",
         type: "number",
         width: 120,
+        renderCell: handleRenderStatOff,
     },
     {
         field: "def",
         headerName: "Defense",
         type: "number",
         width: 120,
+        renderCell: handleRenderStatDef,
     },
     {
         field: "spi",
