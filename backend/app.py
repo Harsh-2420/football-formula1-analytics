@@ -10,7 +10,7 @@ import pandas as pd
 import requests
 import datetime
 from datetime import timedelta
-from set_values import driver_key_val_pair, team_color_pair
+from set_values import driver_key_val_pair, team_color_pair, image_d
 import pandas as pd
 import csv
 import re
@@ -349,6 +349,11 @@ def speed_distance():
     return jsonify(driv_tel)
 
 
+'''
+FOOTBALL ROUTES
+'''
+
+
 def dataunpack(basepath, datacurr):
     with urllib.request.urlopen(str(basepath + datacurr + '.csv')) as f:
         html = f.read().decode('utf-8')
@@ -363,8 +368,19 @@ def dataunpack(basepath, datacurr):
             writer.writerows(lines)
 
 
+def addleagueimage():
+    url = "https://api-football-beta.p.rapidapi.com/leagues"
+    headers = {
+        "X-RapidAPI-Host": "api-football-beta.p.rapidapi.com",
+        "X-RapidAPI-Key": "d78ca9f758msh31ad154b2fe50a8p12fbc9jsnabb8cabd4076"
+    }
+    leagues = requests.request("GET", url, headers=headers)
+    return leagues
+
+
 @app.route('/football/getfbdata', methods=['GET'])
 def getfbdata():
+    # Unpacking Base Data
     basepath = 'https://projects.fivethirtyeight.com/soccer-api/club/'
     datapath = ['spi_matches_latest', 'spi_matches',
                 'spi_global_rankings']
@@ -372,15 +388,30 @@ def getfbdata():
         dataunpack(basepath, datacurr)
     dataunpack('https://projects.fivethirtyeight.com/soccer-api/international/',
                'spi_global_rankings_intl')
+
+    # Adding Image to Base Data
+    leagues = addleagueimage()
+    global_rankings = pd.read_csv('./football_data/spi_global_rankings.csv')
+    leg = {}
+    for league in leagues.json()['response']:
+        leg[league['league']['name']] = league['league']['logo']
+
+    global_rankings['league'].replace(image_d, inplace=True)
+    global_rankings['image'] = global_rankings['league'].map(leg)
+    global_rankings.to_csv(
+        './football_data/spi_global_rankings.csv', index=False)
     return 'Data Unpacked'
 
 
 @app.route('/football/getglobalrankings', methods=['GET'])
 def getglobalrankings():
     global_ranks_df = pd.read_csv('./football_data/spi_global_rankings.csv')
-    global_ranks_df['Change'] = global_ranks_df['rank'] - \
-        global_ranks_df['prev_rank']
+    global_ranks_df = global_ranks_df.drop(
+        global_ranks_df.index[global_ranks_df['rank'] == 'rank'])
+    global_ranks_df['Change'] = pd.to_numeric(
+        global_ranks_df['rank']) - pd.to_numeric(global_ranks_df['prev_rank'])
     global_ranks_df.drop(['prev_rank'], axis=1, inplace=True)
+    global_ranks_df = global_ranks_df.fillna('')
     global_ranks = global_ranks_df.to_dict('records')
     return jsonify(global_ranks)
 

@@ -30,3 +30,19 @@ team_color_pair = {'Red Bull Racing': '#0600ef',
                    'McLaren': '#ffa112',
                    'Aston Martin': '#006f62',
                    }
+
+# Football
+# League Name Changes
+image_d = {
+    'Barclays Premier League': 'Premier League',
+    'German Bundesliga': 'Bundesliga 1',
+    'Spanish Primera Division': 'La Liga',
+    'French Ligue 1': 'Ligue 1',
+    'Dutch Eredivisie': 'Eredivisie',
+    'Austrian T-Mobile Bundesliga': 'Tipp3 Bundesliga',
+    'Italy Serie A': 'Serie A',
+    'Portuguese Liga': 'Primeira Liga',
+    'Scottish Premiership': 'Premiership',
+    'Brasileiro Série A': 'Brasileiro de Aspirantes',
+    'United Soccer League': 'USL Championship',
+}
