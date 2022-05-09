@@ -167,8 +167,6 @@ function GlobalStandings(props) {
                     width: "100%",
                     alignSelf: "center",
                     margin: "0 auto",
-                    // display: "flex",
-                    // justifyContent: "center",
                 }}
             >
                 <DataGrid
@@ -180,6 +178,14 @@ function GlobalStandings(props) {
                             color: "primary.main",
                             fontWeight: "500",
                         },
+                        // "& .MuiMenuItem-root": {
+                        //     fontFamily: "Montserrat",
+                        // },
+
+                        // "& .MuiButtonBase-root": {
+                        //     // color: "primary.main",
+                        //     fontFamily: "Montserrat",
+                        // },
                     }}
                     rows={rows}
                     columns={columns}
