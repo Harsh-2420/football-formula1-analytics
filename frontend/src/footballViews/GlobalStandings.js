@@ -182,7 +182,7 @@ function GlobalStandings(props) {
         fetch("http://127.0.0.1:5000/football/getglobalrankings")
             .then((res) => res.json())
             .then((data) => {
-                console.log("football global ranks:", data)
+                // console.log("football global ranks:", data)
                 setRows(data)
             })
     }, [])

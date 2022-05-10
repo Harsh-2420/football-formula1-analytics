@@ -8,11 +8,14 @@ import Select from "@mui/material/Select"
 
 import { LeaguePredictions } from "./LeaguePredictions"
 import { MatchPredictions } from "./MatchPredictions"
-// import { MatchPredictionsLeague } from "./MatchPredictionsLeague"
+import { MatchPredictionsLeague } from "./MatchPredictionsLeague"
 
 export const Predictions = () => {
     const [leagues, setLeagues] = useState([])
-    const [selectedLeague, setSelectedLeague] = useState("All Leagues")
+    const [selectedLeague, setSelectedLeague] = useState(
+        // "All Leagues"
+        "UEFA Champions League"
+    )
     const [alignment, setAlignment] = useState("matches")
 
     useEffect(() => {
@@ -24,7 +27,7 @@ export const Predictions = () => {
     }, [])
 
     const handleDropdownSelectLeague = (e) => {
-        console.log(e.target.value)
+        // console.log(e.target.value)
         setSelectedLeague(e.target.value)
     }
 
@@ -77,7 +80,7 @@ export const Predictions = () => {
                     {selectedLeague === "All Leagues" ? (
                         <MatchPredictions />
                     ) : (
-                        "Hello"
+                        <MatchPredictionsLeague league={selectedLeague} />
                     )}
                 </>
             ) : (

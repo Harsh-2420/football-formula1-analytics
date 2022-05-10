@@ -414,7 +414,7 @@ def getglobalrankings():
 
 
 @app.route('/football/getfuturepredictions', methods=['GET'])
-def getpredictions():
+def getfuturepredictions():
     global_ranks_df = pd.read_csv('./football_data/spi_matches_latest.csv')
     global_ranks_df = global_ranks_df.drop(
         global_ranks_df.index[global_ranks_df['date'] == 'date'])
@@ -447,6 +447,32 @@ def getleaguedropdown():
         matches_dict['content'] = item
         final_list.append(matches_dict)
     return jsonify(final_list)
+
+
+@app.route('/football/getleaguepredictions', methods=['GET'])
+def getleaguepredictions():
+    global_ranks_df = pd.read_csv('./football_data/spi_matches_latest.csv')
+    global_ranks_df = global_ranks_df.drop(
+        global_ranks_df.index[global_ranks_df['date'] == 'date'])
+    global_ranks_df['date'] = pd.to_datetime(
+        global_ranks_df['date'], errors='coerce')
+
+    # global_ranks_df = global_ranks_df[global_ranks_df['date']
+    #                                   >= datetime.datetime.now() - timedelta(days=1)]
+    global_ranks_df = global_ranks_df.drop_duplicates()
+
+    # global_ranks_df['image'] = global_ranks_df['league'].map(leg)
+    # global_ranks_df['probd'] = 1 - pd.to_numeric(
+    #     global_ranks_df['prob1']) - pd.to_numeric(global_ranks_df['prob2'])
+    global_ranks_df = global_ranks_df.fillna('')
+    global_ranks_df.sort_values('date', inplace=True, ascending=False)
+    global_ranks_df = global_ranks_df.reset_index()
+    global_ranks = global_ranks_df.to_dict('records')
+    return jsonify(global_ranks)
+
+    # leaguepreds = df.to_dict('records')
+    # # app.logger.info(leaguepreds)
+    # return jsonify(leaguepreds)
 
 
 if __name__ == '__main__':
