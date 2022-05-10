@@ -14,7 +14,7 @@ export const Predictions = () => {
     const [leagues, setLeagues] = useState([])
     const [selectedLeague, setSelectedLeague] = useState(
         // "All Leagues"
-        "UEFA Champions League"
+        "All Leagues"
     )
     const [alignment, setAlignment] = useState("matches")
 
@@ -71,10 +71,6 @@ export const Predictions = () => {
                 </ToggleButton>
             </ToggleButtonGroup>
 
-            {/* {(() => {
-                if (alignment === "matches") return <MatchPredictions />
-                else return <LeaguePredictions />
-            })()} */}
             {alignment === "matches" ? (
                 <>
                     {selectedLeague === "All Leagues" ? (

@@ -8,40 +8,59 @@ import { MatchItem } from "../Components/MatchItem"
 import { Row } from "react-bootstrap"
 
 const handleQuality = (params) => {
-    const colorRange = chroma.scale(["#b1fef3", "#019983"])
-    const percent = params.value / 100
+    const colorRange = chroma.scale([
+        // "rgba(1,147,144,0.00)",
+        "#dafefe",
+        "rgba(1,147,144,1.00)",
+    ])
+    // const colorRange = chroma.scale(["#b1fef3", "#019983"])
+    const quality = Math.round(mean(`${params.row.spi1}`, `${params.row.spi2}`))
+    const percent = quality / 100
     return (
         <div
             style={{
                 color: "black",
                 borderStyle: "solid",
                 // border: 1,
-                borderColor: `${colorRange(percent.toString())}`,
+                borderColor: `${colorRange(percent).toString()}`,
                 borderRadius: "13px",
                 width: "65%",
                 // height: "20%",
-                background: `${colorRange(percent.toString())}`,
+                background: `${colorRange(percent).toString()}`,
             }}
         >
+            {console.log(
+                percent,
+                Math.round(mean(`${params.row.spi1}`, `${params.row.spi2}`)),
+                `${colorRange(percent).toString()}`
+            )}
             {Math.round(mean(`${params.row.spi1}`, `${params.row.spi2}`))}
         </div>
     )
 }
 
 const handleImportance = (params) => {
-    const colorRange = chroma.scale(["#b1fef3", "#019983"])
-    const percent = params.value / 100
+    const colorRange = chroma.scale([
+        // "rgba(1,147,144,0.00)",
+        "#dafefe",
+        "rgba(1,147,144,1.00)",
+    ])
+    // const colorRange = chroma.scale(["#b1fef3", "#019983"])
+    const importance = Math.round(
+        mean(`${params.row.importance1}`, `${params.row.importance2}`)
+    )
+    const percent = importance / 100
     return (
         <div
             style={{
                 color: "black",
                 // border: 1,
                 borderStyle: "solid",
-                borderColor: `${colorRange(percent.toString())}`,
+                borderColor: `${colorRange(percent).toString()}`,
                 borderRadius: "13px",
                 width: "65%",
                 // height: "20%",
-                background: `${colorRange(percent.toString())}`,
+                background: `${colorRange(percent).toString()}`,
             }}
         >
             {Math.round(
@@ -52,19 +71,30 @@ const handleImportance = (params) => {
 }
 
 const handleMatchRating = (params) => {
-    const colorRange = chroma.scale(["#b1fef3", "#019983"])
-    const percent = params.value / 100
+    const colorRange = chroma.scale([
+        // "rgba(1,147,144,0.00)",
+        "#dafefe",
+        "rgba(1,147,144,1.00)",
+    ])
+    // const colorRange = chroma.scale(["#b1fef3", "#019983"])
+    const rating = Math.round(
+        mean(
+            mean(`${params.row.spi1}`, `${params.row.spi2}`),
+            mean(`${params.row.importance1}`, `${params.row.importance2}`)
+        )
+    )
+    const percent = rating / 100
     return (
         <div
             style={{
                 color: "black",
                 // border: 1,
                 borderStyle: "solid",
-                borderColor: `${colorRange(percent.toString())}`,
+                borderColor: `${colorRange(percent).toString()}`,
                 borderRadius: "13px",
                 width: "65%",
                 // height: "20%",
-                background: `${colorRange(percent.toString())}`,
+                background: `${colorRange(percent).toString()}`,
             }}
         >
             {Math.round(
@@ -86,6 +116,7 @@ const handleDate = (params) => {
 }
 
 const handleMatchComponent = (params) => {
+    const colorRange = chroma.scale(["#F0F373", "#f4984c"])
     return (
         <div
             className="matchComponent"
@@ -113,17 +144,21 @@ const handleMatchComponent = (params) => {
                     >
                         WIN %
                     </div>
-                    <div
-                        style={{
-                            // paddingTop: "20px",
-                            float: "right",
-                            width: "23px",
-                            fontSize: "10px",
-                            fontColor: "#808080",
-                        }}
-                    >
-                        DRAW %
-                    </div>
+                    {params.row.probd === 0 ? (
+                        <></>
+                    ) : (
+                        <div
+                            style={{
+                                // paddingTop: "20px",
+                                float: "right",
+                                width: "23px",
+                                fontSize: "10px",
+                                fontColor: "#808080",
+                            }}
+                        >
+                            DRAW %
+                        </div>
+                    )}
                 </div>
             </Row>
             <Row>
@@ -157,7 +192,9 @@ const handleMatchComponent = (params) => {
                                     float: "right",
                                     width: "80px",
                                     height: "35px",
-                                    background: "#f6edc3",
+                                    background: `${colorRange(
+                                        params.row.prob1
+                                    ).toString()}`,
                                     borderTopRightRadius: "13px",
                                     borderBottomRightRadius: "13px",
                                 }}
@@ -196,7 +233,9 @@ const handleMatchComponent = (params) => {
                                     float: "right",
                                     width: "80px",
                                     height: "35px",
-                                    background: "#f6edc3",
+                                    background: `${colorRange(
+                                        params.row.prob2
+                                    ).toString()}`,
                                     borderTopRightRadius: "13px",
                                     borderBottomRightRadius: "13px",
                                 }}
@@ -206,22 +245,31 @@ const handleMatchComponent = (params) => {
                         </Row>
                     </div>
                 </div>
-                <div
-                    style={{
-                        background: "#f6edc3",
-                        borderRadius: "13px",
-                        border: "2px solid",
-                        borderColor: "#f6edc3",
-                        width: "80px",
-                        // height: "35px",
-                        float: "right",
-                        left: "320px",
-                        top: "40px",
-                        position: "absolute",
-                    }}
-                >
-                    {`${params.row.probd}`.substring(2, 4)}%
-                </div>
+                {params.row.probd === 0 ? (
+                    <></>
+                ) : (
+                    <div
+                        style={{
+                            // background: "#f6edc3",
+                            background: `${colorRange(
+                                params.row.probd
+                            ).toString()}`,
+                            borderRadius: "13px",
+                            border: "2px solid",
+                            borderColor: `${colorRange(
+                                params.row.probd
+                            ).toString()}`,
+                            width: "80px",
+                            // height: "35px",
+                            float: "right",
+                            left: "320px",
+                            top: "40px",
+                            position: "absolute",
+                        }}
+                    >
+                        {`${params.row.probd}`.substring(2, 4)}%
+                    </div>
+                )}
             </Row>
         </div>
     )

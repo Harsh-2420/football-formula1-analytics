@@ -429,6 +429,7 @@ def getfuturepredictions():
     global_ranks_df['teamImage2'] = global_ranks_df['team2'].map(team_dict)
     global_ranks_df['probd'] = 1 - pd.to_numeric(
         global_ranks_df['prob1']) - pd.to_numeric(global_ranks_df['prob2'])
+    global_ranks_df['probd'] = global_ranks_df['probd'].round(2)
     global_ranks_df = global_ranks_df.fillna('')
     global_ranks_df.sort_values('date', inplace=True)
     global_ranks_df = global_ranks_df.reset_index()
@@ -473,10 +474,6 @@ def getleaguepredictions():
     global_ranks_df = global_ranks_df.reset_index()
     global_ranks = global_ranks_df.to_dict('records')
     return jsonify(global_ranks)
-
-    # leaguepreds = df.to_dict('records')
-    # # app.logger.info(leaguepreds)
-    # return jsonify(leaguepreds)
 
 
 if __name__ == '__main__':
