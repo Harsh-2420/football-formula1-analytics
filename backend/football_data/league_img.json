@@ -1,0 +1,15 @@
+{
+    "Ligue 1": "https://media.api-sports.io/football/leagues/844.png",
+    "Serie A": "https://media.api-sports.io/football/leagues/242.png",
+    "Premier League": "https://media.api-sports.io/football/leagues/39.png",
+    "Bundesliga 1": "https://media.api-sports.io/football/leagues/78.png",
+    "Eredivisie": "https://media.api-sports.io/football/leagues/88.png",
+    "Primeira Liga": "https://media.api-sports.io/football/leagues/94.png",
+    "La Liga": "https://media.api-sports.io/football/leagues/140.png",
+    "Premiership": "https://media.api-sports.io/football/leagues/408.png",
+    "UEFA Champions League": "https://media.api-sports.io/football/leagues/2.png",
+    "Tipp3 Bundesliga": "https://media.api-sports.io/football/leagues/218.png",
+    "UEFA Europa League": "https://media.api-sports.io/football/leagues/3.png",
+    "USL Championship": "https://media.api-sports.io/football/leagues/255.png",
+    "Brasileiro de Aspirantes": "https://media.api-sports.io/football/leagues/741.png"
+}
