@@ -421,7 +421,7 @@ def getpredictions():
     global_ranks_df['date'] = pd.to_datetime(
         global_ranks_df['date'], errors='coerce')
     global_ranks_df = global_ranks_df[global_ranks_df['date']
-                                      >= datetime.datetime.now()]
+                                      >= datetime.datetime.now() - timedelta(days=1)]
     global_ranks_df = global_ranks_df.drop_duplicates()
 
     global_ranks_df['image'] = global_ranks_df['league'].map(leg)
@@ -432,6 +432,21 @@ def getpredictions():
     global_ranks_df = global_ranks_df.reset_index()
     global_ranks = global_ranks_df.to_dict('records')
     return jsonify(global_ranks)
+
+
+@app.route('/football/getleaguedropdown', methods=['GET'])
+def getleaguedropdown():
+    matches = pd.read_csv(
+        './football_data/spi_matches_latest.csv')['league'].unique()
+    matches_list = list(matches)
+    matches_list.insert(0, "All Leagues")
+    final_list = []
+    for i, item in enumerate(matches_list):
+        matches_dict = {}
+        matches_dict['id'] = i
+        matches_dict['content'] = item
+        final_list.append(matches_dict)
+    return jsonify(final_list)
 
 
 if __name__ == '__main__':

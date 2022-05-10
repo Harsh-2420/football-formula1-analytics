@@ -74,3 +74,9 @@
 .MuiDataGrid-root .MuiDataGrid-cell:focus-within {
     outline: none !important;
 }
+.tableHolder {
+    display: "flex";
+    justify-content: "center";
+    padding-left: "90px";
+    padding-right: "90px";
+}

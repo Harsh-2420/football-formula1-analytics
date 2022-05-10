@@ -25,6 +25,9 @@ const theme = createTheme({
         secondary: {
             main: "#f50057",
         },
+        tertiary: {
+            main: "#019983",
+        },
     },
     overrides: {
         MuiButton: {
@@ -58,15 +61,18 @@ export const Football = () => {
                     <FootballHeader />
 
                     <ToggleButtonGroup
-                        color="primary"
+                        color="tertiary"
                         value={alignment}
                         exclusive
                         onChange={handleChange}
                     >
-                        <ToggleButton value="standings">
-                            Global Standings
+                        <ToggleButton sx={{ border: "2px" }} value="standings">
+                            Standings
                         </ToggleButton>
-                        <ToggleButton value="predictions">
+                        <ToggleButton
+                            sx={{ border: "2px" }}
+                            value="predictions"
+                        >
                             Predictions
                         </ToggleButton>
                     </ToggleButtonGroup>

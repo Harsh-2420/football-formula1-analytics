@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react"
+import "../App.css"
 import { DataGrid } from "@mui/x-data-grid"
 import { mean } from "mathjs"
 import moment from "moment"
@@ -90,10 +91,41 @@ const handleMatchComponent = (params) => {
             className="matchComponent"
             style={{
                 position: "relative",
-                // height: "100px",
-                // lineHeight: "100px",
+                color: "black",
             }}
         >
+            <Row>
+                {/* style={{ position: "relative" }} */}
+                <div style={{ float: "left", width: "235px" }}></div>
+                <div
+                    style={{
+                        float: "right",
+                        width: "150px",
+                    }}
+                >
+                    <div
+                        style={{
+                            float: "left",
+                            width: "10px",
+                            fontSize: "10px",
+                            fontColor: "#808080",
+                        }}
+                    >
+                        WIN %
+                    </div>
+                    <div
+                        style={{
+                            // paddingTop: "20px",
+                            float: "right",
+                            width: "23px",
+                            fontSize: "10px",
+                            fontColor: "#808080",
+                        }}
+                    >
+                        DRAW %
+                    </div>
+                </div>
+            </Row>
             <Row>
                 <div style={{ float: "left", width: "400px" }}>
                     <div
@@ -112,7 +144,7 @@ const handleMatchComponent = (params) => {
                                     float: "left",
                                     width: "220px",
                                     height: "35px",
-                                    background: "rgb(192,192,192)",
+                                    background: "#dcdbd3",
                                     borderTopLeftRadius: "13px",
                                     borderBottomLeftRadius: "13px",
                                 }}
@@ -151,7 +183,7 @@ const handleMatchComponent = (params) => {
                                     float: "left",
                                     width: "220px",
                                     height: "35px",
-                                    background: "rgb(192,192,192)",
+                                    background: "#dcdbd3",
                                     borderTopLeftRadius: "13px",
                                     borderBottomLeftRadius: "13px",
                                 }}
@@ -250,10 +282,11 @@ export const MatchPredictions = () => {
         fetch("http://127.0.0.1:5000/football/getfuturepredictions")
             .then((res) => res.json())
             .then((data) => {
-                console.log("football match predictions:", data)
+                // console.log("football match predictions:", data)
                 setRows(data)
             })
     }, [])
+
     return (
         <div
             className="tableHolder"
@@ -283,7 +316,7 @@ export const MatchPredictions = () => {
                             fontWeight: "500",
                         },
                     }}
-                    rowHeight={120}
+                    rowHeight={140}
                     rows={rows}
                     columns={columns}
                     pageSize={100}
