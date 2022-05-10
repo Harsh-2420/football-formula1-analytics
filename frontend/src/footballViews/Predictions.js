@@ -9,6 +9,7 @@ import Select from "@mui/material/Select"
 import { LeaguePredictions } from "./LeaguePredictions"
 import { MatchPredictions } from "./MatchPredictions"
 import { MatchPredictionsLeague } from "./MatchPredictionsLeague"
+import { LeaguePredictionsLeague } from "./LeaguePredictionsLeague"
 
 export const Predictions = () => {
     const [leagues, setLeagues] = useState([])
@@ -80,7 +81,13 @@ export const Predictions = () => {
                     )}
                 </>
             ) : (
-                <LeaguePredictions />
+                <>
+                    {selectedLeague === "All Leagues" ? (
+                        <LeaguePredictions />
+                    ) : (
+                        <LeaguePredictionsLeague league={selectedLeague} />
+                    )}
+                </>
             )}
         </div>
     )

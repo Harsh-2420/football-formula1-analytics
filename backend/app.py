@@ -2,6 +2,7 @@ from hashlib import new
 from flask import Flask, jsonify, request, json, session
 from flask_session import Session
 from flask_cors import CORS
+import json
 from random import randrange
 from flask_sqlalchemy import SQLAlchemy
 import fastf1
@@ -10,7 +11,7 @@ import pandas as pd
 import requests
 import datetime
 from datetime import timedelta
-from set_values import driver_key_val_pair, team_color_pair, image_d, leg, team_dict
+from set_values import driver_key_val_pair, team_color_pair
 import pandas as pd
 import csv
 import re
@@ -354,10 +355,11 @@ FOOTBALL ROUTES
 '''
 
 
+# Creating Data for storage
 def dataunpack(basepath, datacurr):
     with urllib.request.urlopen(str(basepath + datacurr + '.csv')) as f:
         html = f.read().decode('utf-8')
-    with open("./football_data/" + datacurr + '.txt', "a") as myfile:
+    with open("./football_data/" + datacurr + '.txt', "w") as myfile:
         myfile.write(html)
 
     with open('./football_data/' + datacurr + '.txt', 'r') as in_file:
@@ -378,25 +380,67 @@ def addleagueimage():
     return leagues
 
 
+def unpack_legue_id():
+    # Create dict of id: [league name, season]
+    url = "https://api-football-beta.p.rapidapi.com/leagues"
+
+    headers = {
+        "X-RapidAPI-Host": "api-football-beta.p.rapidapi.com",
+        "X-RapidAPI-Key": "d78ca9f758msh31ad154b2fe50a8p12fbc9jsnabb8cabd4076"
+    }
+
+    response = requests.request("GET", url, headers=headers)
+
+    league_id_dict = {}
+    leagues = response.json()['response']
+    for league in leagues:
+        league_id_dict[league['league']['name']] = [
+            league['league']['id'], league['seasons'][-1]['year']]
+    with open('./football_data/league_id.json', 'w') as f:
+        json.dump(league_id_dict, f)
+
+
 @app.route('/football/getfbdata', methods=['GET'])
 def getfbdata():
     # Unpacking Base Data
     basepath = 'https://projects.fivethirtyeight.com/soccer-api/club/'
-    datapath = ['spi_matches_latest', 'spi_matches',
-                'spi_global_rankings']
+    datapath = ['spi_matches_latest', 'spi_global_rankings']
     for datacurr in datapath:
         dataunpack(basepath, datacurr)
-    dataunpack('https://projects.fivethirtyeight.com/soccer-api/international/',
-               'spi_global_rankings_intl')
 
-    # Adding Image to Base Data
-    # leagues = addleagueimage()
-    global_rankings = pd.read_csv('./football_data/spi_global_rankings.csv')
-    global_rankings['image'] = global_rankings['league'].map(leg)
-    global_rankings['league'].replace(image_d, inplace=True)
-    global_rankings.to_csv(
+    # Editing league names in both df
+    # import chosen names
+    f = open('./football_data/rename_dict.json', 'r')
+    rename_dict = json.load(f)
+    # import chosen league images
+    f = open('./football_data/league_img.json', 'r')
+    league_img = json.load(f)
+    # import chosen team images
+    f = open('./football_data/team_img.json', 'r')
+    team_img = json.load(f)
+    # Change global_rankings
+    rankings = pd.read_csv('./football_data/spi_global_rankings.csv')
+    rename_inv = {v: k for k, v in rename_dict.items()}
+    rankings = rankings.replace({"league": rename_inv})
+    rankings = rankings.loc[rankings['league'].isin(list(rename_dict.keys()))]
+    rankings['image'] = rankings['league'].map(league_img)
+    rankings['teamImage'] = rankings['name'].map(team_img)
+    rankings.to_csv(
         './football_data/spi_global_rankings.csv', index=False)
+    # Change matches
+    matches = pd.read_csv('./football_data/spi_matches_latest.csv')
+    rename_inv = {v: k for k, v in rename_dict.items()}
+    matches = matches.replace({"league": rename_inv})
+    matches = matches.loc[matches['league'].isin(list(rename_dict.keys()))]
+    matches['image'] = matches['league'].map(league_img)
+    matches['teamImage1'] = matches['team1'].map(team_img)
+    matches['teamImage2'] = matches['team2'].map(team_img)
+    matches.to_csv(
+        './football_data/spi_matches_latest.csv', index=False)
+
     return 'Data Unpacked'
+
+# Manipulating Data for frontend
 
 
 @app.route('/football/getglobalrankings', methods=['GET'])
@@ -407,7 +451,7 @@ def getglobalrankings():
     global_ranks_df['Change'] = pd.to_numeric(
         global_ranks_df['prev_rank']) - pd.to_numeric(global_ranks_df['rank'])
     global_ranks_df.drop(['prev_rank'], axis=1, inplace=True)
-    global_ranks_df['teamImage'] = global_ranks_df['name'].map(team_dict)
+    # global_ranks_df['teamImage'] = global_ranks_df['name'].map(team_dict)
     global_ranks_df = global_ranks_df.fillna('')
     global_ranks = global_ranks_df.to_dict('records')
     return jsonify(global_ranks)
@@ -423,10 +467,6 @@ def getfuturepredictions():
     global_ranks_df = global_ranks_df[global_ranks_df['date']
                                       >= datetime.datetime.now() - timedelta(days=1)]
     global_ranks_df = global_ranks_df.drop_duplicates()
-
-    global_ranks_df['image'] = global_ranks_df['league'].map(leg)
-    global_ranks_df['teamImage1'] = global_ranks_df['team1'].map(team_dict)
-    global_ranks_df['teamImage2'] = global_ranks_df['team2'].map(team_dict)
     global_ranks_df['probd'] = 1 - pd.to_numeric(
         global_ranks_df['prob1']) - pd.to_numeric(global_ranks_df['prob2'])
     global_ranks_df['probd'] = global_ranks_df['probd'].round(2)
@@ -464,8 +504,6 @@ def getleaguepredictions():
     #                                   >= datetime.datetime.now() - timedelta(days=1)]
     global_ranks_df = global_ranks_df.drop_duplicates()
 
-    global_ranks_df['teamImage1'] = global_ranks_df['team1'].map(team_dict)
-    global_ranks_df['teamImage2'] = global_ranks_df['team2'].map(team_dict)
     global_ranks_df['probd'] = 1 - pd.to_numeric(
         global_ranks_df['prob1']) - pd.to_numeric(global_ranks_df['prob2'])
     global_ranks_df['probd'] = global_ranks_df['probd'].round(2)
