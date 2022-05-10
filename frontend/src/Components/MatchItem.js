@@ -1,8 +1,10 @@
 import React from "react"
 import { Row } from "react-bootstrap"
+import chroma from "chroma-js"
 
 export const MatchItem = (row) => {
     const data = row.row
+    const colorRange = chroma.scale(["#F0F373", "#f4984c"])
     return (
         <div
             className="matchComponent"
@@ -43,19 +45,23 @@ export const MatchItem = (row) => {
                         WIN %
                     </div>
                 </div>
-                <div
-                    style={{
-                        position: "absolute",
-                        left: "265px",
-                        top: "25px",
-                        width: "70px",
-                        marginLeft: "60px",
-                        fontSize: "10px",
-                        fontColor: "#808080",
-                    }}
-                >
-                    DRAW %
-                </div>
+                {data.probd === 0 ? (
+                    <></>
+                ) : (
+                    <div
+                        style={{
+                            position: "absolute",
+                            left: "265px",
+                            top: "25px",
+                            width: "70px",
+                            marginLeft: "60px",
+                            fontSize: "10px",
+                            fontColor: "#808080",
+                        }}
+                    >
+                        DRAW %
+                    </div>
+                )}
             </Row>
             <Row>
                 <div
@@ -82,6 +88,14 @@ export const MatchItem = (row) => {
                                     borderBottomLeftRadius: "13px",
                                 }}
                             >
+                                <img
+                                    style={{
+                                        width: "12%",
+                                        paddingBottom: "5px",
+                                    }}
+                                    alt={data.teamImage1}
+                                    src={data.teamImage1}
+                                />
                                 {data.team1}
                             </div>
 
@@ -90,7 +104,9 @@ export const MatchItem = (row) => {
                                     float: "right",
                                     width: "80px",
                                     height: "35px",
-                                    background: "#f6edc3",
+                                    background: `${colorRange(
+                                        data.prob1
+                                    ).toString()}`,
                                     borderTopRightRadius: "13px",
                                     borderBottomRightRadius: "13px",
                                 }}
@@ -121,6 +137,14 @@ export const MatchItem = (row) => {
                                     borderBottomLeftRadius: "13px",
                                 }}
                             >
+                                <img
+                                    style={{
+                                        width: "12%",
+                                        paddingBottom: "5px",
+                                    }}
+                                    alt={data.teamImage2}
+                                    src={data.teamImage2}
+                                />
                                 {data.team2}
                             </div>
 
@@ -129,7 +153,9 @@ export const MatchItem = (row) => {
                                     float: "right",
                                     width: "80px",
                                     height: "35px",
-                                    background: "#f6edc3",
+                                    background: `${colorRange(
+                                        data.prob2
+                                    ).toString()}`,
                                     borderTopRightRadius: "13px",
                                     borderBottomRightRadius: "13px",
                                 }}
@@ -139,23 +165,28 @@ export const MatchItem = (row) => {
                         </Row>
                     </div>
                 </div>
-                <div
-                    style={{
-                        marginTop: "12px",
-                        background: "#f6edc3",
-                        borderRadius: "13px",
-                        border: "2px solid",
-                        borderColor: "#f6edc3",
-                        width: "80px",
-                        // height: "35px",
-                        float: "right",
-                        left: "320px",
-                        top: "40px",
-                        position: "absolute",
-                    }}
-                >
-                    {`${data.probd}`.substring(2, 4)}%
-                </div>
+                {data.probd === 0 ? (
+                    <></>
+                ) : (
+                    <div
+                        style={{
+                            marginTop: "12px",
+                            // background: "#f6edc3",
+                            background: `${colorRange(data.probd).toString()}`,
+                            borderRadius: "13px",
+                            border: "2px solid",
+                            borderColor: `${colorRange(data.probd).toString()}`,
+                            width: "80px",
+                            // height: "35px",
+                            float: "right",
+                            left: "320px",
+                            top: "40px",
+                            position: "absolute",
+                        }}
+                    >
+                        {`${data.probd}`.substring(2, 4)}%
+                    </div>
+                )}
             </Row>
         </div>
     )

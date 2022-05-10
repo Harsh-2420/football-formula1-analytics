@@ -46,7 +46,11 @@ export const MatchPredictionsLeague = (league) => {
                         paddingTop: "30px",
                     }}
                 >
-                    <Grid container spacing={10}>
+                    <Grid
+                        container
+                        spacing={10}
+                        style={{ paddingBottom: "100px" }}
+                    >
                         {rows.map((row) => (
                             <Grid item xs={4} md={4} key={row.index}>
                                 <MatchItem row={row} />

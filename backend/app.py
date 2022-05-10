@@ -425,6 +425,8 @@ def getfuturepredictions():
     global_ranks_df = global_ranks_df.drop_duplicates()
 
     global_ranks_df['image'] = global_ranks_df['league'].map(leg)
+    global_ranks_df['teamImage1'] = global_ranks_df['team1'].map(team_dict)
+    global_ranks_df['teamImage2'] = global_ranks_df['team2'].map(team_dict)
     global_ranks_df['probd'] = 1 - pd.to_numeric(
         global_ranks_df['prob1']) - pd.to_numeric(global_ranks_df['prob2'])
     global_ranks_df = global_ranks_df.fillna('')
@@ -461,9 +463,11 @@ def getleaguepredictions():
     #                                   >= datetime.datetime.now() - timedelta(days=1)]
     global_ranks_df = global_ranks_df.drop_duplicates()
 
-    # global_ranks_df['image'] = global_ranks_df['league'].map(leg)
+    global_ranks_df['teamImage1'] = global_ranks_df['team1'].map(team_dict)
+    global_ranks_df['teamImage2'] = global_ranks_df['team2'].map(team_dict)
     global_ranks_df['probd'] = 1 - pd.to_numeric(
         global_ranks_df['prob1']) - pd.to_numeric(global_ranks_df['prob2'])
+    global_ranks_df['probd'] = global_ranks_df['probd'].round(2)
     global_ranks_df = global_ranks_df.fillna('')
     global_ranks_df.sort_values('date', inplace=True, ascending=False)
     global_ranks_df = global_ranks_df.reset_index()
