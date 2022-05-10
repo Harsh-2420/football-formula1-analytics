@@ -423,11 +423,10 @@ def getpredictions():
     global_ranks_df = global_ranks_df[global_ranks_df['date']
                                       >= datetime.datetime.now()]
     global_ranks_df = global_ranks_df.drop_duplicates()
-    # global_ranks_df['Change'] = pd.to_numeric(
-    #     global_ranks_df['prev_rank']) - pd.to_numeric(global_ranks_df['rank'])
-    # global_ranks_df.drop(['prev_rank'], axis=1, inplace=True)
-    # global_ranks_df['teamImage'] = global_ranks_df['name'].map(team_dict)
+
     global_ranks_df['image'] = global_ranks_df['league'].map(leg)
+    global_ranks_df['probd'] = 1 - pd.to_numeric(
+        global_ranks_df['prob1']) - pd.to_numeric(global_ranks_df['prob2'])
     global_ranks_df = global_ranks_df.fillna('')
     global_ranks_df.sort_values('date', inplace=True)
     global_ranks_df = global_ranks_df.reset_index()

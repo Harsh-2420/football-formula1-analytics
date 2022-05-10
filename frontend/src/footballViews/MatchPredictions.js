@@ -4,18 +4,21 @@ import { mean } from "mathjs"
 import moment from "moment"
 import chroma from "chroma-js"
 import { MatchItem } from "../Components/MatchItem"
+import { Row } from "react-bootstrap"
 
 const handleQuality = (params) => {
-    const colorRange = chroma.scale(["rgb(202,237,231)", "rgb(34,104,92)"])
+    const colorRange = chroma.scale(["#b1fef3", "#019983"])
     const percent = params.value / 100
     return (
         <div
             style={{
                 color: "black",
                 borderStyle: "solid",
+                // border: 1,
                 borderColor: `${colorRange(percent.toString())}`,
                 borderRadius: "13px",
                 width: "65%",
+                // height: "20%",
                 background: `${colorRange(percent.toString())}`,
             }}
         >
@@ -25,16 +28,18 @@ const handleQuality = (params) => {
 }
 
 const handleImportance = (params) => {
-    const colorRange = chroma.scale(["rgb(202,237,231)", "rgb(34,104,92)"])
+    const colorRange = chroma.scale(["#b1fef3", "#019983"])
     const percent = params.value / 100
     return (
         <div
             style={{
                 color: "black",
+                // border: 1,
                 borderStyle: "solid",
                 borderColor: `${colorRange(percent.toString())}`,
                 borderRadius: "13px",
                 width: "65%",
+                // height: "20%",
                 background: `${colorRange(percent.toString())}`,
             }}
         >
@@ -46,16 +51,18 @@ const handleImportance = (params) => {
 }
 
 const handleMatchRating = (params) => {
-    const colorRange = chroma.scale(["rgb(202,237,231)", "rgb(34,104,92)"])
+    const colorRange = chroma.scale(["#b1fef3", "#019983"])
     const percent = params.value / 100
     return (
         <div
             style={{
                 color: "black",
+                // border: 1,
                 borderStyle: "solid",
                 borderColor: `${colorRange(percent.toString())}`,
                 borderRadius: "13px",
                 width: "65%",
+                // height: "20%",
                 background: `${colorRange(percent.toString())}`,
             }}
         >
@@ -79,29 +86,111 @@ const handleDate = (params) => {
 
 const handleMatchComponent = (params) => {
     return (
-        <div>
-            <div
-                style={{
-                    borderStyle: "solid",
-                    borderColor: "#1a5d57",
-                    borderRadius: "13px",
-                    width: "100%",
-                    background: `#1a5d57`,
-                }}
-            >
-                {params.row.team1}
-            </div>
-            <div
-                style={{
-                    borderStyle: "solid",
-                    borderColor: "#1a5d57",
-                    borderRadius: "13px",
-                    width: "100%",
-                    background: `#1a5d57`,
-                }}
-            >
-                {params.row.team2}
-            </div>
+        <div
+            className="matchComponent"
+            style={{
+                position: "relative",
+                // height: "100px",
+                // lineHeight: "100px",
+            }}
+        >
+            <Row>
+                <div style={{ float: "left", width: "400px" }}>
+                    <div
+                        style={{
+                            paddingTop: "5px",
+                            paddingLeft: "15px",
+                            width: "300px",
+                            height: "35px",
+                            lineHeight: "35px",
+                            textAlign: "left",
+                        }}
+                    >
+                        <Row>
+                            <div
+                                style={{
+                                    float: "left",
+                                    width: "220px",
+                                    height: "35px",
+                                    background: "rgb(192,192,192)",
+                                    borderTopLeftRadius: "13px",
+                                    borderBottomLeftRadius: "13px",
+                                }}
+                            >
+                                {params.row.team1}
+                            </div>
+
+                            <div
+                                style={{
+                                    float: "right",
+                                    width: "80px",
+                                    height: "35px",
+                                    background: "#f6edc3",
+                                    borderTopRightRadius: "13px",
+                                    borderBottomRightRadius: "13px",
+                                }}
+                            >
+                                {`${params.row.prob1}`.substring(2, 4)}%
+                            </div>
+                        </Row>
+                    </div>
+                    <br></br>
+                    <div
+                        style={{
+                            paddingTop: "5px",
+                            paddingLeft: "15px",
+                            width: "300px",
+                            height: "35px",
+                            lineHeight: "35px",
+                            textAlign: "left",
+                        }}
+                    >
+                        <Row>
+                            <div
+                                style={{
+                                    float: "left",
+                                    width: "220px",
+                                    height: "35px",
+                                    background: "rgb(192,192,192)",
+                                    borderTopLeftRadius: "13px",
+                                    borderBottomLeftRadius: "13px",
+                                }}
+                            >
+                                {params.row.team2}
+                            </div>
+
+                            <div
+                                style={{
+                                    float: "right",
+                                    width: "80px",
+                                    height: "35px",
+                                    background: "#f6edc3",
+                                    borderTopRightRadius: "13px",
+                                    borderBottomRightRadius: "13px",
+                                }}
+                            >
+                                {`${params.row.prob2}`.substring(2, 4)}%
+                            </div>
+                        </Row>
+                    </div>
+                </div>
+                <div
+                    style={{
+                        background: "#f6edc3",
+                        borderRadius: "13px",
+                        border: "2px solid",
+                        borderColor: "#f6edc3",
+                        width: "80px",
+                        // height: "35px",
+                        float: "right",
+                        left: "320px",
+                        top: "40px",
+                        position: "absolute",
+                    }}
+                >
+                    {`${params.row.probd}`.substring(2, 4)}%
+                </div>
+            </Row>
         </div>
     )
 }
@@ -194,7 +283,7 @@ export const MatchPredictions = () => {
                             fontWeight: "500",
                         },
                     }}
-                    rowHeight={100}
+                    rowHeight={120}
                     rows={rows}
                     columns={columns}
                     pageSize={100}
