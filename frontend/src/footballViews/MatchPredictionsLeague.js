@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from "react"
 import moment from "moment"
+import Box from "@mui/material/Box"
+import Paper from "@mui/material/Paper"
+import Grid from "@mui/material/Grid"
+import { MatchItem } from "../Components/MatchItem"
 
 export const MatchPredictionsLeague = (league) => {
     const [rows, setRows] = useState([])
@@ -27,8 +31,30 @@ export const MatchPredictionsLeague = (league) => {
                 console.log("football league predictions:", leaguedata)
                 setRows(leaguedata)
             })
-    }, [])
+    }, [league])
 
     // console.log(league)
-    return <div>Upcoming Matches</div>
+    return (
+        <div>
+            <div>Upcoming Matches</div>
+            <div>
+                <Box
+                    sx={{
+                        flexGrow: 1,
+                        paddingLeft: "80px",
+                        paddingRight: "80px",
+                        paddingTop: "30px",
+                    }}
+                >
+                    <Grid container spacing={10}>
+                        {rows.map((row) => (
+                            <Grid item xs={4} md={4} key={row.index}>
+                                <MatchItem row={row} />
+                            </Grid>
+                        ))}
+                    </Grid>
+                </Box>
+            </div>
+        </div>
+    )
 }

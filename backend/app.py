@@ -462,8 +462,8 @@ def getleaguepredictions():
     global_ranks_df = global_ranks_df.drop_duplicates()
 
     # global_ranks_df['image'] = global_ranks_df['league'].map(leg)
-    # global_ranks_df['probd'] = 1 - pd.to_numeric(
-    #     global_ranks_df['prob1']) - pd.to_numeric(global_ranks_df['prob2'])
+    global_ranks_df['probd'] = 1 - pd.to_numeric(
+        global_ranks_df['prob1']) - pd.to_numeric(global_ranks_df['prob2'])
     global_ranks_df = global_ranks_df.fillna('')
     global_ranks_df.sort_values('date', inplace=True, ascending=False)
     global_ranks_df = global_ranks_df.reset_index()
