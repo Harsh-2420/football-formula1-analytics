@@ -29,11 +29,6 @@ const handleQuality = (params) => {
                 background: `${colorRange(percent).toString()}`,
             }}
         >
-            {console.log(
-                percent,
-                Math.round(mean(`${params.row.spi1}`, `${params.row.spi2}`)),
-                `${colorRange(percent).toString()}`
-            )}
             {Math.round(mean(`${params.row.spi1}`, `${params.row.spi2}`))}
         </div>
     )
@@ -115,6 +110,19 @@ const handleDate = (params) => {
     return formatted
 }
 
+const handleRenderLeague = (params) => {
+    return (
+        <>
+            <img
+                alt={params.row.image}
+                src={params.row.image}
+                style={{ width: "20%" }}
+            />
+            {params.value}
+        </>
+    )
+}
+
 const handleMatchComponent = (params) => {
     const colorRange = chroma.scale(["#F0F373", "#f4984c"])
     return (
@@ -184,6 +192,11 @@ const handleMatchComponent = (params) => {
                                     borderBottomLeftRadius: "13px",
                                 }}
                             >
+                                <img
+                                    alt={params.row.teamImage1}
+                                    src={params.row.teamImage1}
+                                    style={{ width: "10%" }}
+                                />
                                 {params.row.team1}
                             </div>
 
@@ -225,6 +238,11 @@ const handleMatchComponent = (params) => {
                                     borderBottomLeftRadius: "13px",
                                 }}
                             >
+                                <img
+                                    alt={params.row.teamImage2}
+                                    src={params.row.teamImage2}
+                                    style={{ width: "10%" }}
+                                />
                                 {params.row.team2}
                             </div>
 
@@ -287,7 +305,7 @@ const columns = [
         field: "league",
         headerName: "League",
         width: 200,
-        // renderCell: handleRenderRankChange,
+        renderCell: handleRenderLeague,
     },
     {
         field: "team1",
@@ -330,7 +348,7 @@ export const MatchPredictions = () => {
         fetch("http://127.0.0.1:5000/football/getfuturepredictions")
             .then((res) => res.json())
             .then((data) => {
-                // console.log("football match predictions:", data)
+                console.log("football match predictions:", data)
                 setRows(data)
             })
     }, [])
