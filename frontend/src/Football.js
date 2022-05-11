@@ -41,7 +41,7 @@ const theme = createTheme({
 })
 
 export const Football = () => {
-    const [alignment, setAlignment] = useState("predictions")
+    const [alignment, setAlignment] = useState("standings")
 
     const handleChange = (event, newAlignment) => {
         setAlignment(newAlignment)

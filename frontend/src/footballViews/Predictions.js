@@ -6,18 +6,17 @@ import FormControl from "@mui/material/FormControl"
 import MenuItem from "@mui/material/MenuItem"
 import Select from "@mui/material/Select"
 
-import { LeaguePredictions } from "./LeaguePredictions"
 import { MatchPredictions } from "./MatchPredictions"
 import { MatchPredictionsLeague } from "./MatchPredictionsLeague"
-import { LeaguePredictionsLeague } from "./LeaguePredictionsLeague"
+import { MatchPredictionsLeagueCompleted } from "./MatchPredictionsLeagueCompleted"
 
 export const Predictions = () => {
     const [leagues, setLeagues] = useState([])
     const [selectedLeague, setSelectedLeague] = useState(
-        // "All Leagues"
+        // "Premier League"
         "All Leagues"
     )
-    const [alignment, setAlignment] = useState("matches")
+    const [alignment, setAlignment] = useState("upcoming")
 
     useEffect(() => {
         fetch("http://127.0.0.1:5000/football/getleaguedropdown")
@@ -58,34 +57,31 @@ export const Predictions = () => {
                     ))}
                 </Select>
             </FormControl>
-            <ToggleButtonGroup
-                color="tertiary"
-                value={alignment}
-                exclusive
-                onChange={handleChange}
-            >
-                <ToggleButton sx={{ border: "2px" }} value="league">
-                    Leagues
-                </ToggleButton>
-                <ToggleButton sx={{ border: "2px" }} value="matches">
-                    Matches
-                </ToggleButton>
-            </ToggleButtonGroup>
 
-            {alignment === "matches" ? (
-                <>
-                    {selectedLeague === "All Leagues" ? (
-                        <MatchPredictions />
-                    ) : (
-                        <MatchPredictionsLeague league={selectedLeague} />
-                    )}
-                </>
+            {selectedLeague === "All Leagues" ? (
+                <MatchPredictions />
             ) : (
                 <>
-                    {selectedLeague === "All Leagues" ? (
-                        <LeaguePredictions />
+                    <ToggleButtonGroup
+                        color="tertiary"
+                        value={alignment}
+                        exclusive
+                        onChange={handleChange}
+                    >
+                        <ToggleButton sx={{ border: "2px" }} value="upcoming">
+                            Upcoming
+                        </ToggleButton>
+                        <ToggleButton sx={{ border: "2px" }} value="completed">
+                            Completed
+                        </ToggleButton>
+                    </ToggleButtonGroup>
+
+                    {alignment === "upcoming" ? (
+                        <MatchPredictionsLeague league={selectedLeague} />
                     ) : (
-                        <LeaguePredictionsLeague league={selectedLeague} />
+                        <MatchPredictionsLeagueCompleted
+                            league={selectedLeague}
+                        />
                     )}
                 </>
             )}
