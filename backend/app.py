@@ -346,7 +346,8 @@ def speed_distance():
         color = fastf1.plotting.team_color(driv_lap['Team'])
         driv_df = driv_lap.get_telemetry(
         )[['Speed', 'Distance', 'RPM', 'nGear', 'Throttle', 'Brake', 'DRS', 'X', 'Y']]
-        driv_tel[driver]['Brake'] = driv_tel[driver]['Brake'].astype(int)
+
+        driv_df['Brake'] = driv_df['Brake'].astype(int)
         driv_df['Distance'] = driv_df['Distance'].apply(np.round)
         driv_df['color'] = color
         driv_df['driver'] = driver
@@ -383,12 +384,9 @@ def speed_distance():
         for i in range(len(driv_df_list)):
             return_dict[driv_df_list[i]['driver'].iloc[0]
                         ] = driv_df_list[i].to_dict('records')
-        return jsonify(return_dict)
-
-        # driv_tel[driver] = driv_tel[driver].to_dict('records')
+    return jsonify(return_dict)
 
 
-    # return jsonify(driv_tel)
 '''
 FOOTBALL ROUTES
 '''

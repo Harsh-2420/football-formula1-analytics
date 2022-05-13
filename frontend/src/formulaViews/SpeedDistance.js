@@ -126,6 +126,8 @@ export const SpeedDistance = () => {
             </h3>
             {/* <div className="responsive"> */}
             <div className="responsive-container">
+                {/* <Row container style={{ height: "100%", width: "100%" }}>
+                    <Col> */}
                 <ResponsiveContainer width={"70%"} height={"70%"}>
                     <LineChart
                         width={600}
@@ -165,6 +167,9 @@ export const SpeedDistance = () => {
                     </LineChart>
                 </ResponsiveContainer>
 
+                {/* </Col>
+                    <Col>Bahrain Circuit</Col>
+                </Row> */}
                 <ResponsiveContainer width={"100%"} height={"70%"}>
                     <LineChart
                         width={1000}
