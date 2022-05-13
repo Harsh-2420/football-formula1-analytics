@@ -13,6 +13,7 @@ import datetime
 from datetime import timedelta
 from set_values import driver_key_val_pair, team_color_pair
 import pandas as pd
+import numpy as np
 import csv
 import re
 from bs4 import BeautifulSoup
@@ -333,23 +334,61 @@ def speed_distance():
     selected_race = "Bahrain Grand Prix"
     selected_event = "Race"
     round_number = 1
-    selected_drivers = ['NOR', 'LEC']
+    selected_drivers = ['VER', 'LEC']
     fastf1_session = fastf1.get_session(
         selected_year, selected_race, selected_event)
     fastf1_session.load(telemetry=True, laps=True, weather=False)
 
-    driv_tel = {}
+    df = pd.DataFrame()
+    driv_df_list = []
     for driver in selected_drivers:
         driv_lap = fastf1_session.laps.pick_driver(driver).pick_fastest()
         color = fastf1.plotting.team_color(driv_lap['Team'])
-        driv_tel[driver] = driv_lap.get_telemetry(
+        driv_df = driv_lap.get_telemetry(
         )[['Speed', 'Distance', 'RPM', 'nGear', 'Throttle', 'Brake', 'DRS', 'X', 'Y']]
         driv_tel[driver]['Brake'] = driv_tel[driver]['Brake'].astype(int)
-        driv_tel[driver]['color'] = color
-        driv_tel[driver] = driv_tel[driver].to_dict('records')
-    return jsonify(driv_tel)
+        driv_df['Distance'] = driv_df['Distance'].apply(np.round)
+        driv_df['color'] = color
+        driv_df['driver'] = driver
+        driv_df_list.append(pd.DataFrame(
+            driv_df).reset_index().drop(['index'], axis=1))
+
+        for i in range(1, len(driv_df_list)):
+            edges, labels = np.unique(
+                driv_df_list[i]['Distance'], return_index=True)
+            edges = np.r_[-np.inf, edges + np.ediff1d(edges, to_end=np.inf)/2]
+            driv_df_list[0]['new_index'] = pd.cut(
+                driv_df_list[0]['Distance'], bins=edges, labels=driv_df_list[i].index[labels])
+            driv_df_list[0] = driv_df_list[0].join(
+                driv_df_list[i], on='new_index', rsuffix=i)
+
+        access_list = []
+        rename_dict = {}
+        for i in range(len(driv_df_list)):
+            if i == 0:
+                access_list.append('Speed')
+                rename_dict['Speed'] = driv_df_list[0]['color'][0]
+            else:
+                access_list.append('Speed{}'.format(i))
+                rename_dict['Speed{}'.format(
+                    i)] = driv_df_list[0]['color{}'.format(i)][0]
+
+        driv_df_list[0]['trackColor'] = driv_df_list[0][access_list].idxmax(
+            axis=1)
+        driv_df_list[0]['trackColor'] = driv_df_list[0]['trackColor'].map(
+            rename_dict)
+        driv_df_list[0] = driv_df_list[0][['Speed', 'Distance', 'RPM', 'nGear',
+                                           'Throttle', 'Brake', 'DRS', 'X', 'Y', 'color', 'driver', 'trackColor']]
+        return_dict = {}
+        for i in range(len(driv_df_list)):
+            return_dict[driv_df_list[i]['driver'].iloc[0]
+                        ] = driv_df_list[i].to_dict('records')
+        return jsonify(return_dict)
+
+        # driv_tel[driver] = driv_tel[driver].to_dict('records')
 
 
+    # return jsonify(driv_tel)
 '''
 FOOTBALL ROUTES
 '''
