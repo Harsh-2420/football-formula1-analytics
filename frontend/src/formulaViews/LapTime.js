@@ -143,7 +143,7 @@ export const LapTime = () => {
                         .filter((v) => v[key] === 0)
                         .forEach((v) => (v[key] = NaN))
                 })
-                console.log("first chart data is", data)
+                // console.log("first chart data is", data)
 
                 setCurrentChartData(data)
             })
