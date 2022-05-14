@@ -3354,7 +3354,7 @@
   "resolved" "https://registry.npmjs.org/charcodes/-/charcodes-0.2.0.tgz"
   "version" "0.2.0"
 
-"chart.js@^3.5.0":
+"chart.js@^3.5.0", "chart.js@^3.7.1":
   "integrity" "sha512-8knRegQLFnPQAheZV8MjxIXc5gQEfDFD897BJgv/klO/vtIyFFmgMXrNfgrXpbTr/XbTturxRgxIXx/Y+ASJBA=="
   "resolved" "https://registry.npmjs.org/chart.js/-/chart.js-3.7.1.tgz"
   "version" "3.7.1"

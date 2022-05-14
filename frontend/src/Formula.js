@@ -72,7 +72,7 @@ class Formula extends Component {
                         {/* <Navbar /> */}
                         <DropdownPage />
                         {/* <Suspense fallback={<DropdownPage />}> */}
-                        <LapTime />
+                        {/* <LapTime /> */}
                         <SpeedDistance />
                         {/* </Suspense> */}
                     </ThemeProvider>

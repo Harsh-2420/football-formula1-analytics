@@ -382,6 +382,8 @@ def speed_distance():
                                            'Throttle', 'Brake', 'DRS', 'X', 'Y', 'color', 'driver', 'trackColor']]
         return_dict = {}
         for i in range(len(driv_df_list)):
+            if i != 0:
+                driv_df_list[i]['trackColor'] = driv_df_list[0]['trackColor']
             return_dict[driv_df_list[i]['driver'].iloc[0]
                         ] = driv_df_list[i].to_dict('records')
     return jsonify(return_dict)

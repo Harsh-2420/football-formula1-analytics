@@ -12,11 +12,13 @@ import {
     XAxis,
     YAxis,
     CartesianGrid,
+    Cell,
     ScatterChart,
     ResponsiveContainer,
     Tooltip,
     Legend,
     Brush,
+    ZAxis,
 } from "recharts"
 import moment from "moment"
 
@@ -129,7 +131,7 @@ export const SpeedDistance = () => {
                 {/* <Row container style={{ height: "100%", width: "100%" }}>
                     <Col> */}
                 <ResponsiveContainer width={"70%"} height={"70%"}>
-                    <LineChart
+                    <ScatterChart
                         width={600}
                         height={600}
                         // syncId="anyId"
@@ -143,13 +145,6 @@ export const SpeedDistance = () => {
                             bottom: 45,
                         }}
                     >
-                        <Line
-                            type="monotone"
-                            stroke="#fff"
-                            dot={false}
-                            dataKey="Y"
-                            strokeWidth={4}
-                        />
                         <XAxis
                             axisLine={false}
                             tickLine={false}
@@ -163,8 +158,24 @@ export const SpeedDistance = () => {
                             tickLine={false}
                             tick={false}
                             domain={["auto", "auto"]}
+                            dataKey="Y"
                         />
-                    </LineChart>
+                        <ZAxis range={[10, 10]} />
+                        {currentChartData[Object.keys(currentChartData)[0]] ? (
+                            <Scatter>
+                                {currentChartData[
+                                    Object.keys(currentChartData)[0]
+                                ].map((entry, index) => (
+                                    <Cell
+                                        key={`cell-${index}`}
+                                        fill={entry.trackColor}
+                                    />
+                                ))}
+                            </Scatter>
+                        ) : (
+                            <>Not Found</>
+                        )}
+                    </ScatterChart>
                 </ResponsiveContainer>
 
                 {/* </Col>
