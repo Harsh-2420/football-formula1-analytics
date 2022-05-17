@@ -4,7 +4,7 @@ import "./App.css"
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import "bootstrap/dist/css/bootstrap.min.css"
 
-import Formula from "./Formula"
+import { Formula } from "./Formula"
 import { Football } from "./Football"
 import { Home } from "./Home"
 import { NavBar } from "./Components/Navbar"

@@ -18,6 +18,7 @@ import csv
 import re
 from bs4 import BeautifulSoup
 import urllib.request
+from scipy import stats
 # import asyncio
 
 app = Flask(__name__)
@@ -305,9 +306,17 @@ def getChartData():
     lap_time_number['TyreLife'] = lap_time_number['TyreLife'].fillna(-1)
     lap_time_number['LapTime'] = pd.to_numeric(
         lap_time_number['LapTime'])/1000000
+    final_list = []
+    for driver in selected_drivers:
+        temp = lap_time_number[lap_time_number['Driver'] == driver]
+        tempdf = temp[(np.abs(stats.zscore(temp['LapTime'])) < 0.25)]
+        final_list.append(tempdf)
+    final_df = pd.concat(final_list)
 
+    # lap_time_number = lap_time_number[(
+    #     np.abs(stats.zscore(lap_time_number['LapTime'])) < 0.75)]
     # TimeDelta
-    lap_time_number_cov = lap_time_number.to_dict('records')
+    lap_time_number_cov = final_df.to_dict('records')
     final_dict = {}
     for data in lap_time_number_cov:
         primary_key = data['Driver']
@@ -386,7 +395,7 @@ def speed_distance():
                 driv_df_list[i]['trackColor'] = driv_df_list[0]['trackColor']
             return_dict[driv_df_list[i]['driver'].iloc[0]
                         ] = driv_df_list[i].to_dict('records')
-    return jsonify(return_dict)
+    return jsonify([selected_race, return_dict])
 
 
 '''

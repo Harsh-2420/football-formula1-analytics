@@ -85,7 +85,7 @@ const getIntroOfPage = (year, label) => {
 
 const CustomTooltip = ({ active, payload, label }) => {
     if (active && payload) {
-        // console.log(payload)
+        // console.log("payload", payload)
         return (
             <div
                 className="custom-tooltip"
@@ -104,24 +104,27 @@ const CustomTooltip = ({ active, payload, label }) => {
                     className="label"
                     style={{ fontWeight: "bold" }}
                 >{`Lap ${label}`}</p>
-                <p className="label">
-                    <span style={{ color: `${payload[0].color}` }}>
-                        {`${payload[0].name} `}
-                    </span>
-                    {`Lap Time: ${moment(payload[0].value)
-                        .utc()
-                        .format("mm:ss.SSS")}`}
-                </p>
-                <p className="label">
-                    <span
-                        style={{ color: `${payload[0].color}` }}
-                    >{`${payload[0].name} `}</span>
-                    {`Tyre: `}
-                    {getIntroOfPage(
-                        `${payload[0].payload.Year}`,
-                        `${payload[0].payload.Compound}`
-                    )}
-                </p>
+                {payload.map((row) => (
+                    <p className="label" key={row.payload.color}>
+                        <span
+                            style={{
+                                // color: `${payload[0].color}`
+                                color: `${row.color}`,
+                            }}
+                        >
+                            {/* {`${payload[0].name} `} */}
+                            {`${row.name} `}
+                        </span>
+                        {`Lap Time: ${moment(row.value)
+                            .utc()
+                            .format("mm:ss.SSS")}`}
+                        &nbsp;
+                        {getIntroOfPage(
+                            `${row.payload.Year}`,
+                            `${row.payload.Compound}`
+                        )}
+                    </p>
+                ))}
             </div>
         )
     }
@@ -143,7 +146,7 @@ export const LapTime = () => {
                         .filter((v) => v[key] === 0)
                         .forEach((v) => (v[key] = NaN))
                 })
-                // console.log("first chart data is", data)
+                // console.log("lap time data is", data)
 
                 setCurrentChartData(data)
             })
@@ -198,11 +201,7 @@ export const LapTime = () => {
                         // onMouseEnter={handleMouseEnter}
                         // onMouseLeave={handleMouseLeave}
                         />
-                        <Brush
-                            // tickFormatter={xAxisTickFormatter}
-                            dataKey="LapNumber"
-                            // height={50}
-                        />
+
                         {Object.keys(currentChartData).map((key, index) => {
                             const data = currentChartData[key]
                             return (
