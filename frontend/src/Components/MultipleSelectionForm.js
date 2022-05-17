@@ -6,7 +6,8 @@ import Select from "@mui/material/Select"
 import Box from "@mui/material/Box"
 import OutlinedInput from "@mui/material/OutlinedInput"
 import Chip from "@mui/material/Chip"
-import { useTheme, createTheme, ThemeProvider } from "@mui/material/styles"
+import { useTheme } from "@mui/material/styles"
+import { makeStyles } from "@material-ui/core/styles"
 
 const ITEM_HEIGHT = 48
 const ITEM_PADDING_TOP = 8
@@ -18,6 +19,40 @@ const MenuProps = {
         },
     },
 }
+
+const useStyles = makeStyles({
+    root: {
+        width: 200,
+        "& .MuiOutlinedInput-input": {
+            color: "#fff",
+        },
+        "& .MuiInputLabel-root": {
+            color: "#fff",
+        },
+        "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
+            borderColor: "#fff",
+        },
+        "&:hover .MuiOutlinedInput-input": {
+            color: "#8a9c9b",
+        },
+        "&:hover .MuiInputLabel-root": {
+            color: "#8a9c9b",
+        },
+        "&:hover .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
+            borderColor: "#8a9c9b",
+        },
+        "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-input": {
+            color: "#8a9c9b",
+        },
+        "& .MuiInputLabel-root.Mui-focused": {
+            color: "#8a9c9b",
+        },
+        "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
+            {
+                borderColor: "#8a9c9b",
+            },
+    },
+})
 
 function getStyles(name, personName, theme) {
     return {
@@ -35,9 +70,20 @@ export const MultipleSelectionForm = ({
     input,
 }) => {
     const theme = useTheme()
+    const classes = useStyles()
     return (
-        <FormControl sx={{ m: 1, minWidth: 220 }}>
-            <InputLabel id="demo-multiple-chip-label">Driver</InputLabel>
+        <FormControl sx={{ m: 1, minWidth: 220 }} className={classes.root}>
+            <InputLabel
+                sx={{
+                    "&.MuiInputLabel-root": {
+                        color: "#fff",
+                        fontFamily: "Montserrat",
+                    },
+                }}
+                id="demo-multiple-chip-label"
+            >
+                Driver
+            </InputLabel>
             <Select
                 multiple
                 value={selection}
@@ -45,7 +91,19 @@ export const MultipleSelectionForm = ({
                 id="demo-multiple-chip"
                 label="Age"
                 onChange={handleDropdown}
-                input={<OutlinedInput id="select-multiple-chip" label="Chip" />}
+                input={
+                    <OutlinedInput
+                        sx={{
+                            color: "#fff",
+                            "&.MuiOutlinedInput-root": {
+                                color: "#fff",
+                                fontFamily: "Montserrat",
+                            },
+                        }}
+                        id="select-multiple-chip"
+                        label="Chip"
+                    />
+                }
                 renderValue={(selected) => (
                     <Box
                         sx={{

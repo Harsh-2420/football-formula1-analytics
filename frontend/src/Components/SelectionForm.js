@@ -3,11 +3,62 @@ import InputLabel from "@mui/material/InputLabel"
 import FormControl from "@mui/material/FormControl"
 import MenuItem from "@mui/material/MenuItem"
 import Select from "@mui/material/Select"
+import { makeStyles } from "@material-ui/core/styles"
+
+const useStyles = makeStyles({
+    root: {
+        width: 160,
+        "& .MuiOutlinedInput-input": {
+            color: "#fff",
+        },
+        "& .MuiInputLabel-root": {
+            color: "#fff",
+        },
+        "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
+            borderColor: "#fff",
+        },
+        "&:hover .MuiOutlinedInput-input": {
+            color: "#8a9c9b",
+        },
+        "&:hover .MuiInputLabel-root": {
+            color: "#8a9c9b",
+        },
+        "&:hover .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
+            borderColor: "#8a9c9b",
+        },
+        "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-input": {
+            color: "#8a9c9b",
+        },
+        "& .MuiInputLabel-root.Mui-focused": {
+            color: "#8a9c9b",
+        },
+        "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
+            {
+                borderColor: "#8a9c9b",
+            },
+    },
+})
 
 export const SelectionForm = ({ selection, data, handleDropdown, input }) => {
+    const classes = useStyles()
     return (
-        <FormControl sx={{ m: 1, minWidth: 120 }}>
-            <InputLabel id="demo-simple-select-label">{input}</InputLabel>
+        <FormControl
+            className={classes.root}
+            sx={{
+                m: 1,
+            }}
+        >
+            <InputLabel
+                sx={{
+                    "&.MuiInputLabel-root": {
+                        color: "#fff",
+                        fontFamily: "Montserrat",
+                    },
+                }}
+                id="demo-simple-select-label"
+            >
+                {input}
+            </InputLabel>
             <Select
                 classes={{
                     outlinedSecondary: { color: "secondary" },
