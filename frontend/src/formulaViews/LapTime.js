@@ -97,7 +97,7 @@ const CustomTooltip = ({ active, payload, label }) => {
                     borderRadius: "0.75rem",
                     padding: "1rem",
                     textAlign: "center",
-                    backgroundColor: "rgb(37, 41, 47, 0.9)",
+                    backgroundColor: "rgba(21,17,4,0.8)",
                 }}
             >
                 <p

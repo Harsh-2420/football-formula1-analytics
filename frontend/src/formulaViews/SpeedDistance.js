@@ -3,6 +3,7 @@ import "../App.css"
 import "bootstrap/dist/css/bootstrap.min.css"
 import { Telemetry } from "../Components/Telemetry"
 import { Row, Col } from "react-bootstrap"
+import Background from "../images/tex.jpeg"
 import Box from "@mui/material/Box"
 import {
     LineChart,
@@ -63,7 +64,7 @@ const CustomTooltip = ({ active, payload, label }) => {
                     border: "1px solid",
                     borderRadius: "7px",
                     padding: "15px",
-                    backgroundColor: "rgb(37, 41, 47, 0.9)",
+                    backgroundColor: "rgba(21,17,4,0.8)",
                 }}
             >
                 <p className="label" style={{ fontWeight: "normal" }}>
@@ -118,7 +119,13 @@ export const SpeedDistance = () => {
     //     setOpacity({ ...opacity, [dataKey]: 1 })
     // }
     return (
-        <Box>
+        <Box
+            style={{
+                backgroundImage: `url(${Background})`,
+                height: "220vh",
+                backgroundSize: "150px 150px",
+            }}
+        >
             <h3
                 style={{
                     color: "#8a9c9b",
