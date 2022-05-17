@@ -112,6 +112,11 @@ def serializer(todo):
             'content': todo.content}
 
 
+'''
+F1 ROUTES
+'''
+
+
 @app.route('/formula/getyear', methods=['GET'])
 def getyear():
     curr_year = datetime.datetime.now().year+1
@@ -396,6 +401,37 @@ def speed_distance():
             return_dict[driv_df_list[i]['driver'].iloc[0]
                         ] = driv_df_list[i].to_dict('records')
     return jsonify([selected_race, return_dict])
+
+
+@app.route('/formula/circuit_hist_features')
+def analysis():
+    races = pd.read_csv("./f1_data/races.csv")
+    circ_history = races[['year', 'name']].to_dict('records')
+    results = pd.read_csv("./f1_data/results.csv")
+    quali_win_corr = pd.merge(results, races, on='raceId', how='left')[
+        ['name', 'grid', 'position']]
+    nan_q = quali_win_corr['position'].value_counts().keys()[0]
+    quali_win_corr['position'].replace(nan_q, np.nan, inplace=True)
+    quali_win_corr['position'] = pd.to_numeric(quali_win_corr['position'])
+
+    # read json files
+    f = open('./f1_data/country_codes.json', 'r')
+    country_codes = json.load(f)
+    f = open('./f1_data/drop_names.json', 'r')
+    drop_names = json.load(f)
+
+    keepNames = quali_win_corr['name'].value_counts().iloc[:40]
+    for name in keepNames.keys():
+        if name in drop_names:
+            del keepNames[name]
+    circ_features = quali_win_corr[quali_win_corr['name'].isin(keepNames.keys())].groupby(
+        'name')[['grid', 'position']].corr().iloc[0::2, -1].reset_index()[['name', 'position']]
+    circ_features['country_code'] = circ_features['name'].map(country_codes)
+    circ_features['freq'] = circ_features['name'].map(dict(keepNames))
+    circ_features = circ_features.fillna('')
+    circ_features = circ_features.sort_values(
+        by=['position'], inplace=True).to_dict('records')
+    return jsonify(circ_history, circ_features)
 
 
 '''
