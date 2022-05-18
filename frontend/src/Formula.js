@@ -22,9 +22,9 @@ import "@fontsource/montserrat/700.css"
 
 const ToggleButton = styled(MuiToggleButton)(() => ({
     "&.Mui-selected, &.Mui-selected:hover": {
-        color: "#8a9c9b",
+        color: "#fff",
     },
-    "&.MuiToggleButton-primary": { color: "white", fontFamily: "Montserrat" },
+    "&.MuiToggleButton-primary": { color: "#8a9c9b", fontFamily: "Montserrat" },
 }))
 const theme = createTheme({
     palette: {
@@ -83,7 +83,8 @@ export const Formula = () => {
                         <ToggleButton
                             sx={{
                                 "&.Mui-selected, &.Mui-selected:hover": {
-                                    color: "#8a9c9b",
+                                    color: "#fff",
+                                    fontWeight: "bold",
                                 },
                                 border: "2px",
                             }}
@@ -94,7 +95,8 @@ export const Formula = () => {
                         <ToggleButton
                             sx={{
                                 "&.Mui-selected, &.Mui-selected:hover": {
-                                    color: "#8a9c9b",
+                                    color: "#fff",
+                                    fontWeight: "bold",
                                 },
                                 border: "2px",
                             }}
@@ -105,7 +107,8 @@ export const Formula = () => {
                         <ToggleButton
                             sx={{
                                 "&.Mui-selected, &.Mui-selected:hover": {
-                                    color: "#8a9c9b",
+                                    color: "#fff",
+                                    fontWeight: "bold",
                                 },
                                 border: "2px",
                             }}

@@ -9,13 +9,13 @@ const useStyles = makeStyles({
     root: {
         width: 160,
         "& .MuiOutlinedInput-input": {
-            color: "#fff",
+            color: "#8a9c9b",
         },
         "& .MuiInputLabel-root": {
-            color: "#fff",
+            color: "#8a9c9b",
         },
         "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-            borderColor: "#fff",
+            borderColor: "#8a9c9b",
         },
         "&:hover .MuiOutlinedInput-input": {
             color: "#8a9c9b",

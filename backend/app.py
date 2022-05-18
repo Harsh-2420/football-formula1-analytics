@@ -19,6 +19,8 @@ import re
 from bs4 import BeautifulSoup
 import urllib.request
 from scipy import stats
+import colorsys
+import palettable.scientific.sequential as palette
 # import asyncio
 
 app = Flask(__name__)
@@ -406,7 +408,6 @@ def speed_distance():
 @app.route('/formula/circuit_hist_features')
 def analysis():
     races = pd.read_csv("./f1_data/races.csv")
-    circ_history = races[['year', 'name']].to_dict('records')
     results = pd.read_csv("./f1_data/results.csv")
     quali_win_corr = pd.merge(results, races, on='raceId', how='left')[
         ['name', 'grid', 'position']]
@@ -426,12 +427,32 @@ def analysis():
             del keepNames[name]
     circ_features = quali_win_corr[quali_win_corr['name'].isin(keepNames.keys())].groupby(
         'name')[['grid', 'position']].corr().iloc[0::2, -1].reset_index()[['name', 'position']]
+    # app.logger.info('circ', circ_features)
     circ_features['country_code'] = circ_features['name'].map(country_codes)
     circ_features['freq'] = circ_features['name'].map(dict(keepNames))
+    circ_features['position'] = circ_features['position']*100
+    circ_features['position'] = circ_features['position'].round()
     circ_features = circ_features.fillna('')
-    circ_features = circ_features.sort_values(
-        by=['position'], inplace=True).to_dict('records')
-    return jsonify(circ_history, circ_features)
+    circ_features['name'] = circ_features['name'].str.replace(
+        "Grand Prix", "GP")
+    circ_features = circ_features.to_dict('records')
+    # circ_features = circ_features.sort_values(
+    #     by=['position'], inplace=True)
+
+    circ_history = races[['year', 'name']]
+    curr_names = circ_history[circ_history['year'] == 2022]['name']
+    circ_history = circ_history[circ_history['name'].isin(curr_names)]
+    circ_history['name'] = circ_history['name'].str.replace("Grand Prix", "GP")
+    # color_range = palette.Acton_20.hex_colors
+    # for i in palette.Oslo_20.hex_colors:
+    #     color_range.append(i)
+    # color_range = color_range[:len(circ_history['name'].unique())+1]
+    # mapping = {item: color_range[i]
+    #            for i, item in enumerate(circ_history["name"].unique())}
+    # circ_history['color'] = circ_history['name'].map(mapping)
+    circ_history = circ_history.to_dict('records')
+
+    return jsonify([circ_history, circ_features])
 
 
 '''

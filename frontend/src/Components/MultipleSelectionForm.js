@@ -24,32 +24,32 @@ const useStyles = makeStyles({
     root: {
         width: 200,
         "& .MuiOutlinedInput-input": {
-            color: "#fff",
+            color: "#8a9c9b",
         },
         "& .MuiInputLabel-root": {
-            color: "#fff",
+            color: "#8a9c9b",
         },
         "& .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
-            borderColor: "#fff",
-        },
-        "&:hover .MuiOutlinedInput-input": {
-            color: "#8a9c9b",
-        },
-        "&:hover .MuiInputLabel-root": {
-            color: "#8a9c9b",
-        },
-        "&:hover .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
             borderColor: "#8a9c9b",
         },
+        "&:hover .MuiOutlinedInput-input": {
+            color: "#fff",
+        },
+        "&:hover .MuiInputLabel-root": {
+            color: "#fff",
+        },
+        "&:hover .MuiOutlinedInput-root .MuiOutlinedInput-notchedOutline": {
+            borderColor: "#fff",
+        },
         "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-input": {
-            color: "#8a9c9b",
+            color: "#fff",
         },
         "& .MuiInputLabel-root.Mui-focused": {
-            color: "#8a9c9b",
+            color: "#fff",
         },
         "& .MuiOutlinedInput-root.Mui-focused .MuiOutlinedInput-notchedOutline":
             {
-                borderColor: "#8a9c9b",
+                borderColor: "#fff",
             },
     },
 })
