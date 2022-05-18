@@ -16,6 +16,16 @@ import {
     BarChart,
 } from "recharts"
 import moment from "moment"
+import MuiToggleButton from "@mui/material/ToggleButton"
+import ToggleButtonGroup from "@mui/material/ToggleButtonGroup"
+import { styled } from "@mui/material/styles"
+
+const ToggleButton = styled(MuiToggleButton)(() => ({
+    "&.Mui-selected, &.Mui-selected:hover": {
+        color: "#fff",
+    },
+    "&.MuiToggleButton-primary": { color: "#8a9c9b", fontFamily: "Montserrat" },
+}))
 
 const renderShape =
     (key, pixel = 10) =>
@@ -48,6 +58,9 @@ const renderShape =
 export const Analysis = () => {
     const [history, setHistory] = useState([])
     const [features, setFeatures] = useState([])
+    const [featuresHybrid, setFeaturesHybrid] = useState([])
+
+    const [alignment, setAlignment] = useState("allTime")
 
     useEffect(() => {
         fetch("http://127.0.0.1:5000/formula/circuit_hist_features")
@@ -59,12 +72,24 @@ export const Analysis = () => {
                         return a.position - b.position
                     })
                 )
+                setFeaturesHybrid(
+                    data[2].sort((a, b) => {
+                        return a.position - b.position
+                    })
+                )
             })
     }, [])
 
+    const handleChange = (event, newAlignment) => {
+        setAlignment(newAlignment)
+    }
+
     return (
         <Box>
-            <div className="responsive-container" style={{ height: "300vh" }}>
+            <div
+                className="responsive-container"
+                style={{ height: "300vh", position: "relative" }}
+            >
                 <div style={{ padding: "30px", paddingLeft: "50px" }}>
                     <ScatterChart
                         width={1300}
@@ -96,62 +121,181 @@ export const Analysis = () => {
                         <Tooltip cursor={{ strokeDasharray: "5 5" }} />
                     </ScatterChart>
                 </div>
-                <div style={{ padding: "30px", paddingLeft: "50px" }}>
-                    {console.log(features)}
-                    <BarChart
-                        width={1300}
-                        height={700}
-                        data={features}
-                        margin={{ top: 5, right: 15, left: 20, bottom: 10 }}
-                        layout="vertical"
+                <div className="features-container">
+                    <ToggleButtonGroup
+                        color="primary"
+                        value={alignment}
+                        exclusive
+                        onChange={handleChange}
+                        style={{
+                            paddingLeft: "7vw",
+                            // position: "absolute"
+                            // float: "right",
+                            // width: "200px",
+                        }}
                     >
-                        <XAxis
-                            type="number"
-                            dataKey="position"
-                            domain={[0, 100]}
-                            unit=" %"
-                            tickCount={5}
-                            axisLine={false}
-                            tickLine={false}
-                        />
-                        <YAxis
-                            type="category"
-                            dataKey="name"
-                            style={{ fontSize: "12px", pading: "5px" }}
-                            width={120}
-                            axisLine={false}
-                            tickLine={false}
-                        />
-                        <Bar
-                            dataKey="position"
-                            // label
-                            fill="#ff7477"
-                            barSize={10}
-                            // radius={[10, 10, 10, 10]}
-                            radius={10}
-                            // fill="url(#colorUv)"
-                            shape={renderShape("a")}
-                            stackId="a"
-                        >
-                            <LabelList
-                                style={{
-                                    textAnchor: "middle",
-                                    fontSize: "70%",
+                        <ToggleButton
+                            sx={{
+                                "&.Mui-selected, &.Mui-selected:hover": {
+                                    color: "#fff",
                                     fontWeight: "bold",
-                                    fill: "#fff",
+                                },
+                                border: "2px",
+                            }}
+                            value="allTime"
+                        >
+                            All Time
+                        </ToggleButton>
+                        <ToggleButton
+                            sx={{
+                                "&.Mui-selected, &.Mui-selected:hover": {
+                                    color: "#fff",
+                                    fontWeight: "bold",
+                                },
+                                border: "2px",
+                            }}
+                            // selected={true}
+                            value="hybrid"
+                        >
+                            Hybrid Era
+                        </ToggleButton>
+                    </ToggleButtonGroup>
+
+                    {alignment === "allTime" ? (
+                        <div style={{ padding: "30px", paddingLeft: "50px" }}>
+                            {/* {console.log(features)} */}
+                            <BarChart
+                                width={1300}
+                                height={700}
+                                data={features}
+                                margin={{
+                                    top: 5,
+                                    right: 15,
+                                    left: 20,
+                                    bottom: 10,
                                 }}
-                                valueAccessor={(props) => {
-                                    const { value } = props
-                                    return Array.isArray(value)
-                                        ? value[1] - value[0]
-                                        : value
+                                layout="vertical"
+                                style={{
+                                    // position: "absolute"
+                                    float: "left",
                                 }}
-                                position="right"
-                                offset={22}
-                            />
-                        </Bar>
-                        <Tooltip cursor={{ fill: "transparent" }} />
-                    </BarChart>
+                            >
+                                <XAxis
+                                    type="number"
+                                    dataKey="position"
+                                    domain={[0, 100]}
+                                    unit=" %"
+                                    tickCount={5}
+                                    axisLine={false}
+                                    tickLine={false}
+                                />
+                                <YAxis
+                                    type="category"
+                                    dataKey="name"
+                                    style={{ fontSize: "12px", pading: "5px" }}
+                                    width={120}
+                                    axisLine={false}
+                                    tickLine={false}
+                                />
+                                <Bar
+                                    dataKey="position"
+                                    // label
+                                    fill="#ff7477"
+                                    barSize={10}
+                                    // radius={[10, 10, 10, 10]}
+                                    radius={10}
+                                    // fill="url(#colorUv)"
+                                    shape={renderShape("a")}
+                                    stackId="a"
+                                >
+                                    <LabelList
+                                        style={{
+                                            textAnchor: "middle",
+                                            fontSize: "70%",
+                                            fontWeight: "bold",
+                                            fill: "#fff",
+                                        }}
+                                        valueAccessor={(props) => {
+                                            const { value } = props
+                                            return Array.isArray(value)
+                                                ? value[1] - value[0]
+                                                : value
+                                        }}
+                                        position="right"
+                                        offset={22}
+                                    />
+                                </Bar>
+                                <Tooltip cursor={{ fill: "transparent" }} />
+                            </BarChart>
+                        </div>
+                    ) : (
+                        <div style={{ padding: "30px", paddingLeft: "50px" }}>
+                            {/* {console.log(features)} */}
+                            <BarChart
+                                width={1300}
+                                height={700}
+                                data={featuresHybrid}
+                                margin={{
+                                    top: 5,
+                                    right: 15,
+                                    left: 20,
+                                    bottom: 10,
+                                }}
+                                layout="vertical"
+                                style={{
+                                    // position: "absolute"
+                                    float: "left",
+                                }}
+                            >
+                                <XAxis
+                                    type="number"
+                                    dataKey="position"
+                                    domain={[0, 100]}
+                                    unit=" %"
+                                    tickCount={5}
+                                    axisLine={false}
+                                    tickLine={false}
+                                />
+                                <YAxis
+                                    type="category"
+                                    dataKey="name"
+                                    style={{ fontSize: "12px", pading: "5px" }}
+                                    width={120}
+                                    axisLine={false}
+                                    tickLine={false}
+                                />
+                                <Bar
+                                    dataKey="position"
+                                    // label
+                                    fill="#ff7477"
+                                    barSize={10}
+                                    // radius={[10, 10, 10, 10]}
+                                    radius={10}
+                                    // fill="url(#colorUv)"
+                                    shape={renderShape("a")}
+                                    stackId="a"
+                                >
+                                    <LabelList
+                                        style={{
+                                            textAnchor: "middle",
+                                            fontSize: "70%",
+                                            fontWeight: "bold",
+                                            fill: "#fff",
+                                        }}
+                                        valueAccessor={(props) => {
+                                            const { value } = props
+                                            return Array.isArray(value)
+                                                ? value[1] - value[0]
+                                                : value
+                                        }}
+                                        position="right"
+                                        offset={22}
+                                    />
+                                </Bar>
+                                <Tooltip cursor={{ fill: "transparent" }} />
+                            </BarChart>
+                        </div>
+                    )}
                 </div>
             </div>
         </Box>

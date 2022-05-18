@@ -410,7 +410,7 @@ def analysis():
     races = pd.read_csv("./f1_data/races.csv")
     results = pd.read_csv("./f1_data/results.csv")
     quali_win_corr = pd.merge(results, races, on='raceId', how='left')[
-        ['name', 'grid', 'position']]
+        ['name', 'grid', 'position', 'year']]
     nan_q = quali_win_corr['position'].value_counts().keys()[0]
     quali_win_corr['position'].replace(nan_q, np.nan, inplace=True)
     quali_win_corr['position'] = pd.to_numeric(quali_win_corr['position'])
@@ -427,7 +427,6 @@ def analysis():
             del keepNames[name]
     circ_features = quali_win_corr[quali_win_corr['name'].isin(keepNames.keys())].groupby(
         'name')[['grid', 'position']].corr().iloc[0::2, -1].reset_index()[['name', 'position']]
-    # app.logger.info('circ', circ_features)
     circ_features['country_code'] = circ_features['name'].map(country_codes)
     circ_features['freq'] = circ_features['name'].map(dict(keepNames))
     circ_features['position'] = circ_features['position']*100
@@ -436,8 +435,21 @@ def analysis():
     circ_features['name'] = circ_features['name'].str.replace(
         "Grand Prix", "GP")
     circ_features = circ_features.to_dict('records')
-    # circ_features = circ_features.sort_values(
-    #     by=['position'], inplace=True)
+
+    quali_win_corr_hybridera = quali_win_corr[quali_win_corr['year'] > 2014]
+    circ_features_hybridera = quali_win_corr_hybridera[quali_win_corr_hybridera['name'].isin(keepNames.keys())].groupby(
+        'name')[['grid', 'position']].corr().iloc[0::2, -1].reset_index()[['name', 'position']]
+    circ_features_hybridera['country_code'] = circ_features_hybridera['name'].map(
+        country_codes)
+    circ_features_hybridera['freq'] = circ_features_hybridera['name'].map(
+        dict(keepNames))
+    circ_features_hybridera['position'] = circ_features_hybridera['position']*100
+    circ_features_hybridera['position'] = circ_features_hybridera['position'].round(
+    )
+    circ_features_hybridera = circ_features_hybridera.fillna('')
+    circ_features_hybridera['name'] = circ_features_hybridera['name'].str.replace(
+        "Grand Prix", "GP")
+    circ_features_hybridera = circ_features_hybridera.to_dict('records')
 
     circ_history = races[['year', 'name']]
     curr_names = circ_history[circ_history['year'] == 2022]['name']
@@ -452,7 +464,7 @@ def analysis():
     # circ_history['color'] = circ_history['name'].map(mapping)
     circ_history = circ_history.to_dict('records')
 
-    return jsonify([circ_history, circ_features])
+    return jsonify([circ_history, circ_features, circ_features_hybridera])
 
 
 '''
