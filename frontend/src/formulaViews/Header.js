@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react"
 import Box from "@mui/material/Box"
+import f1 from "../images/F1.png"
+import "../App.css"
 
 export const Header = () => {
     return (
@@ -7,9 +9,6 @@ export const Header = () => {
             <Box
                 sx={{
                     padding: 4,
-                    // marginTop: 7,
-                    // borderColor: "blue",
-                    // borderStyle: "solid",
                 }}
             >
                 <h1
@@ -19,17 +18,17 @@ export const Header = () => {
                         color: "white",
                     }}
                 >
-                    F1 Discover
+                    <img
+                        className="f1-img"
+                        src={f1}
+                        alt={f1}
+                        style={{
+                            width: "10%",
+                            height: "10%",
+                        }}
+                    />
+                    &nbsp; Discover
                 </h1>
-                {/* <h6
-                    style={{
-                        fontFamily: "Montserrat",
-                        fontWeight: "bold",
-                        color: "white",
-                    }}
-                >
-                    for the data buffs
-                </h6> */}
             </Box>
         </div>
     )

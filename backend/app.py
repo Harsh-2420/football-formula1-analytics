@@ -1,3 +1,4 @@
+from copyreg import constructor
 from hashlib import new
 from flask import Flask, jsonify, request, json, session
 from flask_session import Session
@@ -464,7 +465,43 @@ def analysis():
     # circ_history['color'] = circ_history['name'].map(mapping)
     circ_history = circ_history.to_dict('records')
 
-    return jsonify([circ_history, circ_features, circ_features_hybridera])
+    # Crash DF
+    constructors = pd.read_csv("./f1_data/constructors.csv")
+    drivers = pd.read_csv("./f1_data/drivers.csv")
+    crashdf = pd.merge(results, races, on='raceId', how='left')
+    nan_q = crashdf['position'].value_counts().keys()[0]
+    crashdf['position'].replace(nan_q, 99, inplace=True)
+    crashdf['position'] = pd.to_numeric(crashdf['position'])
+    crashdf['crashCount'] = np.where(crashdf['position'] == 99, 1, 0)
+    crashdf['totalCount'] = 1
+
+    # constructor_list = [1,2,3,4,5,9,6,10,131,210,211,213,214,205]
+    driverIds = list(results[results['raceId'] == 1076]['driverId'])
+    constructorIds = list(results[results['raceId'] == 1076]['constructorId'])
+
+    trackCrashes = crashdf[crashdf['name'].isin(keepNames.keys())].groupby('name')[
+        ['crashCount', 'totalCount']].sum().reset_index().sort_values(by='crashCount')
+    teamCrashes = crashdf[crashdf['constructorId'].isin(constructorIds)].groupby(
+        'constructorId')[['crashCount', 'totalCount']].sum().reset_index().sort_values(by='crashCount')
+    driverCrashes = crashdf[crashdf['driverId'].isin(driverIds)].groupby('driverId')[
+        ['crashCount', 'totalCount']].sum().reset_index().sort_values(by='crashCount')
+
+    trackCrashes['percentage'] = np.round(
+        trackCrashes['crashCount']/trackCrashes['totalCount']*100)
+    trackCrashes['name'] = trackCrashes['name'].str.replace("Grand Prix", "GP")
+    trackCrashes = trackCrashes[['name', 'percentage']].to_dict('records')
+
+    teamCrashes['percentage'] = np.round(
+        teamCrashes['crashCount']/teamCrashes['totalCount']*100)
+    teamdf = pd.merge(teamCrashes, constructors, on='constructorId')[
+        ['percentage', 'name']].to_dict('records')
+
+    driverCrashes['percentage'] = np.round(
+        driverCrashes['crashCount']/driverCrashes['totalCount']*100)
+    driverdf = pd.merge(driverCrashes, drivers, on='driverId')[
+        ['percentage', 'surname']].to_dict('records')
+
+    return jsonify([circ_history, circ_features, circ_features_hybridera, trackCrashes, teamdf, driverdf])
 
 
 '''

@@ -19,6 +19,9 @@ import moment from "moment"
 import MuiToggleButton from "@mui/material/ToggleButton"
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup"
 import { styled } from "@mui/material/styles"
+import { HorizontalBarFeatures } from "../Components/HorizontalBarFeatures"
+
+import Background from "../images/tex.jpeg"
 
 const ToggleButton = styled(MuiToggleButton)(() => ({
     "&.Mui-selected, &.Mui-selected:hover": {
@@ -54,11 +57,13 @@ const renderShape =
             </svg>
         )
     }
-
 export const Analysis = () => {
     const [history, setHistory] = useState([])
     const [features, setFeatures] = useState([])
     const [featuresHybrid, setFeaturesHybrid] = useState([])
+    const [trackCrashes, setTrackCrashes] = useState([])
+    const [teamCrashes, setTeamCrashes] = useState([])
+    const [driverCrashes, setDriverCrashes] = useState([])
 
     const [alignment, setAlignment] = useState("allTime")
 
@@ -77,6 +82,9 @@ export const Analysis = () => {
                         return a.position - b.position
                     })
                 )
+                setTrackCrashes(data[3])
+                setTeamCrashes(data[4])
+                setDriverCrashes(data[5])
             })
     }, [])
 
@@ -85,7 +93,13 @@ export const Analysis = () => {
     }
 
     return (
-        <Box>
+        <Box
+            style={{
+                backgroundImage: `url(${Background})`,
+                height: "320vh",
+                backgroundSize: "150px 150px",
+            }}
+        >
             <div
                 className="responsive-container"
                 style={{ height: "300vh", position: "relative" }}
@@ -129,9 +143,6 @@ export const Analysis = () => {
                         onChange={handleChange}
                         style={{
                             paddingLeft: "7vw",
-                            // position: "absolute"
-                            // float: "right",
-                            // width: "200px",
                         }}
                     >
                         <ToggleButton
@@ -163,139 +174,234 @@ export const Analysis = () => {
 
                     {alignment === "allTime" ? (
                         <div style={{ padding: "30px", paddingLeft: "50px" }}>
-                            {/* {console.log(features)} */}
-                            <BarChart
-                                width={1300}
-                                height={700}
-                                data={features}
-                                margin={{
-                                    top: 5,
-                                    right: 15,
-                                    left: 20,
-                                    bottom: 10,
-                                }}
-                                layout="vertical"
-                                style={{
-                                    // position: "absolute"
-                                    float: "left",
-                                }}
-                            >
-                                <XAxis
-                                    type="number"
-                                    dataKey="position"
-                                    domain={[0, 100]}
-                                    unit=" %"
-                                    tickCount={5}
-                                    axisLine={false}
-                                    tickLine={false}
-                                />
-                                <YAxis
-                                    type="category"
-                                    dataKey="name"
-                                    style={{ fontSize: "12px", pading: "5px" }}
-                                    width={120}
-                                    axisLine={false}
-                                    tickLine={false}
-                                />
-                                <Bar
-                                    dataKey="position"
-                                    // label
-                                    fill="#ff7477"
-                                    barSize={10}
-                                    // radius={[10, 10, 10, 10]}
-                                    radius={10}
-                                    // fill="url(#colorUv)"
-                                    shape={renderShape("a")}
-                                    stackId="a"
-                                >
-                                    <LabelList
-                                        style={{
-                                            textAnchor: "middle",
-                                            fontSize: "70%",
-                                            fontWeight: "bold",
-                                            fill: "#fff",
-                                        }}
-                                        valueAccessor={(props) => {
-                                            const { value } = props
-                                            return Array.isArray(value)
-                                                ? value[1] - value[0]
-                                                : value
-                                        }}
-                                        position="right"
-                                        offset={22}
-                                    />
-                                </Bar>
-                                <Tooltip cursor={{ fill: "transparent" }} />
-                            </BarChart>
+                            <HorizontalBarFeatures data={features} />
                         </div>
                     ) : (
                         <div style={{ padding: "30px", paddingLeft: "50px" }}>
-                            {/* {console.log(features)} */}
-                            <BarChart
-                                width={1300}
-                                height={700}
-                                data={featuresHybrid}
-                                margin={{
-                                    top: 5,
-                                    right: 15,
-                                    left: 20,
-                                    bottom: 10,
-                                }}
-                                layout="vertical"
-                                style={{
-                                    // position: "absolute"
-                                    float: "left",
-                                }}
-                            >
-                                <XAxis
-                                    type="number"
-                                    dataKey="position"
-                                    domain={[0, 100]}
-                                    unit=" %"
-                                    tickCount={5}
-                                    axisLine={false}
-                                    tickLine={false}
-                                />
-                                <YAxis
-                                    type="category"
-                                    dataKey="name"
-                                    style={{ fontSize: "12px", pading: "5px" }}
-                                    width={120}
-                                    axisLine={false}
-                                    tickLine={false}
-                                />
-                                <Bar
-                                    dataKey="position"
-                                    // label
-                                    fill="#ff7477"
-                                    barSize={10}
-                                    // radius={[10, 10, 10, 10]}
-                                    radius={10}
-                                    // fill="url(#colorUv)"
-                                    shape={renderShape("a")}
-                                    stackId="a"
-                                >
-                                    <LabelList
-                                        style={{
-                                            textAnchor: "middle",
-                                            fontSize: "70%",
-                                            fontWeight: "bold",
-                                            fill: "#fff",
-                                        }}
-                                        valueAccessor={(props) => {
-                                            const { value } = props
-                                            return Array.isArray(value)
-                                                ? value[1] - value[0]
-                                                : value
-                                        }}
-                                        position="right"
-                                        offset={22}
-                                    />
-                                </Bar>
-                                <Tooltip cursor={{ fill: "transparent" }} />
-                            </BarChart>
+                            <HorizontalBarFeatures data={featuresHybrid} />
                         </div>
                     )}
+                </div>
+
+                <div
+                    className="crashes-container"
+                    style={{
+                        width: "100%",
+                        // overflow: "hidden"
+                    }}
+                >
+                    <p
+                        style={{
+                            color: "#8a9c9b",
+                            fontSize: "15px",
+                            fontWeight: "400",
+                        }}
+                    >
+                        Percentage of Crashes by Circuit, Constructor and Driver
+                    </p>
+                    <div
+                        style={{
+                            float: "left",
+                            // border: "1px solid blue",
+                            width: "60%",
+                        }}
+                    >
+                        <BarChart
+                            width={800}
+                            height={850}
+                            data={trackCrashes}
+                            margin={{
+                                top: 5,
+                                right: 15,
+                                left: 20,
+                                bottom: 10,
+                            }}
+                            layout="vertical"
+                        >
+                            <XAxis
+                                type="number"
+                                dataKey="percentage"
+                                domain={[0, 100]}
+                                unit=" %"
+                                tickCount={5}
+                                axisLine={false}
+                                tickLine={false}
+                            />
+                            <YAxis
+                                type="category"
+                                dataKey="name"
+                                style={{ fontSize: "12px", pading: "5px" }}
+                                width={120}
+                                axisLine={false}
+                                tickLine={false}
+                            />
+                            <Bar
+                                dataKey="percentage"
+                                // label
+                                fill="#ff7477"
+                                barSize={10}
+                                // radius={[10, 10, 10, 10]}
+                                radius={10}
+                                // fill="url(#colorUv)"
+                                shape={renderShape("a")}
+                                stackId="a"
+                            >
+                                <LabelList
+                                    style={{
+                                        textAnchor: "middle",
+                                        fontSize: "70%",
+                                        fontWeight: "bold",
+                                        fill: "#fff",
+                                    }}
+                                    valueAccessor={(props) => {
+                                        const { value } = props
+                                        return Array.isArray(value)
+                                            ? value[1] - value[0]
+                                            : value
+                                    }}
+                                    position="right"
+                                    offset={22}
+                                />
+                            </Bar>
+                            <Tooltip cursor={{ fill: "transparent" }} />
+                        </BarChart>
+                    </div>
+                    <div
+                        style={{
+                            // height: "100vh",
+                            float: "right",
+                            // border: "1px solid red",
+                            width: "40%",
+                        }}
+                    >
+                        <BarChart
+                            width={600}
+                            height={300}
+                            data={teamCrashes}
+                            margin={{
+                                top: 5,
+                                right: 15,
+                                left: 20,
+                                bottom: 10,
+                            }}
+                            layout="vertical"
+                        >
+                            <XAxis
+                                type="number"
+                                dataKey="percentage"
+                                domain={[0, 50]}
+                                unit=" %"
+                                tickCount={5}
+                                axisLine={false}
+                                tickLine={false}
+                            />
+                            <YAxis
+                                type="category"
+                                dataKey="name"
+                                style={{ fontSize: "12px", pading: "5px" }}
+                                width={120}
+                                axisLine={false}
+                                tickLine={false}
+                            />
+                            <Bar
+                                dataKey="percentage"
+                                // label
+                                fill="#ff7477"
+                                barSize={10}
+                                // radius={[10, 10, 10, 10]}
+                                radius={10}
+                                // fill="url(#colorUv)"
+                                shape={renderShape("a")}
+                                stackId="a"
+                            >
+                                <LabelList
+                                    style={{
+                                        textAnchor: "middle",
+                                        fontSize: "70%",
+                                        fontWeight: "bold",
+                                        fill: "#fff",
+                                    }}
+                                    valueAccessor={(props) => {
+                                        const { value } = props
+                                        return Array.isArray(value)
+                                            ? value[1] - value[0]
+                                            : value
+                                    }}
+                                    position="right"
+                                    offset={22}
+                                />
+                            </Bar>
+                            <Tooltip cursor={{ fill: "transparent" }} />
+                        </BarChart>
+                    </div>
+                    <div
+                        style={{
+                            // height: "100vh",
+                            float: "right",
+                            // border: "1px solid green",
+                            width: "40%",
+                        }}
+                    >
+                        <BarChart
+                            width={600}
+                            height={550}
+                            data={driverCrashes}
+                            margin={{
+                                top: 5,
+                                right: 15,
+                                left: 20,
+                                bottom: 10,
+                            }}
+                            layout="vertical"
+                        >
+                            <XAxis
+                                type="number"
+                                dataKey="percentage"
+                                domain={[0, 30]}
+                                unit=" %"
+                                tickCount={5}
+                                axisLine={false}
+                                tickLine={false}
+                            />
+                            <YAxis
+                                type="category"
+                                dataKey="surname"
+                                style={{ fontSize: "12px", pading: "5px" }}
+                                width={120}
+                                axisLine={false}
+                                tickLine={false}
+                            />
+                            <Bar
+                                dataKey="percentage"
+                                // label
+                                fill="#ff7477"
+                                barSize={10}
+                                // radius={[10, 10, 10, 10]}
+                                radius={10}
+                                // fill="url(#colorUv)"
+                                shape={renderShape("a")}
+                                stackId="a"
+                            >
+                                <LabelList
+                                    style={{
+                                        textAnchor: "middle",
+                                        fontSize: "70%",
+                                        fontWeight: "bold",
+                                        fill: "#fff",
+                                    }}
+                                    valueAccessor={(props) => {
+                                        const { value } = props
+                                        return Array.isArray(value)
+                                            ? value[1] - value[0]
+                                            : value
+                                    }}
+                                    position="right"
+                                    offset={22}
+                                />
+                            </Bar>
+                            <Tooltip cursor={{ fill: "transparent" }} />
+                        </BarChart>
+                    </div>
                 </div>
             </div>
         </Box>

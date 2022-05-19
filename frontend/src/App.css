@@ -4,7 +4,6 @@
 } */
 .App {
     text-align: center;
-    /* background-image: "url('./images/tina-dawson-Kim9COAIEGc-unsplash.jpg')"; */
 }
 
 .App-logo {
@@ -42,6 +41,41 @@
     }
 }
 
+.home-container-box {
+    display: flex;
+    justify-content: left;
+}
+.home-container-text {
+    color: #8a9c9b;
+    /* border: 1px solid blue; */
+    width: 50%;
+}
+
+.home-link-h3 {
+    font-weight: bold;
+    color: white;
+    /* border: 1px solid green; */
+}
+.nav-glass {
+    font-family: Montserrat, "Helvetica Neue";
+    background: rgba(55, 26, 23, 0.29);
+    /* border-radius-bottom-left: 5px; */
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+    backdrop-filter: blur(0.5px);
+    -webkit-backdrop-filter: blur(0.5px);
+    /* border: 0.1px solid rgba(85, 84, 84, 0.36); */
+}
+
+.f1-img {
+    filter: grayscale(25%) contrast(80%);
+    /* filter: brightness(0) invert(1); */
+}
+.uefa-img {
+    /* filter: grayscale(25%) contrast(80%); */
+    filter: brightness(0) invert(1);
+}
 .responsive {
     width: 100vh;
     height: 100vw;
