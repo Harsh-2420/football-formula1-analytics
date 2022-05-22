@@ -7,17 +7,18 @@ import "bootstrap/dist/css/bootstrap.min.css"
 import { Formula } from "./Formula"
 import { Football } from "./Football"
 import { Home } from "./Home"
-import { NavBar } from "./Components/Navbar"
+import ScrollToTop from "./Components/ScrollToTop"
 
 function App() {
     return (
         <BrowserRouter>
-            <NavBar />
-            <Routes>
-                <Route path="/" exact element={<Home />} />
-                <Route path="/formula" element={<Formula />} />
-                <Route path="/football" element={<Football />} />
-            </Routes>
+            <ScrollToTop>
+                <Routes>
+                    <Route path="/" exact element={<Home />} />
+                    <Route path="/formula" element={<Formula />} />
+                    <Route path="/football" element={<Football />} />
+                </Routes>
+            </ScrollToTop>
         </BrowserRouter>
     )
 }

@@ -7,6 +7,7 @@ import CssBaseline from "@mui/material/CssBaseline"
 import ToggleButton from "@mui/material/ToggleButton"
 import ToggleButtonGroup from "@mui/material/ToggleButtonGroup"
 
+import { NavBar } from "./Components/Navbar"
 import { FootballHeader } from "./footballViews/Header"
 import { Predictions } from "./footballViews/Predictions"
 import GlobalStandings from "./footballViews/GlobalStandings"
@@ -58,7 +59,8 @@ export const Football = () => {
             <React.Fragment>
                 <ThemeProvider theme={theme}>
                     <CssBaseline />
-                    <FootballHeader />
+                    <NavBar />
+                    <FootballHeader page={alignment} />
 
                     <ToggleButtonGroup
                         color="tertiary"
@@ -78,9 +80,55 @@ export const Football = () => {
                     </ToggleButtonGroup>
 
                     {alignment === "standings" ? (
-                        <GlobalStandings />
+                        <>
+                            <GlobalStandings />
+                            <div>
+                                <p
+                                    style={{
+                                        color: "black",
+                                        height: "10vh",
+                                        fontSize: "15px",
+                                    }}
+                                >
+                                    Design and Data from{" "}
+                                    <a
+                                        style={{
+                                            color: "orange",
+                                            fontSize: "15px",
+                                            textDecoration: "none",
+                                        }}
+                                        href="https://github.com/fivethirtyeight/data/tree/master/soccer-spi"
+                                    >
+                                        <span>FiveThirtyEight</span>
+                                    </a>
+                                </p>
+                            </div>
+                        </>
                     ) : (
-                        <Predictions />
+                        <>
+                            <Predictions />
+                            <div>
+                                <p
+                                    style={{
+                                        color: "black",
+                                        height: "10vh",
+                                        fontSize: "15px",
+                                    }}
+                                >
+                                    Design and Data from{" "}
+                                    <a
+                                        style={{
+                                            color: "orange",
+                                            fontSize: "15px",
+                                            textDecoration: "none",
+                                        }}
+                                        href="https://github.com/fivethirtyeight/data/tree/master/soccer-spi"
+                                    >
+                                        <span>FiveThirtyEight</span>
+                                    </a>
+                                </p>
+                            </div>
+                        </>
                     )}
                 </ThemeProvider>
             </React.Fragment>

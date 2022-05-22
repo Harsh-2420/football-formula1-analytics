@@ -1,35 +1,35 @@
-import React, { useEffect, useState } from "react"
+import React from "react"
 import Box from "@mui/material/Box"
 
-export const FootballHeader = () => {
+export const FootballHeader = (page) => {
     return (
         <div>
             <Box
                 sx={{
                     padding: 4,
-                    // marginTop: 7,
-                    // borderColor: "blue",
-                    // borderStyle: "solid",
                 }}
             >
-                <h1
-                    style={{
-                        fontFamily: "Montserrat",
-                        fontWeight: "bold",
-                        color: "black",
-                    }}
-                >
-                    Football Predictions
-                </h1>
-                {/* <h6
-                    style={{
-                        fontFamily: "Montserrat",
-                        fontWeight: "bold",
-                        color: "white",
-                    }}
-                >
-                    for the data buffs
-                </h6> */}
+                {page.page === "standings" ? (
+                    <h1
+                        style={{
+                            fontFamily: "Montserrat",
+                            fontWeight: "bold",
+                            color: "black",
+                        }}
+                    >
+                        Football Standings
+                    </h1>
+                ) : (
+                    <h1
+                        style={{
+                            fontFamily: "Montserrat",
+                            fontWeight: "bold",
+                            color: "black",
+                        }}
+                    >
+                        Football Predictions
+                    </h1>
+                )}
             </Box>
         </div>
     )

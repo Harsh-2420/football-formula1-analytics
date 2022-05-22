@@ -16,6 +16,7 @@ import {
     Brush,
 } from "recharts"
 import moment from "moment"
+import Background from "../images/tex.jpeg"
 
 const getIntroOfPage = (year, label) => {
     if (year !== 2018) {
@@ -161,7 +162,13 @@ export const LapTime = () => {
     //     setOpacity({ ...opacity, [dataKey]: 1 })
     // }
     return (
-        <Box>
+        <Box
+            style={{
+                backgroundImage: `url(${Background})`,
+                height: "80vh",
+                backgroundSize: "150px 150px",
+            }}
+        >
             <h3
                 style={{
                     color: "#8a9c9b",

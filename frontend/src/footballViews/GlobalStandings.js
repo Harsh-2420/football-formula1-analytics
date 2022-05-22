@@ -54,42 +54,108 @@ const handleRenderRankChange = (params) => {
 }
 
 const handleRenderStatOff = (params) => {
-    const colorRange = chroma.scale(["rgb(252,155,155)", "rgb(155,252,155)"])
-    const percent = (params.value - 0) / (3 - 0)
-    const outputX = percent * (1 - 0) + 0
+    const greenColorRange = chroma.scale([
+        "rgba(76,206,119,0.00)",
+        "rgba(76,206,119,1.00)",
+    ])
+    const redColorRange = chroma.scale([
+        "rgba(255,153,153,1.00)",
+        "rgba(255,153,153,0.00)",
+    ]) //f99
+
+    const percent =
+        params.value < 1.2
+            ? (params.value - 0.5) / (1.2 - 0.5)
+            : (params.value - 1.2) / (3 - 1.2)
     return (
-        <div
-            style={{
-                color: "black",
-                borderStyle: "solid",
-                borderColor: `${colorRange(outputX.toString())}`,
-                borderRadius: "13px",
-                width: "55%",
-                background: `${colorRange(outputX.toString())}`,
-            }}
-        >
-            {params.value}
-        </div>
+        <>
+            {params.value < 1.2 ? (
+                <div
+                    style={{
+                        color: "black",
+                        // borderStyle: "solid",
+                        // borderColor: `${redColorRange(percent.toString())}`,
+                        borderRadius: "13px",
+                        width: "55%",
+                        background: `${redColorRange(percent.toString())}`,
+                        height: "50%",
+                        textAlign: "center",
+                        lineHeight: "25px",
+                    }}
+                >
+                    {params.value}
+                </div>
+            ) : (
+                <div
+                    style={{
+                        color: "black",
+                        // borderStyle: "solid",
+                        // borderColor: `${greenColorRange(percent.toString())}`,
+                        borderRadius: "13px",
+                        width: "55%",
+                        background: `${greenColorRange(percent.toString())}`,
+                        height: "50%",
+                        textAlign: "center",
+                        lineHeight: "25px",
+                    }}
+                >
+                    {params.value}
+                </div>
+            )}
+        </>
     )
 }
 
 const handleRenderStatDef = (params) => {
-    const colorRange = chroma.scale(["rgb(155,252,155)", "rgb(252,155,155)"])
-    const percent = (params.value - 0) / (3 - 0)
-    const outputX = percent * (1 - 0) + 0
+    const greenColorRange = chroma.scale([
+        "rgba(76,206,119,1.00)",
+        "rgba(76,206,119,0.00)",
+    ])
+    const redColorRange = chroma.scale([
+        "rgba(255,153,153,0.00)",
+        "rgba(255,153,153,1.00)",
+    ]) //f99
+
+    const percent =
+        params.value < 1.5
+            ? (params.value - 0.5) / (1.5 - 0.5)
+            : (params.value - 1.5) / (2.4 - 1.5)
     return (
-        <div
-            style={{
-                color: "black",
-                borderStyle: "solid",
-                borderColor: `${colorRange(outputX.toString())}`,
-                borderRadius: "13px",
-                width: "55%",
-                background: `${colorRange(outputX.toString())}`,
-            }}
-        >
-            {params.value}
-        </div>
+        <>
+            {params.value > 1.5 ? (
+                <div
+                    style={{
+                        color: "black",
+                        // borderStyle: "solid",
+                        // borderColor: `${redColorRange(percent.toString())}`,
+                        borderRadius: "13px",
+                        width: "55%",
+                        background: `${redColorRange(percent.toString())}`,
+                        height: "50%",
+                        textAlign: "center",
+                        lineHeight: "25px",
+                    }}
+                >
+                    {params.value}
+                </div>
+            ) : (
+                <div
+                    style={{
+                        color: "black",
+                        // borderStyle: "solid",
+                        // borderColor: `${greenColorRange(percent.toString())}`,
+                        borderRadius: "13px",
+                        width: "55%",
+                        background: `${greenColorRange(percent.toString())}`,
+                        height: "50%",
+                        textAlign: "center",
+                        lineHeight: "25px",
+                    }}
+                >
+                    {params.value}
+                </div>
+            )}
+        </>
     )
 }
 

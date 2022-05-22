@@ -9,6 +9,7 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup"
 // import Background from "./images/tina-dawson-Kim9COAIEGc-unsplash.jpg"
 import Background from "./images/tex.jpeg"
 
+import { NavBar } from "./Components/Navbar"
 import { Header } from "./formulaViews/Header"
 import { DropdownPage } from "./formulaViews/DropdownPage"
 import { LapTime } from "./formulaViews/LapTime"
@@ -65,13 +66,14 @@ export const Formula = () => {
             style={{
                 fontFamily: "Montserrat",
                 backgroundImage: `url(${Background})`,
-                height: "200vh",
+                height: "70vh",
                 backgroundSize: "150px 150px",
             }}
         >
             <React.Fragment>
                 <ThemeProvider theme={theme}>
                     <CssBaseline />
+                    <NavBar />
                     <Header />
 
                     <ToggleButtonGroup
@@ -210,6 +212,9 @@ export const Formula = () => {
                                         style={{
                                             display: "flex",
                                             justifyContent: "center",
+                                            backgroundImage: `url(${Background})`,
+                                            // height: "30vh",
+                                            backgroundSize: "150px 150px",
                                         }}
                                     >
                                         <p
@@ -271,6 +276,7 @@ export const Formula = () => {
                                     <div
                                         style={{
                                             backgroundImage: `url(${Background})`,
+                                            height: "28vh",
                                             backgroundSize: "150px 150px",
                                         }}
                                     >
