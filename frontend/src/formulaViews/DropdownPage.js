@@ -279,6 +279,11 @@ export const DropdownPage = () => {
                     console.log("selection not made")
                 )} */}
             </Box>
+            <p style={{ color: "#8a9c9b" }}>
+                Here, you can create F1 lap time and telemetry charts using the
+                selection boxes below.
+                <br></br>
+            </p>
         </div>
     )
 }

@@ -96,10 +96,13 @@ export const Analysis = () => {
         <Box
             style={{
                 backgroundImage: `url(${Background})`,
-                height: "320vh",
+                height: "310vh",
                 backgroundSize: "150px 150px",
             }}
         >
+            <p style={{ color: "#8a9c9b" }}>
+                See some of the initial analysis I did from historic race data.
+            </p>
             <div
                 className="responsive-container"
                 style={{ height: "300vh", position: "relative" }}
@@ -404,6 +407,16 @@ export const Analysis = () => {
                     </div>
                 </div>
             </div>
+            <p
+                style={{
+                    color: "#8a9c9b",
+                    fontSize: "12px",
+                }}
+            >
+                In Progress: Further Analysis on locations and home race
+                advantages. Also, I will add customisations for you to control
+                the data like in telemetry.
+            </p>
         </Box>
     )
 }

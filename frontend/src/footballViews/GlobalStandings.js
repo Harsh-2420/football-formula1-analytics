@@ -200,24 +200,37 @@ const handleRenderTeamImage = (params) => {
 }
 
 const columns = [
-    { field: "rank", headerName: "Rank", type: "number", width: 100 },
+    {
+        field: "rank",
+        headerName: "Rank",
+        type: "number",
+        headerAlign: "center",
+        width: 100,
+        align: "center",
+    },
     {
         field: "Change",
         headerName: "1-Week Change",
         type: "number",
+        headerAlign: "center",
         width: 150,
+        align: "center",
         renderCell: handleRenderRankChange,
     },
     {
         field: "name",
         headerName: "Team",
         width: 300,
+        align: "center",
+        headerAlign: "center",
         renderCell: handleRenderTeamImage,
     },
     {
         field: "league",
         headerName: "League",
         width: 300,
+        align: "center",
+        headerAlign: "center",
         renderCell: handleRenderImage,
     },
     {
@@ -225,6 +238,8 @@ const columns = [
         headerName: "Offense",
         type: "number",
         width: 120,
+        headerAlign: "center",
+        align: "center",
         renderCell: handleRenderStatOff,
     },
     {
@@ -232,6 +247,8 @@ const columns = [
         headerName: "Defense",
         type: "number",
         width: 120,
+        align: "center",
+        headerAlign: "center",
         renderCell: handleRenderStatDef,
     },
     {
@@ -239,6 +256,8 @@ const columns = [
         headerName: "SPI",
         type: "number",
         width: 120,
+        headerAlign: "center",
+        align: "center",
     },
 ]
 function GlobalStandings(props) {

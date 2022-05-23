@@ -1,3 +1,4 @@
+import xmltodict
 from copyreg import constructor
 from hashlib import new
 from flask import Flask, jsonify, request, json, session
@@ -502,6 +503,36 @@ def analysis():
         ['percentage', 'surname']].to_dict('records')
 
     return jsonify([circ_history, circ_features, circ_features_hybridera, trackCrashes, teamdf, driverdf])
+
+
+@app.route('/formula/getstandings')
+def getstandings():
+    f = open('./f1_data/team_images.json', 'r')
+    team_images = json.load(f)
+    response = requests.get(
+        "http://ergast.com/api/f1/current/driverStandings", stream=True)
+    standings = xmltodict.parse(response.content)
+    driv_standings = []
+    for k, drivstand in enumerate(standings['MRData']['StandingsTable']['StandingsList']['DriverStanding']):
+        teamname = drivstand['Constructor']['Name']
+        teamImg = team_images[teamname]
+        data_dict = {'position': drivstand['@position'], 'points': drivstand['@points'], 'firstname': drivstand['Driver']['GivenName'],
+                     'lastname': drivstand['Driver']['FamilyName'], 'nationality': drivstand['Driver']['Nationality'], 'constructor': drivstand['Constructor']['Name'], 'img': teamImg}
+        driv_standings.append(data_dict)
+        # driv_standings[k+1] = [drivstand['@position'], drivstand['@points'], drivstand['Driver']['GivenName'] +
+        #                        drivstand['Driver']['FamilyName'], drivstand['Driver']['Nationality'], drivstand['Constructor']['Name']]
+
+    response = requests.get(
+        "http://ergast.com/api/f1/current/constructorStandings", stream=True)
+    standings = xmltodict.parse(response.content)
+    constructor_standings = []
+    for k, constructorstand in enumerate(standings['MRData']['StandingsTable']['StandingsList']['ConstructorStanding']):
+        name = constructorstand['Constructor']['Name']
+        teamImg = team_images[name]
+        data_dict = {'position': constructorstand['@position'], 'points': constructorstand['@points'], 'name': constructorstand['Constructor']
+                     ['Name'], 'nationality': constructorstand['Constructor']['Nationality'], 'wins': constructorstand['@wins'], 'img': teamImg}
+        constructor_standings.append(data_dict)
+    return jsonify([driv_standings, constructor_standings])
 
 
 '''
