@@ -10,12 +10,14 @@ import ToggleButtonGroup from "@mui/material/ToggleButtonGroup"
 import Background from "./images/tex.jpeg"
 
 import { NavBar } from "./Components/Navbar"
+// import { NavBar } from "./formulaViews/formulaNav"
 import { Header } from "./formulaViews/Header"
 import { DropdownPage } from "./formulaViews/DropdownPage"
 import { LapTime } from "./formulaViews/LapTime"
 import { SpeedDistance } from "./formulaViews/SpeedDistance"
 import { Analysis } from "./formulaViews/Analysis"
 import { FormulaModel } from "./formulaViews/FormulaModel"
+import { DriverCards } from "./formulaViews/DriverCards"
 import { TelemetryFooter } from "./formulaViews/TelemetryFooter"
 import { FormulaStandings } from "./formulaViews/FormulaStandings"
 
@@ -155,6 +157,7 @@ export const Formula = () => {
                                         <FormulaStandings />
                                     ) : (
                                         <FormulaModel />
+                                        // <DriverCards />
                                     )}
                                 </>
                             )}

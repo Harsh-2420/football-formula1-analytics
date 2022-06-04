@@ -505,12 +505,32 @@ def analysis():
     return jsonify([circ_history, circ_features, circ_features_hybridera, trackCrashes, teamdf, driverdf])
 
 
+@app.route('/formula/getyearstandings', methods=['GET'])
+def getyearstandings():
+    curr_year = datetime.datetime.now().year+1
+    year_db_len = len(Year.query.all())
+    latest_entry = Year.query.filter_by(id=year_db_len).first().content
+    if str(latest_entry) > str(curr_year):
+        db.session.add(
+            Year(content=(int(latest_entry)+1)))
+    db.session.commit()
+    return jsonify([*map(serializer, Year.query.all())])
+
+
 @app.route('/formula/getstandings')
 def getstandings():
     f = open('./f1_data/team_images.json', 'r')
+    selected_year = 'current'
+    # try:
+    #     selected_year = session['year_standing']
+    # except:
+    #     selected_year = 'current'
+    # if selected_year == None:
+    #     selected_year = 'current'
+    # app.logger.info("##########", selected_year)
     team_images = json.load(f)
     response = requests.get(
-        "http://ergast.com/api/f1/current/driverStandings", stream=True)
+        "http://ergast.com/api/f1/{y}/driverStandings".format(y=selected_year), stream=True)
     standings = xmltodict.parse(response.content)
     driv_standings = []
     for k, drivstand in enumerate(standings['MRData']['StandingsTable']['StandingsList']['DriverStanding']):
@@ -533,6 +553,15 @@ def getstandings():
                      ['Name'], 'nationality': constructorstand['Constructor']['Nationality'], 'wins': constructorstand['@wins'], 'img': teamImg}
         constructor_standings.append(data_dict)
     return jsonify([driv_standings, constructor_standings])
+
+
+@app.route('/formula/selectyearstanding', methods=['POST'])
+def selectyearstanding():
+    if request.method == 'POST':
+        selected_year = request.get_json(force=True)
+        session['year_standing'] = str(selected_year)
+        # app.logger.info("##########", selected_year)
+        return {"201": selected_year}
 
 
 '''

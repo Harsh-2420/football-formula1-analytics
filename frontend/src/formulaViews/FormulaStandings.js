@@ -1,26 +1,27 @@
 import React, { useEffect, useState } from "react"
 import "../App.css"
-import { Row, Column } from "react-bootstrap"
+// import { Row, Column } from "react-bootstrap"
 import Box from "@mui/material/Box"
 import "bootstrap/dist/css/bootstrap.min.css"
-import {
-    Label,
-    XAxis,
-    YAxis,
-    LabelList,
-    Tooltip,
-    Legend,
-    ScatterChart,
-    Scatter,
-    Bar,
-    BarChart,
-} from "recharts"
-import moment from "moment"
-import MuiToggleButton from "@mui/material/ToggleButton"
-import ToggleButtonGroup from "@mui/material/ToggleButtonGroup"
-import { styled } from "@mui/material/styles"
-import { HorizontalBarFeatures } from "../Components/HorizontalBarFeatures"
+// import {
+//     Label,
+//     XAxis,
+//     YAxis,
+//     LabelList,
+//     Tooltip,
+//     Legend,
+//     ScatterChart,
+//     Scatter,
+//     Bar,
+//     BarChart,
+// } from "recharts"
+// import moment from "moment"
+// import MuiToggleButton from "@mui/material/ToggleButton"
+// import ToggleButtonGroup from "@mui/material/ToggleButtonGroup"
+// import { styled } from "@mui/material/styles"
+// import { HorizontalBarFeatures } from "../Components/HorizontalBarFeatures"
 import { DataGrid } from "@mui/x-data-grid"
+import { SelectionForm } from "../Components/SelectionForm"
 
 import Background from "../images/tex.jpeg"
 
@@ -161,6 +162,9 @@ export const FormulaStandings = () => {
     const [drivStandings, setDrivStandings] = useState([])
     const [consStandings, setConsStandings] = useState([])
 
+    const [years, setYears] = useState([])
+    const [selectedYear, setSelectedYear] = useState()
+
     useEffect(() => {
         fetch("http://127.0.0.1:5000/formula/getstandings")
             .then((res) => res.json())
@@ -170,6 +174,52 @@ export const FormulaStandings = () => {
             })
     }, [])
 
+    useEffect(() => {
+        fetch("http://127.0.0.1:5000/formula/getyearstandings", {
+            method: "GET",
+            headers: {
+                "Content-type": "application/json",
+            },
+        })
+            .then((res) => res.json())
+            .then((data) => {
+                setYears(data)
+            })
+    }, [])
+
+    useEffect(() => {
+        if (selectedYear) {
+            fetch("http://127.0.0.1:5000/formula/selectyearstanding", {
+                method: "POST",
+                body: JSON.stringify(selectedYear),
+                headers: { "content-type": "application/json" },
+            })
+                .then((res) => {
+                    if (!res.ok) return Promise.reject(res)
+                    return res.json()
+                })
+                .then((data) => {
+                    getLatestRace()
+                })
+                .catch(console.error)
+        }
+    }, [selectedYear])
+
+    const handleDropdownSelectYear = (e) => {
+        setSelectedYear(e.target.value)
+        console.log(e.target.value)
+    }
+
+    const getLatestRace = () => {
+        fetch("http://127.0.0.1:5000/formula/getstandings")
+            .then((response) => {
+                if (response.ok) {
+                    return response.json()
+                }
+            })
+            .then((response) => setYears(response))
+    }
+
     return (
         <Box
             style={{
@@ -178,6 +228,12 @@ export const FormulaStandings = () => {
                 backgroundSize: "150px 150px",
             }}
         >
+            {/* <SelectionForm
+                selection={selectedYear}
+                data={years}
+                handleDropdown={handleDropdownSelectYear}
+                input="Year"
+            /> */}
             <div
                 className="tableHolder"
                 style={{
